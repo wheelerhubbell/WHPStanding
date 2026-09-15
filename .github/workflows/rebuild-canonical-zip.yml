@@ -1,0 +1,62 @@
+name: Rebuild WHP Standing canonical ZIP
+on:
+  push:
+    branches: [standing-v1-propagation]
+    paths:
+      - POST-ZIP-CONTINUITY.md
+      - .github/workflows/rebuild-canonical-zip.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: whp-standing-canonical-zip
+  cancel-in-progress: false
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Build amended continuity archive without recursive old ZIP
+        run: |
+          set -euo pipefail
+          SOURCE_SHA="$(git rev-parse HEAD)"
+          rm -f WHP-Standing-v1-candidate-1.zip
+          rm -rf /tmp/WHP-Standing-v1-amended
+          mkdir -p /tmp/WHP-Standing-v1-amended
+          git archive --format=tar HEAD | tar -x -C /tmp/WHP-Standing-v1-amended
+          rm -f /tmp/WHP-Standing-v1-amended/WHP-Standing-v1-candidate-1.zip
+          cat > /tmp/WHP-Standing-v1-amended/AMENDED-ARCHIVE-IDENTITY.txt <<EOF
+          WHP Standing v1 amended continuity archive
+          Original ZIP first added: 12fd5beb2564f90a57079e598b0dbddf09dfcada
+          Known clean verified checkpoint: 1cc06944fc821dbb182ecdec826b85da949cabce
+          Amended source commit: ${SOURCE_SHA}
+          Built UTC: $(date -u +%Y-%m-%dT%H:%M:%SZ)
+          Purpose: preserve all repository source, evidence, production authority, provider findings, deployment work, and post-ZIP continuity knowledge available at the amended source commit.
+          Private keys are not included.
+          EOF
+          (cd /tmp/WHP-Standing-v1-amended && find . -type f -print0 | sort -z | xargs -0 sha256sum > AMENDED-FILES.sha256)
+          (cd /tmp/WHP-Standing-v1-amended && zip -q -r "$GITHUB_WORKSPACE/WHP-Standing-v1-candidate-1.zip" .)
+          sha256sum WHP-Standing-v1-candidate-1.zip > WHP-Standing-v1-candidate-1.zip.sha256
+          unzip -t WHP-Standing-v1-candidate-1.zip
+          test "$(unzip -l WHP-Standing-v1-candidate-1.zip | grep -c 'POST-ZIP-CONTINUITY.md')" -eq 1
+          test "$(unzip -l WHP-Standing-v1-candidate-1.zip | grep -c 'evidence/live-authority/verification.json')" -eq 1
+          test "$(unzip -l WHP-Standing-v1-candidate-1.zip | grep -c 'evidence/production/deployment-blocker.json')" -eq 1
+          test "$(unzip -l WHP-Standing-v1-candidate-1.zip | grep -c 'public/authority/root.json')" -eq 1
+          if unzip -p WHP-Standing-v1-candidate-1.zip | grep -aq 'BEGIN .*PRIVATE KEY'; then echo PRIVATE_KEY_FOUND; exit 1; fi
+      - name: Replace old ZIP with amended continuity archive
+        run: |
+          git config user.name 'WHP Standing Archive'
+          git config user.email 'actions@users.noreply.github.com'
+          git add WHP-Standing-v1-candidate-1.zip WHP-Standing-v1-candidate-1.zip.sha256
+          git commit -m 'Amend WHP Standing ZIP with complete post-candidate source, authority, evidence, and production knowledge'
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: WHP-Standing-v1-amended-continuity
+          path: |
+            WHP-Standing-v1-candidate-1.zip
+            WHP-Standing-v1-candidate-1.zip.sha256
+          retention-days: 90
