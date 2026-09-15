@@ -1,0 +1,50 @@
+name: Establish WHP Standing LIVE authority
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  establish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.16.0'
+      - name: Generate production root and issuer keys and root-signed LIVE authority bundle
+        env:
+          AUTHORIZATION_TEXT: "I authorize establishment of Wheeler Hubbell Publishing’s production cryptographic root and issuer authority for WHP Standing v1."
+        run: |
+          mkdir -p .authority evidence/live-authority
+          node --input-type=module <<'JS'
+          import {generateKeyPairSync,createHash,sign} from 'node:crypto';import {readFile,writeFile} from 'node:fs/promises';
+          const auth=process.env.AUTHORIZATION_TEXT;if(!auth)throw Error('AUTHORIZATION_REQUIRED');
+          const now=Math.floor(Date.now()/1000),until=now+31536000;
+          const root=generateKeyPairSync('ed25519');const issuer=generateKeyPairSync('ed25519');
+          const pub=k=>k.export({type:'spki',format:'der'});const pem=k=>k.export({type:'pkcs8',format:'pem'}).toString();const b64=b=>Buffer.from(b).toString('base64');const sha=b=>createHash('sha256').update(b).digest('hex');
+          const rootPub=pub(root.publicKey),issuerPub=pub(issuer.publicKey),rootPin=sha(rootPub),issuerId=sha(issuerPub);
+          const profile=JSON.parse(await readFile('profiles/structured-passage-1.0.0.json','utf8'));const profileHash=sha(Buffer.from(JSON.stringify(profile)));
+          const canonical=o=>JSON.stringify(o,Object.keys(o).sort());
+          const seal=(type,payload,key,keyId)=>{const protectedHeader={type,algorithm:'Ed25519',canonicalization:'WHP-JCS-I1',key_id:keyId};const body=Buffer.from(JSON.stringify({protected:protectedHeader,payload}));return {protected:protectedHeader,payload,signature:sign(null,body,key).toString('base64')}};
+          const issuerCertPayload={subject_key_id:issuerId,subject_public_key:b64(issuerPub),roles:['ISSUER','REGISTRY'],scope:'WHP Standing v1',jurisdiction:'GLOBAL',valid_from:now,valid_until:until};
+          const profileAuthPayload={profile:{id:profile.id,version:profile.version,sha256:profileHash},environment:'LIVE',issuer:'Wheeler Hubbell Publishing',issuer_key_id:issuerId,valid_from:now,valid_until:until};
+          const trustStatePayload={environment:'LIVE',issuer:'Wheeler Hubbell Publishing',root_key_id:rootPin,root_public_key:b64(rootPub),valid_from:now,valid_until:until,status:'ACTIVE'};
+          const bundle={environment:'LIVE',issuer:'Wheeler Hubbell Publishing',root_pin:rootPin,root_public_key:b64(rootPub),issuer_certificate:seal('WHP-ISSUER-CERTIFICATE-v1',issuerCertPayload,root.privateKey,rootPin),profile_authorization:seal('WHP-PROFILE-AUTHORIZATION-v1',profileAuthPayload,root.privateKey,rootPin),trust_state:seal('WHP-TRUST-STATE-v1',trustStatePayload,root.privateKey,rootPin)};
+          await writeFile('.authority/root-private.pem',pem(root.privateKey),{mode:0o600});await writeFile('.authority/issuer-private.pem',pem(issuer.privateKey),{mode:0o600});await writeFile('.authority/trust-bundle.json',JSON.stringify(bundle,null,2)+'\n',{mode:0o600});
+          await writeFile('evidence/live-authority/public-authority.json',JSON.stringify({authorized_act:auth,authorized_at:new Date().toISOString(),root_pin:rootPin,root_public_key:b64(rootPub),issuer_key_id:issuerId,issuer_public_key:b64(issuerPub),profile:{id:profile.id,version:profile.version,sha256:profileHash},environment:'LIVE',issuer:'Wheeler Hubbell Publishing',private_keys_committed:false},null,2)+'\n');
+          JS
+      - name: Preserve encrypted-custody input as artifact only; never commit private keys
+        uses: actions/upload-artifact@v4
+        with:
+          name: whp-standing-live-authority-${{ github.run_id }}
+          path: .authority/
+          include-hidden-files: true
+          retention-days: 1
+      - name: Commit public authority evidence only
+        run: |
+          git config user.name 'WHP Standing Authority Ceremony'
+          git config user.email 'actions@users.noreply.github.com'
+          git add evidence/live-authority/public-authority.json
+          git commit -m 'Record authorized WHP Standing v1 production root and issuer public identity'
+          git push origin "HEAD:${GITHUB_REF_NAME}"
+          test -z "$(git ls-files '.authority/*')"
