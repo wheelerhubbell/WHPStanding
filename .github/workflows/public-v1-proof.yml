@@ -1,0 +1,24 @@
+name: First public v1 isolated proof
+on:
+  push:
+    branches: ['work/first-public-v1-contract']
+    paths: ['.github/workflows/public-v1-proof.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-snapshot:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Package exact source
+        run: |
+          git rev-parse HEAD > /tmp/SOURCE-COMMIT.txt
+          git archive --format=tar HEAD > /tmp/standing-source.tar
+      - uses: actions/upload-artifact@v4
+        with:
+          name: standing-source
+          path: |
+            /tmp/standing-source.tar
+            /tmp/SOURCE-COMMIT.txt
+          retention-days: 30
