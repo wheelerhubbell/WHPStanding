@@ -7,19 +7,20 @@ import {AUTHORIZATION,ORIGIN,newCustody,establish,verifyAuthority,authorityNegat
 const SITE='914e2d6d-ec82-4b03-aa58-785fcf3b453b';
 const ACCOUNT='6aa6fb2da06f6afa962eee67';
 const PREFIX='/accounts/'+ACCOUNT+'/env';
-const SCOPES=['builds','functions','runtime','post-processing'];
 const DIR='evidence/live-authority';
 const token=process.env.NETLIFY_AUTH_TOKEN;
 demand(token,'NETLIFY_AUTH_TOKEN_REQUIRED');
 demand(process.env.AUTHORIZATION_TEXT===AUTHORIZATION,'EXPLICIT_AUTHORIZATION_REQUIRED');
 async function api(path,{method='GET',body}={}){
   const r=await fetch('https://api.netlify.com/api/v1'+path,{method,headers:{Authorization:'Bearer '+token,'content-type':'application/json'},body:body===undefined?undefined:JSON.stringify(body),redirect:'error',signal:AbortSignal.timeout(30000)});
+  if(!r.ok)console.error('NETLIFY_OPERATION_FAILED',method,path.split('?')[0],r.status);
   demand(r.ok,'NETLIFY_HTTP_'+r.status,503);return r.status===204?null:r.json();
 }
 const value=(e,context)=>e?.values?.find(v=>v.context===context)?.value;
 async function put(key,data,context='production',secret=false){
-  // Context isolation works on every plan; no root is available to production.
-  const body={key,scopes:SCOPES,is_secret:secret,values:[{context,value:data}]};
+  // Do not request optional paid granular scopes. Netlify applies its secret
+  // policy/default scopes. Explicit deploy contexts isolate root from production.
+  const body={key,is_secret:secret,values:[{context,value:data}]};
   const vars=await api(PREFIX+'?site_id='+SITE);
   return vars.some(e=>e.key===key)?api(PREFIX+'/'+key+'?site_id='+SITE,{method:'PUT',body}):api(PREFIX+'?site_id='+SITE,{method:'POST',body:[body]});
 }
