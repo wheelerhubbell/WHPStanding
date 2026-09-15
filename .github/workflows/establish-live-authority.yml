@@ -2,7 +2,10 @@ name: Establish WHP Standing LIVE authority
 on:
   push:
     branches: [standing-v1-propagation]
-    paths: [.github/workflows/establish-live-authority.yml]
+    paths:
+      - .github/workflows/establish-live-authority.yml
+      - scripts/establish-live-authority.mjs
+      - scripts/authority-core.mjs
   workflow_dispatch:
 permissions:
   contents: write
