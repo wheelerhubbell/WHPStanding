@@ -1,5 +1,8 @@
 name: Deploy and verify WHP Standing production
 on:
+  push:
+    branches: [standing-v1-propagation]
+    paths: [.github/workflows/deploy-production.yml]
   workflow_dispatch:
 permissions:
   contents: write
@@ -15,9 +18,15 @@ jobs:
         with:
           node-version: '22.16.0'
       - run: npm ci --include=optional --ignore-scripts
+      - name: Configure established authority and existing Free-plan dependencies
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+        run: |
+          node scripts/configure-production.mjs
+          node scripts/refresh-live-status.mjs
       - name: Require verified configuration and install official deployment tooling
         run: |
-          node --input-type=module -e "import fs from 'node:fs';if(!JSON.parse(fs.readFileSync('evidence/production/configuration.json')).configuration_verified)process.exit(1)"
+          node --input-type=module -e "import fs from 'node:fs';if(!JSON.parse(fs.readFileSync('evidence/production/configuration.json')).configuration_ready_for_deployment)process.exit(1)"
           npm install --prefix .runtime/deploy-tools netlify-cli
       - name: Deploy exact release branch to canonical Netlify site
         env:
@@ -38,6 +47,7 @@ jobs:
           git config user.email 'actions@users.noreply.github.com'
           git add evidence/production evidence/public-service
           git diff --cached --quiet || git commit -m 'Record production deployment and actual public boundary evidence'
+          git pull --rebase origin "${GITHUB_REF_NAME}"
           git push origin "HEAD:${GITHUB_REF_NAME}"
       - uses: actions/upload-artifact@v4
         if: always()
