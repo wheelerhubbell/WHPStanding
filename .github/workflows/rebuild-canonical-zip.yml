@@ -39,7 +39,7 @@ jobs:
           python3 - <<'PY'
           from pathlib import Path
           root=Path('/tmp/WHP-Standing-v1-amended')
-          marker=b'-----BEGIN PRIVATE KEY-----'
+          marker=b'-----BEGIN '+b'PRIVATE KEY-----'
           hits=[]
           for p in root.rglob('*'):
               if p.is_file() and p.stat().st_size < 20_000_000:
