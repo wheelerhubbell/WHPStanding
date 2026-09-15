@@ -40,10 +40,6 @@ jobs:
           https.request = function(...args) {
             const req = original.apply(this,args);
             req.on('response',res=>{
-              if(res.statusCode===403 && req.path.split('?')[0].endsWith('/deploys')) {
-                let body='';res.on('data',chunk=>{if(body.length<10000)body+=chunk});
-                res.on('end',()=>process.stderr.write('NETLIFY_DEPLOY_DENIAL '+body+'\n'));
-              }
               if(res.statusCode>=400) process.stderr.write(JSON.stringify({http_status:res.statusCode,method:req.method,host:req.host,path:req.path.split('?')[0]})+'\n');
             });
             return req;
