@@ -2,7 +2,7 @@ name: Complete WHP Standing source import
 on:
   push:
     paths:
-      - '.source-import/runtime.tgz'
+      - '.source-import/chunks/part05'
 permissions:
   contents: write
 jobs:
@@ -10,9 +10,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Expand verified candidate runtime
+      - name: Reassemble verified candidate runtime
         run: |
-          tar -xzf .source-import/runtime.tgz
+          cat .source-import/chunks/part* | base64 -d > /tmp/runtime.tgz
+          tar -xzf /tmp/runtime.tgz
           rm -rf .source-import
       - name: Verify source before commit
         run: |
