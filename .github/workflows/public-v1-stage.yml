@@ -2,7 +2,7 @@ name: Isolated first-public-v1 completion proof
 on:
   push:
     branches: [public-v1-contract-20260915]
-    paths: ['build-input/public-v1-source/**', 'build-input/public-v1-stage.py', '.github/workflows/public-v1-stage.yml']
+    paths: ['build-input/public-v1-source/**', 'build-input/public-v1-stage.py', '.github/workflows/public-v1-stage.yml', '.github/workflows/verify.yml']
 permissions:
   contents: write
 jobs:
@@ -32,8 +32,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.13'
-      - run: npm ci --ignore-scripts
-      - run: python -m pip install -r verify/requirements.txt
+      - run: npm ci --include=optional --ignore-scripts
+      - run: python -m pip install -r requirements-verification.txt
       - name: Build generic no-network verifier sandbox
         run: bash scripts/build-cold-sandbox.sh
       - name: Full inherited and cold-agent cryptographic proof
