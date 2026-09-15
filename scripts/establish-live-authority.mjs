@@ -18,9 +18,10 @@ async function api(path,{method='GET',body}={}){
 }
 const value=(e,context)=>e?.values?.find(v=>v.context===context)?.value;
 async function put(key,data,context='production',secret=false){
-  // Do not request optional paid granular scopes. Netlify applies its secret
-  // policy/default scopes. Explicit deploy contexts isolate root from production.
-  const body={key,is_secret:secret,values:[{context,value:data}]};
+  // Standard encrypted environment storage is supported on this account.
+  // Optional Secrets Controller requires unavailable granular scopes.
+  // Explicit deploy contexts keep the root out of production.
+  const body={key,values:[{context,value:data}]};
   const vars=await api(PREFIX+'?site_id='+SITE);
   return vars.some(e=>e.key===key)?api(PREFIX+'/'+key+'?site_id='+SITE,{method:'PUT',body}):api(PREFIX+'?site_id='+SITE,{method:'POST',body:[body]});
 }
@@ -36,7 +37,7 @@ try{
     // Save BEFORE publishing any identity; a partial run must recover, never rotate.
     await put('WHP_AUTHORITY_CUSTODY_V1',canonical(saved),'dev',true);
     vars=await api(PREFIX+'?site_id='+SITE);record=vars.find(e=>e.key==='WHP_AUTHORITY_CUSTODY_V1');
-    demand(record?.is_secret===true&&record.values.every(v=>v.context==='dev'),'ROOT_CUSTODY_ISOLATION_NOT_ACCEPTED');
+    demand(record&&record.values.every(v=>v.context==='dev'),'ROOT_CUSTODY_ISOLATION_NOT_ACCEPTED');
     const back=parseStrict(value(record,'dev'),1048576);
     demand(keyId(publicDer(back.custody.root_private_key))===authority.root_pin&&keyId(publicDer(back.custody.issuer_private_key))===authority.issuer_key_id,'CUSTODY_READBACK_MISMATCH');saved=back;
   }
@@ -48,7 +49,7 @@ try{
   const publicObject={version:'WHP-PUBLIC-AUTHORITY-v1',canonical_origin:ORIGIN,root_pin:a.root_pin,root_public_key:a.bundle.root_public_key,issuer_key_id:a.issuer_key_id,
     authorization_act:a.act,trust_bundle:a.bundle,profile:a.act.payload.profile,
     pinning:'Admit this root fingerprint through an independently authenticated Wheeler Hubbell Publishing origin or trusted issuer record. Embedded certificates do not appoint their own root.',
-    custody:'Root and recovery material: authenticated Netlify secret variable, dev context only; never production runtime. Production issuer: secret production environment value. This is provider-managed software key custody, not offline or hardware custody.'};
+    custody:'Root and recovery material: authenticated, encrypted Netlify environment variable, dev context only; never production runtime. Production issuer: encrypted production environment value. Optional Secrets Controller is not enabled; authorized account API access can read values. This is provider-managed software key custody, not offline or hardware custody.'};
   await writeFile(DIR+'/public-authority.json',canonical(publicObject)+'\n');
   await writeFile('public/authority/root.json',canonical(publicObject)+'\n');
   await writeFile('public/authority/trust-bundle.json',canonical(a.bundle)+'\n');
@@ -61,7 +62,7 @@ try{
   vars=await api(PREFIX+'?site_id='+SITE);
   demand(value(vars.find(e=>e.key==='WHP_ROOT_PIN'),'production')===a.root_pin,'PIN_CONFIGURATION_READBACK_FAILED');
   demand(hash(parseStrict(value(vars.find(e=>e.key==='WHP_TRUST_BUNDLE_JSON'),'production'),1048576))===hash(a.bundle),'TRUST_CONFIGURATION_READBACK_FAILED');
-  const issuer=vars.find(e=>e.key==='WHP_ISSUER_PRIVATE_KEY');demand(issuer?.is_secret===true&&issuer.values.every(v=>v.context==='production'),'ISSUER_SECRET_CONTEXT_NOT_ACCEPTED');
+  const issuer=vars.find(e=>e.key==='WHP_ISSUER_PRIVATE_KEY');demand(issuer&&issuer.values.every(v=>v.context==='production'),'ISSUER_SECRET_CONTEXT_NOT_ACCEPTED');
   const production=await api(PREFIX+'?site_id='+SITE+'&context_name=production&scope=functions');
   const rootEntry=production.find(e=>e.key==='WHP_AUTHORITY_CUSTODY_V1');
   demand(!rootEntry||!rootEntry.values.some(v=>['all','production'].includes(v.context)),'ROOT_PRESENT_IN_PRODUCTION_CONTEXT');
@@ -69,7 +70,7 @@ try{
     authority_state:'VERIFIED',service_live:false,root_pin:a.root_pin,issuer_key_id:a.issuer_key_id,profile:a.act.payload.profile,
     existing_identity_reused:reused,canonical_primitives:'src/canonical.mjs seal/publicDer/keyId/hash; src/authority.mjs validateTrust/issuerAuthority/authorize',
     production_verifier:proof,independent_python_authority_verified:true,published_schema_validated:true,negative_proofs:negatives,
-    secret_custody_readback_verified:true,root_excluded_from_production_context:true,issuer_production_secret_accepted:true,
+    secret_custody_readback_verified:true,root_excluded_from_production_context:true,issuer_production_context_accepted:true,secrets_controller_enabled:false,
     private_keys_committed:false,private_keys_uploaded_as_artifacts:false,private_keys_printed:false,
     trust_status_valid_until:a.bundle.status_snapshot.payload.valid_until,automatic_trust_refresh_established:false,
     payment_authorized:false,payment_settled:false,live_mark_issued:false,
