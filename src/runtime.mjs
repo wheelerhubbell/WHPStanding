@@ -15,6 +15,7 @@ export async function runtimeFromEnvironment(env=process.env){
   validateTrust(trustBundle,env.WHP_ROOT_PIN,Math.floor(Date.now()/1000));livePaymentDestination(requirements);
   demand(trustBundle.profile_authorization.payload.environment==='LIVE','PRODUCTION_REQUIRES_LIVE_AUTHORITY',503);
   const privateKey=createPrivateKey(env.WHP_ISSUER_PRIVATE_KEY),rail=new EvmRail({facilitator_url:env.WHP_FACILITATOR_URL,rpc_url:env.WHP_RPC_URL,network:requirements.network,discovery_extensions:{bazaar:bazaar({origin:env.WHP_ORIGIN})}});
-  const store=await postgresStore(env.DATABASE_URL??env.NETLIFY_DB_URL);
+  const connectionString=env.WHP_USE_NETLIFY_DATABASE==='true'?(await import('@netlify/database')).getConnectionString():env.DATABASE_URL??env.NETLIFY_DB_URL;
+  const store=await postgresStore(connectionString);
   try{return new StandingService({store,rail,privateKey,trustBundle,rootPin:env.WHP_ROOT_PIN,origin:env.WHP_ORIGIN,requirements});}catch(e){await store.close();throw e;}
 }
