@@ -1,0 +1,43 @@
+name: WHP Standing production preflight
+on:
+  push:
+    branches: [standing-v1-propagation]
+    paths: [.github/workflows/production-preflight.yml]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.16.0'
+      - name: Archive exact public source
+        run: |
+          mkdir -p /tmp/whp-preflight
+          git archive --format=tar.gz HEAD > /tmp/whp-preflight/source.tar.gz
+      - name: Inspect authorized production configuration without exporting secrets
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+        run: |
+          node --input-type=module <<'JS'
+          import {writeFile} from 'node:fs/promises';
+          const token=process.env.NETLIFY_AUTH_TOKEN;
+          const out={source_commit:process.env.GITHUB_SHA,run_id:process.env.GITHUB_RUN_ID,checked_at:new Date().toISOString(),scope:'read-only Netlify production dependency presence',secret_values_exported:false,production_mutated:false};
+          const get=async path=>{const r=await fetch('https://api.netlify.com/api/v1'+path,{headers:{Authorization:'Bearer '+token}});if(!r.ok)throw Error('NETLIFY_HTTP_'+r.status);return r.json()};
+          if(!token)throw Error('NETLIFY_AUTH_TOKEN_REQUIRED');
+          const sites=await get('/sites?per_page=100');const site=sites.find(s=>s.name==='whpstanding');
+          if(!site)throw Error('CANONICAL_SITE_NOT_FOUND');
+          out.site={id:site.id,name:site.name,ssl_url:site.ssl_url,account_id:site.account_id,account_slug:site.account_slug,repo_url:site.build_settings?.repo_url,repo_branch:site.build_settings?.repo_branch,published_deploy_id:site.published_deploy?.id};
+          out.build_env_keys=Object.keys(site.build_settings?.env||{}).sort();
+          try {const env=await get('/accounts/'+site.account_id+'/env?site_id='+site.id);out.environment=env.map(e=>({key:e.key,scopes:e.scopes,contexts:(e.values||[]).map(v=>({context:v.context,present:Boolean(v.value)}))}));} catch(e){out.environment_error=e.message;}
+          await writeFile('/tmp/whp-preflight/inspection.json',JSON.stringify(out,null,2)+'\n');console.log(JSON.stringify(out,null,2));
+          JS
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: whp-standing-production-preflight-${{ github.run_id }}
+          path: /tmp/whp-preflight/
+          retention-days: 7
