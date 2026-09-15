@@ -30,7 +30,7 @@ jobs:
           const a=await req('/accounts/'+account);out.account_read_status=a.status;if(a.status===200)out.account={type:a.data.type,type_name:a.data.type_name,capabilities:a.data.capabilities};
           for(const secret of [true,false]){
             const key='WHP_PUBLIC_ACCESS_PROBE_'+(secret?'SECRET_FLAG':'STANDARD');
-            const payload=[{key,scopes:['builds','functions','runtime','post-processing'],is_secret:secret,values:[{context:'dev',value:'public-probe-not-secret'}]}];
+            const payload=[{key,is_secret:secret,values:[{context:'dev',value:'public-probe-not-secret'}]}];
             const r=await req(envpath,'POST',payload);
             // Probe request contains only public data, never actual custody or credentials.
             out.probes.push({operation:'create context-isolated site variable',secret_controller_flag:secret,status:r.status,error:r.status>=400?r.data:null});
