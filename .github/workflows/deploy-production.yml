@@ -34,6 +34,18 @@ jobs:
           NETLIFY_SITE_ID: 914e2d6d-ec82-4b03-aa58-785fcf3b453b
         run: |
           mkdir -p evidence/production
+          cat > /tmp/whp-http-diagnostic.cjs <<'JS'
+          const https = require('node:https');
+          const original = https.request;
+          https.request = function(...args) {
+            const req = original.apply(this,args);
+            req.on('response',res=>{
+              if(res.statusCode>=400) process.stderr.write(JSON.stringify({http_status:res.statusCode,method:req.method,host:req.host,path:req.path.split('?')[0]})+'\n');
+            });
+            return req;
+          };
+          JS
+          export NODE_OPTIONS="--require=/tmp/whp-http-diagnostic.cjs"
           .runtime/deploy-tools/node_modules/.bin/netlify deploy --prod --no-build --dir public --functions netlify/functions --json > evidence/production/deploy.json
       - name: Verify public authority, discovery, and real unpaid boundary
         run: |
@@ -42,10 +54,11 @@ jobs:
       - name: Preserve actual public evidence
         if: always()
         run: |
+          mkdir -p evidence/production evidence/public-service
           if grep -Rq 'BEGIN .*PRIVATE KEY\|postgresql://' evidence/production evidence/public-service; then exit 1; fi
           git config user.name 'WHP Standing Production'
           git config user.email 'actions@users.noreply.github.com'
-          git add evidence/production evidence/public-service
+          git add evidence/production evidence/public-service evidence/live-authority public/authority
           git diff --cached --quiet || git commit -m 'Record production deployment and actual public boundary evidence'
           git pull --rebase origin "${GITHUB_REF_NAME}"
           git push origin "HEAD:${GITHUB_REF_NAME}"
