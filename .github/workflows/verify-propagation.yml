@@ -3,10 +3,10 @@ on:
   push:
     paths:
       - 'build-input/propagation-extension.json'
-      - '.github/workflows/verify-propagation.yml'
   workflow_dispatch:
 permissions:
   contents: write
+  actions: read
 concurrency:
   group: whp-standing-propagation-promotion
   cancel-in-progress: false
@@ -35,8 +35,13 @@ jobs:
         run: |
           test -f build-input/propagation-extension.json
           python - <<'PY'
-          import pathlib,json,hashlib,subprocess
+          import pathlib,json,hashlib,subprocess,base64,lzma
           manifest=json.loads(pathlib.Path('build-input/propagation-extension.json').read_text())
+          if manifest.get('encoding')=='xz-base64-parts':
+              encoded=''.join(pathlib.Path(p).read_text().strip() for p in manifest['parts'])
+              blob=base64.b64decode(encoded,validate=True)
+              assert hashlib.sha256(blob).hexdigest()==manifest['sha256'],'Lossless transfer digest mismatch'
+              manifest=json.loads(lzma.decompress(blob))
           def digest(p):return hashlib.sha256(p.read_bytes()).hexdigest() if p.exists() else None
           for entry in manifest['files']:
               p=pathlib.Path(entry['path'])
