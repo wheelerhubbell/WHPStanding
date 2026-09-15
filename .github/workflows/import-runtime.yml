@@ -1,0 +1,27 @@
+name: Complete WHP Standing source import
+on:
+  push:
+    paths:
+      - '.source-import/runtime.tgz'
+permissions:
+  contents: write
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Expand verified candidate runtime
+        run: |
+          tar -xzf .source-import/runtime.tgz
+          rm -rf .source-import
+      - name: Verify source before commit
+        run: |
+          npm test
+          node scripts/check.mjs
+      - name: Commit completed runtime
+        run: |
+          git config user.name 'WHP Standing Build'
+          git config user.email 'actions@users.noreply.github.com'
+          git add -A
+          git commit -m 'Complete WHP Standing v1 candidate source import'
+          git push
