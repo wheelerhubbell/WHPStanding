@@ -41,14 +41,14 @@ try{
  // Official idempotent create endpoint; existing Free plan only, no upgrades/top-ups.
  const db=await api('/sites/'+SITE+'/database','POST',{});demand(typeof db.connection_string==='string','DATABASE_CONNECTION_REQUIRED');
  const store=await postgresStore(db.connection_string);try{
- await store.initialize();
+ report.database_stage='migration';await store.initialize();report.migration_completed=true;
  const rows=await store.driver.query("SELECT table_name FROM information_schema.tables WHERE table_schema='public' AND table_name IN ('purchases','registry_events','review_requests')");demand(rows.length===3,'MIGRATION_INCOMPLETE');
- const tls=await store.driver.query('SELECT ssl FROM pg_stat_ssl WHERE pid=pg_backend_pid()');demand(tls[0]?.ssl===true,'DATABASE_TLS_REQUIRED');
+ report.database_stage='tls-inspection';const tls=await store.driver.query('SELECT ssl FROM pg_stat_ssl WHERE pid=pg_backend_pid()');demand(tls[0]?.ssl===true,'DATABASE_TLS_REQUIRED');
  report.database={provider:'Netlify managed PostgreSQL',migration_verified:true,tls_verified:true,tables:rows.map(r=>r.table_name)};
  }finally{await store.close();}
  for(const [k,v] of Object.entries({DATABASE_URL:db.connection_string,WHP_ORIGIN:ORIGIN,WHP_FACILITATOR_URL:facilitator,WHP_RPC_URL:rpc,WHP_PAYMENT_REQUIREMENTS_JSON:canonical(requirements)}))await put(k,v);
  const back=await api(PREFIX+'?site_id='+SITE);for(const k of ['DATABASE_URL','WHP_PAYMENT_REQUIREMENTS_JSON','WHP_RPC_URL','WHP_FACILITATOR_URL'])demand(value(back.find(e=>e.key===k)),'CONFIG_READBACK_FAILED');
  demand(hash(parseStrict(value(back.find(e=>e.key==='WHP_PAYMENT_REQUIREMENTS_JSON'))))===hash(requirements),'PAYMENT_CONFIG_MISMATCH');
  report.configuration_verified=true;
-}catch(e){report.failure=e.code??e.name;process.exitCode=1;}
+}catch(e){report.failure=e.code??e.name;if(e.code==='42501')report.permission_error=e.message;process.exitCode=1;}
 await mkdir('evidence/production',{recursive:true});await writeFile('evidence/production/configuration.json',JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify(report,null,2));
