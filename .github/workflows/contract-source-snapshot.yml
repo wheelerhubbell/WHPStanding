@@ -1,0 +1,31 @@
+name: Contract source snapshot
+on:
+  push:
+    branches: [public-v1-contract-20260915]
+    paths: [.github/workflows/contract-source-snapshot.yml]
+permissions:
+  contents: read
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Archive pinned tracked sources only
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p snapshots
+          git archive --format=tar 2004b4b6a738c13c3b6f5adaf46adf217de28ece > snapshots/authoritative-main.tar
+          git archive --format=tar 1cc06944fc821dbb182ecdec826b85da949cabce > snapshots/existing-propagation.tar
+          git log --all --oneline -30 > snapshots/history.txt
+          git diff --stat 2004b4b6a738c13c3b6f5adaf46adf217de28ece 1cc06944fc821dbb182ecdec826b85da949cabce > snapshots/diff-stat.txt
+          sha256sum snapshots/*.tar > snapshots/SHA256SUMS
+      - uses: actions/upload-artifact@v4
+        with:
+          name: whp-contract-pinned-source
+          path: snapshots/
+          if-no-files-found: error
+          retention-days: 30
