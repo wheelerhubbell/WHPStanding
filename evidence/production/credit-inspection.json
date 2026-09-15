@@ -1,0 +1,43 @@
+{
+  "checked_at": "2026-09-15T13:57:24.900307+00:00",
+  "source_commit": "540b74ce62b7aae9d7b46eadd8064317a8659adc",
+  "run_id": "34978375622",
+  "artifact_id": 10400272559,
+  "artifact_sha256_verified": "c7fa41856b2e021ebbc03374ec44cbbe89fa4ab4f2acccb7fa91c792c511b2af",
+  "scope": "Read-only GET /accounts/6aa6fb2da06f6afa962eee67 and GET /sites/914e2d6d-ec82-4b03-aa58-785fcf3b453b. Account capability counters are not independently reconciled against a billing credit ledger.",
+  "production_mutated": false,
+  "payment_executed": false,
+  "credit_fields": {
+    "ai_usage_limit_credits": null,
+    "ai_usage_limit_enforced": false,
+    "per_user_agent_runner_credit_limit": null,
+    "blocked_by_orb_migration": false,
+    "capabilities.credit_features.included": true,
+    "capabilities.credit_rollover.included": false,
+    "capabilities.block_builds_when_usage_exceeded.included": true,
+    "capabilities.credits.included": 300,
+    "capabilities.credits.used": 0,
+    "current_billing_period_start": "2026-09-13T00:00:00.000-07:00",
+    "current_usage_period_start": "2026-09-13T00:00:00.000-07:00",
+    "next_billing_period_start": "2026-10-13T00:00:00.000-07:00",
+    "next_usage_period_start": "2026-10-13T00:00:00.000-07:00",
+    "credit_alert_percentage": null,
+    "plan_credits": 300,
+    "swar_auto_topup_credits": 400
+  },
+  "account_id": "6aa6fb2da06f6afa962eee67",
+  "account_slug": "wheelerhubbell",
+  "plan": "Free",
+  "site": {
+    "id": "914e2d6d-ec82-4b03-aa58-785fcf3b453b",
+    "name": "whpstanding",
+    "state": "current",
+    "public_origin": "https://whpstanding.netlify.app",
+    "published_deploy_id": "6aa94b1d094f6e0008995e8f",
+    "published_at": "2026-09-15T13:42:12.711Z"
+  },
+  "account_read_verified": true,
+  "interpretation": "Netlify rejects production deployment for exceeded credits while the account capability counters report 300 included and 0 used. This establishes a discrepancy, not that credits are definitely available or that the user must purchase an upgrade. The provider must reconcile the deployment block against its authoritative credit ledger.",
+  "paid_upgrade_requirement_verified": false,
+  "production_payment_boundary_verified": false
+}
