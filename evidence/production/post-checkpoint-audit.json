@@ -1,0 +1,37 @@
+{
+  "audited_at": "2026-09-15T13:49:33.839Z",
+  "base": "1cc06944fc821dbb182ecdec826b85da949cabce",
+  "observed_initial_head": "f672f315566292f17656542f95628bc04e46f1e3",
+  "observed_post_checkpoint_commits": 11,
+  "user_reported_commits": 9,
+  "initial_changed_paths": [
+    ".github/workflows/authorization-check.yml",
+    ".github/workflows/establish-live-authority.yml",
+    ".github/workflows/production-access-proof.yml",
+    ".github/workflows/production-preflight.yml",
+    "evidence/production-authorization/latest-inspection.json",
+    "scripts/authority-core.mjs",
+    "scripts/establish-live-authority.mjs",
+    "test/production-authority.test.mjs"
+  ],
+  "findings": {
+    "initial_core_application_unchanged": true,
+    "canonical_signing_reused": true,
+    "external_admission_required_to_establish_whp_root": false,
+    "issuer_roles": [
+      "ISSUER",
+      "REGISTRY"
+    ],
+    "profile_contract_unchanged": true,
+    "mark_contract_unchanged": true,
+    "trust_validation_unchanged": true,
+    "independent_verifier_unchanged": true
+  },
+  "repairs": {
+    "custody": "Netlify ordinary encrypted environment storage with explicit dev-only root and production-only issuer; optional Secrets Controller unavailable under default scopes; no private keys published.",
+    "database": "Exact exported src/store.mjs migration copied byte-for-byte into Netlify native migration file. Official getConnectionString supplies platform-authorized connection to existing pg adapter."
+  },
+  "authority_evidence": "evidence/live-authority/verification.json",
+  "root_pin": "c9507f2c5d0d80935a4885071c8372eeba25010e514e81401acabb246134bff6",
+  "no_payment_executed": true
+}
