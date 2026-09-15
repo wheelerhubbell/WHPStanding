@@ -1,10 +1,10 @@
 {
-  "checked_at": "2026-09-15T12:02:45.615111+00:00",
-  "source_commit": "de3c484087ebb50c2ced6809ed1abf6d78fa34eb",
-  "run_id": "34966595182",
+  "checked_at": "2026-09-15T12:57:25.662093+00:00",
+  "source_commit": "4f358839717ca36341593e50c54d939a0d7ccfc9",
+  "run_id": "34971959765",
   "scope": "Named repository Actions secrets and variables available to this branch; not all external accounts or environments.",
   "configured": {
-    "NETLIFY_AUTH_TOKEN": false,
+    "NETLIFY_AUTH_TOKEN": true,
     "NETLIFY_SITE_ID": false,
     "WHP_ORIGIN": false,
     "WHP_ROOT_PIN": false,
@@ -19,5 +19,6 @@
   "secret_values_exported": false,
   "production_mutated": false,
   "payment_authorized": false,
-  "netlify_authenticated_read": "AUTHORIZATION_NOT_CONFIGURED"
+  "netlify_authenticated_read": "VERIFIED",
+  "matching_sites": []
 }
