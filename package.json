@@ -1,0 +1,9 @@
+{
+  "name": "whp-standing",
+  "version": "1.0.0-candidate.1",
+  "private": true,
+  "type": "module",
+  "engines": {"node": ">=22.16.0"},
+  "scripts": {"test":"node --test test/*.test.mjs","verify":"node scripts/check.mjs","demonstrate":"node scripts/demonstrate.mjs","start":"node src/server.mjs","schemas":"python3 scripts/generate-schemas.py","migrate":"node scripts/migrate.mjs","buy":"node scripts/buy.mjs"},
+  "optionalDependencies":{"pg":"8.16.3"}
+}
