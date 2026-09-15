@@ -39,9 +39,9 @@ try{
  const other=await check.json();demand(other.result?.hash===finalized.hash,'INDEPENDENT_FINALIZED_BLOCK_MISMATCH');
  report.rpc={url:rpc,chain_id:8453,finalized_number:finalized.number,finalized_hash:finalized.hash,independent_base_rpc_agrees:true,usdc_code_present:true,logs_readable:true};
  // Official idempotent create endpoint; existing Free plan only, no upgrades/top-ups.
- const db=await api('/sites/'+SITE+'/database','POST',{});demand(typeof db.connection_string==='string','DATABASE_CONNECTION_REQUIRED');
+ await api('/sites/'+SITE+'/database','POST',{});const db=await api('/sites/'+SITE+'/database?role=netlifydb_owner');demand(typeof db.connection_string==='string','DATABASE_CONNECTION_REQUIRED');
  const store=await postgresStore(db.connection_string);try{
- report.database_stage='migration';await store.initialize();report.migration_completed=true;
+ report.database_role=(await store.driver.query('SELECT current_user AS role'))[0].role;report.database_stage='migration';await store.initialize();report.migration_completed=true;
  const rows=await store.driver.query("SELECT table_name FROM information_schema.tables WHERE table_schema='public' AND table_name IN ('purchases','registry_events','review_requests')");demand(rows.length===3,'MIGRATION_INCOMPLETE');
  report.database_stage='tls-inspection';const tls=await store.driver.query('SELECT ssl FROM pg_stat_ssl WHERE pid=pg_backend_pid()');demand(tls[0]?.ssl===true,'DATABASE_TLS_REQUIRED');
  report.database={provider:'Netlify managed PostgreSQL',migration_verified:true,tls_verified:true,tables:rows.map(r=>r.table_name)};
