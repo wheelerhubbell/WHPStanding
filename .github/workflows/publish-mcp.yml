@@ -1,0 +1,29 @@
+name: Publish WHP Standing to official MCP Registry
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+  id-token: write
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    env:
+      WHP_ORIGIN: ${{ vars.WHP_ORIGIN }}
+      WHP_ROOT_PIN: ${{ vars.WHP_ROOT_PIN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.16.0'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Require live public identity, publish using repository OIDC, verify registry read-back
+        run: bash scripts/publish-mcp.sh
+      - name: Preserve actual outcome, never infer registration from metadata
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: whp-standing-mcp-registration-${{ github.run_id }}
+          path: evidence/public-service/
+          retention-days: 90
