@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Package exact source
+      - name: Package exact reconciled source
         run: |
           git rev-parse HEAD > /tmp/SOURCE-COMMIT.txt
           git archive --format=tar HEAD > /tmp/standing-source.tar

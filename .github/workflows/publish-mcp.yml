@@ -1,0 +1,10 @@
+name: MCP publication (requires separate production authorization)
+on: workflow_dispatch
+permissions:
+  contents: read
+jobs:
+  publication:
+    if: ${{ false }}
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo 'No production publication is authorized by the TEST contract assignment.'
