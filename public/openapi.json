@@ -1,0 +1,257 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "WHP Standing",
+    "version": "1.0.0-candidate.1",
+    "description": "Candidate Structured Passage assessment machinery. Discovery or API health is not proof of live institutional issuance."
+  },
+  "servers": [
+    {
+      "url": "{origin}",
+      "variables": {
+        "origin": {
+          "default": "https://standing.invalid",
+          "description": "Replace with the actually deployed, buyer-pinned HTTPS origin; this is a placeholder, not a deployment."
+        }
+      }
+    }
+  ],
+  "paths": {
+    "/.well-known/whp-standing.json": {
+      "get": {
+        "operationId": "discoverStanding",
+        "responses": {
+          "200": {
+            "description": "Durable signed result or requested public contract."
+          },
+          "503": {
+            "description": "Service/authority/provider unavailable; no optimistic success."
+          }
+        }
+      }
+    },
+    "/v1/profile": {
+      "get": {
+        "operationId": "getProfile",
+        "responses": {
+          "200": {
+            "description": "Durable signed result or requested public contract."
+          },
+          "503": {
+            "description": "Service/authority/provider unavailable; no optimistic success."
+          }
+        }
+      }
+    },
+    "/v1/evaluations": {
+      "post": {
+        "operationId": "purchaseEvaluation",
+        "security": [
+          {
+            "ClientProof": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "PAYMENT-SIGNATURE",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Base64 x402-v2 exact-EVM authorization with mandatory WHP quote-bound nonce."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "/schemas/submission.schema.json"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Durable signed result or requested public contract."
+          },
+          "202": {
+            "description": "Still pending; use the same purchase recovery identity."
+          },
+          "400": {
+            "description": "Malformed request or unsupported structure."
+          },
+          "401": {
+            "description": "Buyer authentication failed."
+          },
+          "402": {
+            "description": "x402-v2 payment required or invalid authorization."
+          },
+          "409": {
+            "description": "Identity conflict, expired quote or denied state transition."
+          },
+          "413": {
+            "description": "Request capacity exceeded."
+          },
+          "415": {
+            "description": "JSON content type required."
+          },
+          "503": {
+            "description": "Service/authority/provider unavailable; no optimistic success."
+          }
+        }
+      }
+    },
+    "/v1/purchases/{purchase_id}/result": {
+      "get": {
+        "operationId": "retrieveResult",
+        "parameters": [
+          {
+            "name": "purchase_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          }
+        ],
+        "security": [
+          {
+            "ClientProof": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Durable signed result or requested public contract."
+          },
+          "202": {
+            "description": "Still pending; use the same purchase recovery identity."
+          },
+          "401": {
+            "description": "Buyer authentication failed."
+          },
+          "404": {
+            "description": "No such resource."
+          },
+          "503": {
+            "description": "Service/authority/provider unavailable; no optimistic success."
+          }
+        }
+      }
+    },
+    "/v1/purchases/{purchase_id}/recover": {
+      "post": {
+        "operationId": "recoverOriginalPurchase",
+        "parameters": [
+          {
+            "name": "purchase_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          }
+        ],
+        "security": [
+          {
+            "ClientProof": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Durable signed result or requested public contract."
+          },
+          "202": {
+            "description": "Still pending; use the same purchase recovery identity."
+          },
+          "400": {
+            "description": "Malformed request or unsupported structure."
+          },
+          "401": {
+            "description": "Buyer authentication failed."
+          },
+          "404": {
+            "description": "No such resource."
+          },
+          "409": {
+            "description": "Identity conflict, expired quote or denied state transition."
+          },
+          "503": {
+            "description": "Service/authority/provider unavailable; no optimistic success."
+          }
+        }
+      }
+    },
+    "/v1/registry/{purchase_id}": {
+      "get": {
+        "operationId": "readRegistry",
+        "parameters": [
+          {
+            "name": "purchase_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Durable signed result or requested public contract."
+          },
+          "404": {
+            "description": "No such resource."
+          },
+          "503": {
+            "description": "Service/authority/provider unavailable; no optimistic success."
+          }
+        }
+      }
+    },
+    "/v1/reviews": {
+      "post": {
+        "operationId": "submitReview",
+        "security": [
+          {
+            "ClientProof": []
+          }
+        ],
+        "description": "Signed reviewer request; durable receipt does not change standing. Fields: client_reference, reviewer_key, purchase_id, reason, evidence_hashes.",
+        "responses": {
+          "201": {
+            "description": "Signed durable review receipt, not an adjudication."
+          },
+          "400": {
+            "description": "Malformed request or unsupported structure."
+          },
+          "401": {
+            "description": "Buyer authentication failed."
+          },
+          "404": {
+            "description": "No such resource."
+          },
+          "409": {
+            "description": "Identity conflict, expired quote or denied state transition."
+          },
+          "503": {
+            "description": "Service/authority/provider unavailable; no optimistic success."
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "ClientProof": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "WHP-Client-Proof",
+        "description": "Base64 WHP-CLIENT-PROOF-v1 Ed25519 signature binding method, exact path/query, body SHA256, issued_at, expires_at and random nonce. See wire contract."
+      }
+    }
+  }
+}

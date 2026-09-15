@@ -1,0 +1,320 @@
+TAP version 13
+# (node:899) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: autonomous buyer discovers, enforces allowance, signs bound authorization, pays, independently verifies and retrieves without signing again
+ok 1 - autonomous buyer discovers, enforces allowance, signs bound authorization, pays, independently verifies and retrieves without signing again
+  ---
+  duration_ms: 1563.434382
+  type: 'test'
+  ...
+# Subtest: buyer rejects per-purchase maximum before invoking wallet signer
+ok 2 - buyer rejects per-purchase maximum before invoking wallet signer
+  ---
+  duration_ms: 33.927314
+  type: 'test'
+  ...
+# Subtest: buyer rejects recipient pin before invoking wallet signer
+ok 3 - buyer rejects recipient pin before invoking wallet signer
+  ---
+  duration_ms: 19.768819
+  type: 'test'
+  ...
+# Subtest: buyer rejects root pin before invoking wallet signer
+ok 4 - buyer rejects root pin before invoking wallet signer
+  ---
+  duration_ms: 15.186433
+  type: 'test'
+  ...
+# Subtest: buyer rejects token domain before invoking wallet signer
+ok 5 - buyer rejects token domain before invoking wallet signer
+  ---
+  duration_ms: 15.527846
+  type: 'test'
+  ...
+# Subtest: durable aggregate allowance prevents a second distinct purchase exceeding the cap
+ok 6 - durable aggregate allowance prevents a second distinct purchase exceeding the cap
+  ---
+  duration_ms: 729.789017
+  type: 'test'
+  ...
+# Subtest: buyer journal rejects a changed submitted object under the same reference
+ok 7 - buyer journal rejects a changed submitted object under the same reference
+  ---
+  duration_ms: 745.885735
+  type: 'test'
+  ...
+# Subtest: buyer process state survives journal reopen and a lost paid HTTP response without another wallet signature
+ok 8 - buyer process state survives journal reopen and a lost paid HTTP response without another wallet signature
+  ---
+  duration_ms: 664.118446
+  type: 'test'
+  ...
+# Subtest: real localhost HTTP service completes the autonomous test transaction
+ok 9 - real localhost HTTP service completes the autonomous test transaction
+  ---
+  duration_ms: 1525.335687
+  type: 'test'
+  ...
+# (node:900) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: strict JSON rejects duplicate keys before information is lost
+ok 10 - strict JSON rejects duplicate keys before information is lost
+  ---
+  duration_ms: 1.637233
+  type: 'test'
+  ...
+# Subtest: strict JSON rejects nested duplicates
+ok 11 - strict JSON rejects nested duplicates
+  ---
+  duration_ms: 0.223817
+  type: 'test'
+  ...
+# Subtest: strict JSON rejects nonintegral numbers, unsafe integers, negative zero and lone surrogates
+ok 12 - strict JSON rejects nonintegral numbers, unsafe integers, negative zero and lone surrogates
+  ---
+  duration_ms: 0.613443
+  type: 'test'
+  ...
+# Subtest: canonical ordering follows UTF-16 and preserves distinct Unicode strings
+ok 13 - canonical ordering follows UTF-16 and preserves distinct Unicode strings
+  ---
+  duration_ms: 0.213161
+  type: 'test'
+  ...
+# Subtest: Keccak known vectors agree with public Ethereum event selectors
+ok 14 - Keccak known vectors agree with public Ethereum event selectors
+  ---
+  duration_ms: 1.377703
+  type: 'test'
+  ...
+# Subtest: source-locked COPY establishes only its declared operation
+ok 15 - source-locked COPY establishes only its declared operation
+  ---
+  duration_ms: 12.671228
+  type: 'test'
+  ...
+# Subtest: qualifier stripping cannot receive a mark
+ok 16 - qualifier stripping cannot receive a mark
+  ---
+  duration_ms: 7.359024
+  type: 'test'
+  ...
+# Subtest: unknown concealment cannot receive a mark
+ok 17 - unknown concealment cannot receive a mark
+  ---
+  duration_ms: 7.540507
+  type: 'test'
+  ...
+# Subtest: changed copy content cannot receive a mark
+ok 18 - changed copy content cannot receive a mark
+  ---
+  duration_ms: 9.189579
+  type: 'test'
+  ...
+# Subtest: epistemic promotion cannot receive a mark
+ok 19 - epistemic promotion cannot receive a mark
+  ---
+  duration_ms: 7.648159
+  type: 'test'
+  ...
+# Subtest: force escalation cannot receive a mark
+ok 20 - force escalation cannot receive a mark
+  ---
+  duration_ms: 7.240666
+  type: 'test'
+  ...
+# Subtest: withdrawn source cannot receive a mark
+ok 21 - withdrawn source cannot receive a mark
+  ---
+  duration_ms: 9.291762
+  type: 'test'
+  ...
+# Subtest: jurisdiction drift cannot receive a mark
+ok 22 - jurisdiction drift cannot receive a mark
+  ---
+  duration_ms: 6.245187
+  type: 'test'
+  ...
+# Subtest: temporal narrowing below requested bounds cannot receive a mark
+ok 23 - temporal narrowing below requested bounds cannot receive a mark
+  ---
+  duration_ms: 6.841505
+  type: 'test'
+  ...
+# Subtest: client-declared authority without an admitted key fails closed
+ok 24 - client-declared authority without an admitted key fails closed
+  ---
+  duration_ms: 6.322955
+  type: 'test'
+  ...
+# Subtest: a different embedded root cannot appoint itself
+ok 25 - a different embedded root cannot appoint itself
+  ---
+  duration_ms: 4.76459
+  type: 'test'
+  ...
+# Subtest: explicit source revocation defeats standing
+ok 26 - explicit source revocation defeats standing
+  ---
+  duration_ms: 6.396826
+  type: 'test'
+  ...
+# Subtest: blocking unknown prevents EXECUTE
+ok 27 - blocking unknown prevents EXECUTE
+  ---
+  duration_ms: 6.39329
+  type: 'test'
+  ...
+# Subtest: unrelated source cannot disappear from the submitted graph
+ok 28 - unrelated source cannot disappear from the submitted graph
+  ---
+  duration_ms: 7.303841
+  type: 'test'
+  ...
+# Subtest: invalid requests stop before storage and all payment work
+ok 29 - invalid requests stop before storage and all payment work
+  ---
+  duration_ms: 29.011617
+  type: 'test'
+  ...
+# Subtest: first paid test issuance independently verifies in Python
+ok 30 - first paid test issuance independently verifies in Python
+  ---
+  duration_ms: 812.235978
+  type: 'test'
+  ...
+# Subtest: a failed assessment is paid once but receives no Standing Mark
+ok 31 - a failed assessment is paid once but receives no Standing Mark
+  ---
+  duration_ms: 771.686539
+  type: 'test'
+  ...
+# Subtest: durable retrieval and identical POST return exactly the original bytes with no payment calls
+ok 32 - durable retrieval and identical POST return exactly the original bytes with no payment calls
+  ---
+  duration_ms: 35.657904
+  type: 'test'
+  ...
+# Subtest: same buyer reference with changed object is a conflict, not another purchase
+ok 33 - same buyer reference with changed object is a conflict, not another purchase
+  ---
+  duration_ms: 13.132161
+  type: 'test'
+  ...
+# Subtest: payment nonce is bound to the exact quote and cannot buy a different input
+ok 34 - payment nonce is bound to the exact quote and cannot buy a different input
+  ---
+  duration_ms: 13.236078
+  type: 'test'
+  ...
+# Subtest: wrong recipient is rejected before facilitator verification
+ok 35 - wrong recipient is rejected before facilitator verification
+  ---
+  duration_ms: 15.946967
+  type: 'test'
+  ...
+# Subtest: wrong amount is rejected before facilitator verification
+ok 36 - wrong amount is rejected before facilitator verification
+  ---
+  duration_ms: 13.740838
+  type: 'test'
+  ...
+# Subtest: wrong network is rejected before facilitator verification
+ok 37 - wrong network is rejected before facilitator verification
+  ---
+  duration_ms: 14.381191
+  type: 'test'
+  ...
+# Subtest: wrong asset is rejected before facilitator verification
+ok 38 - wrong asset is rejected before facilitator verification
+  ---
+  duration_ms: 12.328983
+  type: 'test'
+  ...
+# Subtest: wrong resource is rejected before facilitator verification
+ok 39 - wrong resource is rejected before facilitator verification
+  ---
+  duration_ms: 14.489795
+  type: 'test'
+  ...
+# Subtest: failed facilitator verification never settles or issues
+ok 40 - failed facilitator verification never settles or issues
+  ---
+  duration_ms: 14.441564
+  type: 'test'
+  ...
+# Subtest: concurrent same-purchase requests converge on one transfer and one immutable result
+ok 41 - concurrent same-purchase requests converge on one transfer and one immutable result
+  ---
+  duration_ms: 90.300732
+  type: 'test'
+  ...
+# Subtest: an uncertain settlement never becomes an optimistic mark
+ok 42 - an uncertain settlement never becomes an optimistic mark
+  ---
+  duration_ms: 33.054705
+  type: 'test'
+  ...
+# Subtest: lost response after settlement recovers exact stored authorization, not a second charge
+ok 43 - lost response after settlement recovers exact stored authorization, not a second charge
+  ---
+  duration_ms: 45.081545
+  type: 'test'
+  ...
+# Subtest: crash after durable settlement resumes signing without another settlement
+ok 44 - crash after durable settlement resumes signing without another settlement
+  ---
+  duration_ms: 23.791034
+  type: 'test'
+  ...
+# Subtest: lost HTTP response after durable issuance retrieves byte-identically
+ok 45 - lost HTTP response after durable issuance retrieves byte-identically
+  ---
+  duration_ms: 26.063323
+  type: 'test'
+  ...
+# Subtest: a fresh process connection retrieves durable SQLite bytes
+ok 46 - a fresh process connection retrieves durable SQLite bytes
+  ---
+  duration_ms: 27.964124
+  type: 'test'
+  ...
+# Subtest: buyer A cannot retrieve buyer B private result
+ok 47 - buyer A cannot retrieve buyer B private result
+  ---
+  duration_ms: 24.475704
+  type: 'test'
+  ...
+# Subtest: independent verifier rejects altered signatures and a wrong root pin
+ok 48 - independent verifier rejects altered signatures and a wrong root pin
+  ---
+  duration_ms: 1222.603771
+  type: 'test'
+  ...
+# Subtest: independent replay rejects issuer-signed false promotion
+ok 49 - independent replay rejects issuer-signed false promotion
+  ---
+  duration_ms: 713.121072
+  type: 'test'
+  ...
+# Subtest: public registry binds the exact signed file and independent freshness check passes
+ok 50 - public registry binds the exact signed file and independent freshness check passes
+  ---
+  duration_ms: 1394.651822
+  type: 'test'
+  ...
+# Subtest: withdrawal appends history, does not rewrite a Mark, and cannot silently reactivate it
+ok 51 - withdrawal appends history, does not rewrite a Mark, and cannot silently reactivate it
+  ---
+  duration_ms: 25.991435
+  type: 'test'
+  ...
+1..51
+# tests 51
+# suites 0
+# pass 51
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 5590.367206

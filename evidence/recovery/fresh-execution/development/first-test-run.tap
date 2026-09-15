@@ -1,0 +1,503 @@
+TAP version 13
+# (node:550) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: strict JSON rejects duplicate keys before information is lost
+ok 1 - strict JSON rejects duplicate keys before information is lost
+  ---
+  duration_ms: 1.502291
+  type: 'test'
+  ...
+# Subtest: strict JSON rejects nested duplicates
+ok 2 - strict JSON rejects nested duplicates
+  ---
+  duration_ms: 0.233612
+  type: 'test'
+  ...
+# Subtest: strict JSON rejects nonintegral numbers, unsafe integers, negative zero and lone surrogates
+ok 3 - strict JSON rejects nonintegral numbers, unsafe integers, negative zero and lone surrogates
+  ---
+  duration_ms: 0.21238
+  type: 'test'
+  ...
+# Subtest: canonical ordering follows UTF-16 and preserves distinct Unicode strings
+ok 4 - canonical ordering follows UTF-16 and preserves distinct Unicode strings
+  ---
+  duration_ms: 0.221864
+  type: 'test'
+  ...
+# Subtest: Keccak known vectors agree with public Ethereum event selectors
+ok 5 - Keccak known vectors agree with public Ethereum event selectors
+  ---
+  duration_ms: 0.883109
+  type: 'test'
+  ...
+# Subtest: source-locked COPY establishes only its declared operation
+ok 6 - source-locked COPY establishes only its declared operation
+  ---
+  duration_ms: 11.110041
+  type: 'test'
+  ...
+# Subtest: qualifier stripping cannot receive a mark
+ok 7 - qualifier stripping cannot receive a mark
+  ---
+  duration_ms: 6.596447
+  type: 'test'
+  ...
+# Subtest: unknown concealment cannot receive a mark
+ok 8 - unknown concealment cannot receive a mark
+  ---
+  duration_ms: 6.151818
+  type: 'test'
+  ...
+# Subtest: changed copy content cannot receive a mark
+ok 9 - changed copy content cannot receive a mark
+  ---
+  duration_ms: 7.113035
+  type: 'test'
+  ...
+# Subtest: epistemic promotion cannot receive a mark
+ok 10 - epistemic promotion cannot receive a mark
+  ---
+  duration_ms: 6.074673
+  type: 'test'
+  ...
+# Subtest: force escalation cannot receive a mark
+ok 11 - force escalation cannot receive a mark
+  ---
+  duration_ms: 6.776087
+  type: 'test'
+  ...
+# Subtest: withdrawn source cannot receive a mark
+ok 12 - withdrawn source cannot receive a mark
+  ---
+  duration_ms: 5.589162
+  type: 'test'
+  ...
+# Subtest: jurisdiction drift cannot receive a mark
+ok 13 - jurisdiction drift cannot receive a mark
+  ---
+  duration_ms: 5.766329
+  type: 'test'
+  ...
+# Subtest: temporal narrowing below requested bounds cannot receive a mark
+ok 14 - temporal narrowing below requested bounds cannot receive a mark
+  ---
+  duration_ms: 5.513618
+  type: 'test'
+  ...
+# Subtest: client-declared authority without an admitted key fails closed
+ok 15 - client-declared authority without an admitted key fails closed
+  ---
+  duration_ms: 5.625846
+  type: 'test'
+  ...
+# Subtest: a different embedded root cannot appoint itself
+ok 16 - a different embedded root cannot appoint itself
+  ---
+  duration_ms: 3.690584
+  type: 'test'
+  ...
+# Subtest: explicit source revocation defeats standing
+ok 17 - explicit source revocation defeats standing
+  ---
+  duration_ms: 6.550728
+  type: 'test'
+  ...
+# Subtest: blocking unknown prevents EXECUTE
+ok 18 - blocking unknown prevents EXECUTE
+  ---
+  duration_ms: 6.407694
+  type: 'test'
+  ...
+# Subtest: unrelated source cannot disappear from the submitted graph
+ok 19 - unrelated source cannot disappear from the submitted graph
+  ---
+  duration_ms: 6.665491
+  type: 'test'
+  ...
+# Subtest: invalid requests stop before storage and all payment work
+ok 20 - invalid requests stop before storage and all payment work
+  ---
+  duration_ms: 29.747861
+  type: 'test'
+  ...
+# Subtest: first paid test issuance independently verifies in Python
+not ok 21 - first paid test issuance independently verifies in Python
+  ---
+  duration_ms: 13.034527
+  type: 'test'
+  location: '/mnt/data/whp-standing-v1/test/core.test.mjs:32:1'
+  failureType: 'testCodeFailure'
+  error: "Cannot read properties of undefined (reading 'payload')"
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    paymentFor (file:///mnt/data/whp-standing-v1/test/fixtures.mjs:45:79)
+    Object.purchase (file:///mnt/data/whp-standing-v1/test/fixtures.mjs:51:80)
+    async TestContext.<anonymous> (file:///mnt/data/whp-standing-v1/test/core.test.mjs:32:110)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: a failed assessment is paid once but receives no Standing Mark
+not ok 22 - a failed assessment is paid once but receives no Standing Mark
+  ---
+  duration_ms: 10.702227
+  type: 'test'
+  location: '/mnt/data/whp-standing-v1/test/core.test.mjs:33:1'
+  failureType: 'testCodeFailure'
+  error: "Cannot read properties of undefined (reading 'payload')"
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    paymentFor (file:///mnt/data/whp-standing-v1/test/fixtures.mjs:45:79)
+    Object.purchase (file:///mnt/data/whp-standing-v1/test/fixtures.mjs:51:80)
+    async TestContext.<anonymous> (file:///mnt/data/whp-standing-v1/test/core.test.mjs:33:154)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: durable retrieval and identical POST return exactly the original bytes with no payment calls
+not ok 23 - durable retrieval and identical POST return exactly the original bytes with no payment calls
+  ---
+  duration_ms: 9.394218
+  type: 'test'
+  location: '/mnt/data/whp-standing-v1/test/core.test.mjs:34:1'
+  failureType: 'testCodeFailure'
+  error: "Cannot read properties of undefined (reading 'payload')"
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    paymentFor (file:///mnt/data/whp-standing-v1/test/fixtures.mjs:45:79)
+    Object.purchase (file:///mnt/data/whp-standing-v1/test/fixtures.mjs:51:80)
+    async TestContext.<anonymous> (file:///mnt/data/whp-standing-v1/test/core.test.mjs:34:145)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: same buyer reference with changed object is a conflict, not another purchase
+not ok 24 - same buyer reference with changed object is a conflict, not another purchase
+  ---
+  duration_ms: 13.386207
+  type: 'test'
+  location: '/mnt/data/whp-standing-v1/test/core.test.mjs:36:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    503 !== 409
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 409
+  actual: 503
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///mnt/data/whp-standing-v1/test/core.test.mjs:36:273)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: payment nonce is bound to the exact quote and cannot buy a different input
+not ok 25 - payment nonce is bound to the exact quote and cannot buy a different input
+  ---
+  duration_ms: 9.642531
+  type: 'test'
+  location: '/mnt/data/whp-standing-v1/test/core.test.mjs:37:1'
+  failureType: 'testCodeFailure'
+  error: "Cannot read properties of undefined (reading 'payload')"
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    paymentFor (file:///mnt/data/whp-standing-v1/test/fixtures.mjs:45:79)
+    TestContext.<anonymous> (file:///mnt/data/whp-standing-v1/test/core.test.mjs:37:145)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: wrong recipient is rejected before facilitator verification
+not ok 26 - wrong recipient is rejected before facilitator verification
+  ---
+  duration_ms: 8.868557
+  type: 'test'
+  location: '/mnt/data/whp-standing-v1/test/core.test.mjs:39:1'
+  failureType: 'testCodeFailure'
+  error: "Cannot read properties of undefined (reading 'payload')"
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    paymentFor (file:///mnt/data/whp-standing-v1/test/fixtures.mjs:45:79)
+    TestContext.<anonymous> (file:///mnt/data/whp-standing-v1/test/core.test.mjs:39:129)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: wrong amount is rejected before facilitator verification
+not ok 27 - wrong amount is rejected before facilitator verification
+  ---
+  duration_ms: 8.287312
+  type: 'test'
+  location: '/mnt/data/whp-standing-v1/test/core.test.mjs:39:1'
+  failureType: 'testCodeFailure'
+  error: "Cannot read properties of undefined (reading 'payload')"
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    paymentFor (file:///mnt/data/whp-standing-v1/test/fixtures.mjs:45:79)
+    TestContext.<anonymous> (file:///mnt/data/whp-standing-v1/test/core.test.mjs:39:129)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: wrong network is rejected before facilitator verification
+not ok 28 - wrong network is rejected before facilitator verification
+  ---
+  duration_ms: 11.408791
+  type: 'test'
+  location: '/mnt/data/whp-standing-v1/test/core.test.mjs:39:1'
+  failureType: 'testCodeFailure'
+  error: "Cannot read properties of undefined (reading 'payload')"
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    paymentFor (file:///mnt/data/whp-standing-v1/test/fixtures.mjs:45:79)
+    TestContext.<anonymous> (file:///mnt/data/whp-standing-v1/test/core.test.mjs:39:129)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: wrong asset is rejected before facilitator verification
+not ok 29 - wrong asset is rejected before facilitator verification
+  ---
+  duration_ms: 7.943765
+  type: 'test'
+  location: '/mnt/data/whp-standing-v1/test/core.test.mjs:39:1'
+  failureType: 'testCodeFailure'
+  error: "Cannot read properties of undefined (reading 'payload')"
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    paymentFor (file:///mnt/data/whp-standing-v1/test/fixtures.mjs:45:79)
+    TestContext.<anonymous> (file:///mnt/data/whp-standing-v1/test/core.test.mjs:39:129)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: wrong resource is rejected before facilitator verification
+not ok 30 - wrong resource is rejected before facilitator verification
+  ---
+  duration_ms: 8.425921
+  type: 'test'
+  location: '/mnt/data/whp-standing-v1/test/core.test.mjs:39:1'
+  failureType: 'testCodeFailure'
+  error: "Cannot read properties of undefined (reading 'payload')"
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    paymentFor (file:///mnt/data/whp-standing-v1/test/fixtures.mjs:45:79)
+    TestContext.<anonymous> (file:///mnt/data/whp-standing-v1/test/core.test.mjs:39:129)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: failed facilitator verification never settles or issues
+not ok 31 - failed facilitator verification never settles or issues
+  ---
+  duration_ms: 8.623478
+  type: 'test'
+  location: '/mnt/data/whp-standing-v1/test/core.test.mjs:40:1'
+  failureType: 'testCodeFailure'
+  error: "Cannot read properties of undefined (reading 'payload')"
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    paymentFor (file:///mnt/data/whp-standing-v1/test/fixtures.mjs:45:79)
+    TestContext.<anonymous> (file:///mnt/data/whp-standing-v1/test/core.test.mjs:40:202)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: concurrent same-purchase requests converge on one transfer and one immutable result
+not ok 32 - concurrent same-purchase requests converge on one transfer and one immutable result
+  ---
+  duration_ms: 8.131859
+  type: 'test'
+  location: '/mnt/data/whp-standing-v1/test/core.test.mjs:41:1'
+  failureType: 'testCodeFailure'
+  error: "Cannot read properties of undefined (reading 'payload')"
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    paymentFor (file:///mnt/data/whp-standing-v1/test/fixtures.mjs:45:79)
+    TestContext.<anonymous> (file:///mnt/data/whp-standing-v1/test/core.test.mjs:41:154)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: an uncertain settlement never becomes an optimistic mark
+not ok 33 - an uncertain settlement never becomes an optimistic mark
+  ---
+  duration_ms: 8.725151
+  type: 'test'
+  location: '/mnt/data/whp-standing-v1/test/core.test.mjs:42:1'
+  failureType: 'testCodeFailure'
+  error: "Cannot read properties of undefined (reading 'payload')"
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    paymentFor (file:///mnt/data/whp-standing-v1/test/fixtures.mjs:45:79)
+    Object.purchase (file:///mnt/data/whp-standing-v1/test/fixtures.mjs:51:80)
+    async TestContext.<anonymous> (file:///mnt/data/whp-standing-v1/test/core.test.mjs:42:166)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: lost response after settlement recovers exact stored authorization, not a second charge
+not ok 34 - lost response after settlement recovers exact stored authorization, not a second charge
+  ---
+  duration_ms: 7.988513
+  type: 'test'
+  location: '/mnt/data/whp-standing-v1/test/core.test.mjs:43:1'
+  failureType: 'testCodeFailure'
+  error: "Cannot read properties of undefined (reading 'payload')"
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    paymentFor (file:///mnt/data/whp-standing-v1/test/fixtures.mjs:45:79)
+    Object.purchase (file:///mnt/data/whp-standing-v1/test/fixtures.mjs:51:80)
+    async TestContext.<anonymous> (file:///mnt/data/whp-standing-v1/test/core.test.mjs:43:177)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: crash after durable settlement resumes signing without another settlement
+not ok 35 - crash after durable settlement resumes signing without another settlement
+  ---
+  duration_ms: 8.016114
+  type: 'test'
+  location: '/mnt/data/whp-standing-v1/test/core.test.mjs:44:1'
+  failureType: 'testCodeFailure'
+  error: "Cannot read properties of undefined (reading 'payload')"
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    paymentFor (file:///mnt/data/whp-standing-v1/test/fixtures.mjs:45:79)
+    Object.purchase (file:///mnt/data/whp-standing-v1/test/fixtures.mjs:51:80)
+    async TestContext.<anonymous> (file:///mnt/data/whp-standing-v1/test/core.test.mjs:44:234)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: lost HTTP response after durable issuance retrieves byte-identically
+not ok 36 - lost HTTP response after durable issuance retrieves byte-identically
+  ---
+  duration_ms: 7.364033
+  type: 'test'
+  location: '/mnt/data/whp-standing-v1/test/core.test.mjs:45:1'
+  failureType: 'testCodeFailure'
+  error: "Cannot read properties of undefined (reading 'payload')"
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    paymentFor (file:///mnt/data/whp-standing-v1/test/fixtures.mjs:45:79)
+    Object.purchase (file:///mnt/data/whp-standing-v1/test/fixtures.mjs:51:80)
+    async TestContext.<anonymous> (file:///mnt/data/whp-standing-v1/test/core.test.mjs:45:243)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: a fresh process connection retrieves durable SQLite bytes
+not ok 37 - a fresh process connection retrieves durable SQLite bytes
+  ---
+  duration_ms: 10.649037
+  type: 'test'
+  location: '/mnt/data/whp-standing-v1/test/core.test.mjs:46:1'
+  failureType: 'testCodeFailure'
+  error: "Cannot read properties of undefined (reading 'payload')"
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    paymentFor (file:///mnt/data/whp-standing-v1/test/fixtures.mjs:45:79)
+    Object.purchase (file:///mnt/data/whp-standing-v1/test/fixtures.mjs:51:80)
+    async TestContext.<anonymous> (file:///mnt/data/whp-standing-v1/test/core.test.mjs:46:246)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: buyer A cannot retrieve buyer B private result
+not ok 38 - buyer A cannot retrieve buyer B private result
+  ---
+  duration_ms: 7.981322
+  type: 'test'
+  location: '/mnt/data/whp-standing-v1/test/core.test.mjs:47:1'
+  failureType: 'testCodeFailure'
+  error: "Cannot read properties of undefined (reading 'payload')"
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    paymentFor (file:///mnt/data/whp-standing-v1/test/fixtures.mjs:45:79)
+    Object.purchase (file:///mnt/data/whp-standing-v1/test/fixtures.mjs:51:80)
+    async TestContext.<anonymous> (file:///mnt/data/whp-standing-v1/test/core.test.mjs:47:99)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: independent verifier rejects altered signatures and a wrong root pin
+not ok 39 - independent verifier rejects altered signatures and a wrong root pin
+  ---
+  duration_ms: 8.761556
+  type: 'test'
+  location: '/mnt/data/whp-standing-v1/test/core.test.mjs:48:1'
+  failureType: 'testCodeFailure'
+  error: "Cannot read properties of undefined (reading 'payload')"
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    paymentFor (file:///mnt/data/whp-standing-v1/test/fixtures.mjs:45:79)
+    Object.purchase (file:///mnt/data/whp-standing-v1/test/fixtures.mjs:51:80)
+    async TestContext.<anonymous> (file:///mnt/data/whp-standing-v1/test/core.test.mjs:48:121)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: independent replay rejects issuer-signed false promotion
+not ok 40 - independent replay rejects issuer-signed false promotion
+  ---
+  duration_ms: 7.705407
+  type: 'test'
+  location: '/mnt/data/whp-standing-v1/test/core.test.mjs:49:1'
+  failureType: 'testCodeFailure'
+  error: "Cannot read properties of undefined (reading 'payload')"
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    paymentFor (file:///mnt/data/whp-standing-v1/test/fixtures.mjs:45:79)
+    Object.purchase (file:///mnt/data/whp-standing-v1/test/fixtures.mjs:51:80)
+    async TestContext.<anonymous> (file:///mnt/data/whp-standing-v1/test/core.test.mjs:49:109)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: public registry binds the exact signed file and independent freshness check passes
+not ok 41 - public registry binds the exact signed file and independent freshness check passes
+  ---
+  duration_ms: 8.226391
+  type: 'test'
+  location: '/mnt/data/whp-standing-v1/test/core.test.mjs:50:1'
+  failureType: 'testCodeFailure'
+  error: "Cannot read properties of undefined (reading 'payload')"
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    paymentFor (file:///mnt/data/whp-standing-v1/test/fixtures.mjs:45:79)
+    Object.purchase (file:///mnt/data/whp-standing-v1/test/fixtures.mjs:51:80)
+    async TestContext.<anonymous> (file:///mnt/data/whp-standing-v1/test/core.test.mjs:50:189)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: withdrawal appends history, does not rewrite a Mark, and cannot silently reactivate it
+not ok 42 - withdrawal appends history, does not rewrite a Mark, and cannot silently reactivate it
+  ---
+  duration_ms: 7.655171
+  type: 'test'
+  location: '/mnt/data/whp-standing-v1/test/core.test.mjs:51:1'
+  failureType: 'testCodeFailure'
+  error: "Cannot read properties of undefined (reading 'payload')"
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    paymentFor (file:///mnt/data/whp-standing-v1/test/fixtures.mjs:45:79)
+    Object.purchase (file:///mnt/data/whp-standing-v1/test/fixtures.mjs:51:80)
+    async TestContext.<anonymous> (file:///mnt/data/whp-standing-v1/test/core.test.mjs:51:139)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+1..42
+# tests 42
+# suites 0
+# pass 20
+# fail 22
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 413.650454

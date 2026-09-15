@@ -1,0 +1,72 @@
+{
+  "artifact": "WHP Standing v1 executable demonstration",
+  "execution_recorded_at": "2026-09-15T10:56:35.833Z",
+  "fixture_clock": "2026-09-15T08:48:10.000Z",
+  "environment": "TEST",
+  "live_completion": false,
+  "purchase_id": "5f22e6329d4e29395f3b05f79b7116ed4ee0ddbb89b9611f2f277a294a6c7d02",
+  "mark_id": "WHP-SM-5f22e6329d4e29395f3b05f79b7116ed4ee0ddbb89b9611f2f277a294a6c7d02",
+  "root_pin": "fa1d73b695dafa5f4f8e448ce86519015124c5858dbb8f55dce91aba2bdfac8d",
+  "mark_sha256": "3a9220354909e3e98bbc4a883c96cfadb634ec68c7974e861e99aa2e67e9cfbe",
+  "registry_sha256": "8ac61ded13206f754556f811fcdc9b855bb26e3fe7bb1b510223b700d37266da",
+  "real_http_server_used": true,
+  "independent_python_verifier_executed": true,
+  "byte_identical_authenticated_retrieval": true,
+  "separate_process_durable_retrieval": true,
+  "payment_wallet_signer": "SIMULATED EIP-1193 provider returning a format-valid fixture signature, not ECDSA wallet signing",
+  "settlement_rail": "SIMULATED payment rail; no blockchain or real funds",
+  "signer_invocations": 1,
+  "settlement_calls": 1,
+  "simulated_transfers": 1,
+  "chain_requests": 0,
+  "actual_funds_moved": "0",
+  "private_keys_exported": false,
+  "trace": [
+    {
+      "method": "GET",
+      "path": "/.well-known/whp-standing.json",
+      "payment_authorization_present": false,
+      "http_status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/v1/evaluations",
+      "payment_authorization_present": false,
+      "http_status": 402
+    },
+    {
+      "method": "POST",
+      "path": "/v1/evaluations",
+      "payment_authorization_present": true,
+      "http_status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/v1/registry/5f22e6329d4e29395f3b05f79b7116ed4ee0ddbb89b9611f2f277a294a6c7d02",
+      "payment_authorization_present": false,
+      "http_status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/v1/purchases/5f22e6329d4e29395f3b05f79b7116ed4ee0ddbb89b9611f2f277a294a6c7d02/result",
+      "payment_authorization_present": false,
+      "http_status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/v1/registry/5f22e6329d4e29395f3b05f79b7116ed4ee0ddbb89b9611f2f277a294a6c7d02",
+      "payment_authorization_present": false,
+      "http_status": 200
+    }
+  ],
+  "not_executed": [
+    "Real buyer payment",
+    "Institutional root and profile ratification",
+    "Live EIP-3009 wallet signature verification",
+    "Live facilitator integration",
+    "Live chain finality",
+    "PostgreSQL integration",
+    "Netlify deployment",
+    "External independent security audit"
+  ]
+}

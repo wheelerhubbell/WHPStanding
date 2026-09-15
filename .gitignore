@@ -1,6 +1,5 @@
 node_modules/
 .env
-.env.*
+*.sqlite*
 *.pem
-*.key
-*.sqlite
+.runtime/

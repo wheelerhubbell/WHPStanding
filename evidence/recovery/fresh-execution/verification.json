@@ -1,0 +1,42 @@
+{
+  "build": "WHP Standing v1",
+  "version": "1.0.0-candidate.1",
+  "started_at": "2026-09-15T10:56:32.044Z",
+  "completed_at": "2026-09-15T10:56:36.605Z",
+  "node": "v22.16.0",
+  "python": "Python 3.13.15",
+  "python_packages": {
+    "cryptography": "46.0.4",
+    "jsonschema": "4.26.0"
+  },
+  "javascript_syntax_files": 27,
+  "python_syntax_files": 3,
+  "test_counts": {
+    "tests": 83,
+    "pass": 83,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0
+  },
+  "schemas_validated": true,
+  "real_local_http_transaction_executed": true,
+  "separate_process_retrieval_executed": true,
+  "independent_python_verifier_executed": true,
+  "test_artifact_refused_as_live": true,
+  "demonstration": {
+    "purchase_id": "5f22e6329d4e29395f3b05f79b7116ed4ee0ddbb89b9611f2f277a294a6c7d02",
+    "mark_id": "WHP-SM-5f22e6329d4e29395f3b05f79b7116ed4ee0ddbb89b9611f2f277a294a6c7d02",
+    "mark_sha256": "3a9220354909e3e98bbc4a883c96cfadb634ec68c7974e861e99aa2e67e9cfbe",
+    "root_pin": "fa1d73b695dafa5f4f8e448ce86519015124c5858dbb8f55dce91aba2bdfac8d",
+    "wallet_signing_calls": 1,
+    "settlement_calls": 1,
+    "simulated_transfers": 1
+  },
+  "exact_completion_boundary": "OPEN — no real buyer payment or institutional WHP Standing Mark was issued.",
+  "live_completion": false,
+  "production_deployment_performed": false,
+  "postgresql_integration_tested": false,
+  "live_facilitator_integration_tested": false,
+  "external_security_audit_performed": false
+}

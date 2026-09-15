@@ -1,0 +1,179 @@
+import submissionSchema from '../schemas/submission.schema.json' with {type:'json'};
+import resultSchema from '../schemas/result.schema.json' with {type:'json'};
+import trustSchema from '../schemas/trust-bundle.schema.json' with {type:'json'};
+import requirementsSchema from '../schemas/payment-requirements.schema.json' with {type:'json'};
+import openapi from '../public/openapi.json' with {type:'json'};
+const publicSchemas={'/schemas/submission.schema.json':submissionSchema,'/schemas/result.schema.json':resultSchema,'/schemas/trust-bundle.schema.json':trustSchema,'/schemas/payment-requirements.schema.json':requirementsSchema};
+import { canonical, parseStrict, hash, hashBytes, seal, openSeal, keyId, publicDer, decode, encode, demand, Fault, randomHex } from './canonical.mjs';
+import { validateSubmission } from './validation.mjs';
+import { validateTrust, issuerAuthority, liveAuthorityIntact } from './authority.mjs';
+import { evaluate } from './evaluator.mjs';
+import { assembleResult } from './mark.mjs';
+import { profile, PROFILE_HASH } from './profile.mjs';
+import { validatePayment, validateRequirements, HEX32 } from './payment.mjs';
+
+const headers={'content-type':'application/json; charset=utf-8','cache-control':'no-store','x-content-type-options':'nosniff'};
+const json=(status,body,extra={})=>new Response(canonical(body)+'\n',{status,headers:{...headers,...extra}});
+const result=bytes=>new Response(bytes,{status:200,headers});
+export const purchaseId=(s,pin)=>hash({domain:'WHP-STANDING-PURCHASE-v1',root_pin:pin,buyer_key:s.buyer_key,client_reference:s.client_reference});
+export function clientProof(privateKey,method,path,body,at){return encode(seal('WHP-CLIENT-PROOF-v1',{method,path,body_hash:hashBytes(body),issued_at:at,expires_at:at+120,nonce:randomHex(16)},privateKey));}
+function authenticate(req,pub,body,now){
+  const e=decode(req.headers.get('whp-client-proof')??'',4096);
+  const p=openSeal(e,'WHP-CLIENT-PROOF-v1',pub);
+  demand(Object.keys(p).sort().join(',')==='body_hash,expires_at,issued_at,method,nonce,path','CLIENT_PROOF_FIELDS');
+  const u=new URL(req.url);
+  demand(p.method===req.method&&p.path===u.pathname+u.search&&p.body_hash===hashBytes(body),'CLIENT_PROOF_BINDING',401);
+  demand(Number.isSafeInteger(p.issued_at)&&Number.isSafeInteger(p.expires_at)&&p.issued_at<=now+30&&p.expires_at>now&&p.expires_at-p.issued_at<=120&&p.expires_at>p.issued_at,'CLIENT_PROOF_EXPIRED',401);
+  demand(typeof p.nonce==='string'&&/^[0-9a-f]{32}$/.test(p.nonce),'CLIENT_PROOF_NONCE',401);
+}
+async function readBody(req){const reader=req.body?.getReader();if(!reader)return '';let size=0;const parts=[];
+  for(;;){const {done,value}=await reader.read();if(done)break;size+=value.length;if(size>262144){await reader.cancel();throw new Fault('BODY_TOO_LARGE',413);}parts.push(Buffer.from(value));}
+  try{return new TextDecoder('utf-8',{fatal:true}).decode(Buffer.concat(parts));}catch{throw new Fault('INVALID_UTF8');}}
+
+export class StandingService {
+  constructor({store,rail,privateKey,trustBundle,rootPin,origin,requirements,clock=()=>Math.floor(Date.now()/1000),hooks={}}) {
+    demand(/^https:\/\//.test(origin)||/^http:\/\/127\.0\.0\.1(?::[0-9]+)?$/.test(origin),'SERVICE_ORIGIN_INVALID',503);
+    demand(!new URL(origin).search&&new URL(origin).pathname==='/'&&!new URL(origin).username,'SERVICE_ORIGIN_INVALID',503);
+    this.store=store;this.rail=rail;this.privateKey=privateKey;this.trustBundle=trustBundle;this.rootPin=rootPin;this.origin=origin.replace(/\/$/,'');this.requirements=requirements;this.clock=clock;this.hooks=hooks;
+    this.keyId=keyId(publicDer(privateKey));
+    const trust=validateTrust(trustBundle,rootPin,clock());validateRequirements(requirements);
+    demand(trust.keys.get(this.keyId)?.roles.includes('ISSUER')&&trust.keys.get(this.keyId)?.roles.includes('REGISTRY'),'ISSUER_AND_REGISTRY_AUTHORITY_REQUIRED',503);
+    demand(requirements.scheme==='exact'&&requirements.extra.assetTransferMethod==='eip3009'&&requirements.extra.paymentFlow==='authorization','PAYMENT_SCHEME_UNSUPPORTED',503);
+    demand(/^eip155:[1-9][0-9]*$/.test(requirements.network)&&/^0x[0-9a-f]{40}$/.test(requirements.asset)&&/^0x[0-9a-f]{40}$/.test(requirements.payTo)&&/^[1-9][0-9]*$/.test(requirements.amount),'PAYMENT_CONFIG_INVALID',503);
+    demand(trust.profile.environment!=='LIVE'||(origin.startsWith('https://')&&trust.profile.issuer==='Wheeler Hubbell Publishing'&&rail.constructor.name==='EvmRail'),'LIVE_CONFIGURATION_INVALID',503);
+  }
+  async handle(req){try{return await this.route(req);}catch(e){
+    if(e instanceof Fault)return json(e.status,{error:{code:e.code,path:e.path}});
+    // Never reflect internal DB errors, provider URLs, secret material or stack traces.
+    return json(503,{error:{code:'SERVICE_UNAVAILABLE',retryable:true}});
+  }}
+  async route(req){const u=new URL(req.url),now=this.clock(),path=u.pathname;
+    if(req.method==='GET'&&['/schemas/submission.schema.json','/schemas/result.schema.json','/schemas/trust-bundle.schema.json','/schemas/payment-requirements.schema.json'].includes(path)){
+      return json(200,publicSchemas[path]);}
+    if(req.method==='GET'&&path==='/v1/openapi.json')return json(200,openapi);
+    if(req.method==='GET'&&path==='/healthz')return json(200,{service:'WHP Standing',version:'1.0.0-candidate.1',live_completion_proven:false});
+    if(req.method==='GET'&&path==='/.well-known/whp-standing.json')return json(200,{
+      service:'WHP Standing',version:'1.0.0-candidate.1',environment:this.trustBundle.profile_authorization.payload.environment,
+      issuer:this.trustBundle.profile_authorization.payload.issuer,root_public_key:this.trustBundle.root_public_key,root_pin:this.rootPin,
+      issuer_certificate:this.trustBundle.certificates.find(e=>keyId(e.payload.public_key)===this.keyId),
+      profile:profile(),profile_authorization:this.trustBundle.profile_authorization,trust_bundle:this.trustBundle,
+      evaluation_url:this.origin+'/v1/evaluations',registry_url_template:this.origin+'/v1/registry/{purchase_id}',
+      review_url:this.origin+'/v1/reviews',retrieval_charge:'0',payment_protocol:'x402-v2',
+      required_extension:'whp-standing',payment_binding:'EIP-3009 nonce = SHA256(WHP-STANDING-PURCHASE-BINDING-v1 plus complete signed quote payload). Client must support this binding; generic random-nonce clients are not silently accepted.',
+      request_limit_bytes:262144,max_nodes:64,max_transitions:64,
+      input_schema:'/schemas/submission.schema.json',result_schema:'/schemas/result.schema.json',
+      completion_claim:'No claim of live issuance follows from discovery or health.'});
+    if(req.method==='GET'&&path==='/v1/profile')return json(200,{profile:profile(),sha256:PROFILE_HASH,authorization:this.trustBundle.profile_authorization});
+    if(req.method==='POST'&&path==='/v1/evaluations') {
+      demand(!u.search,'QUERY_NOT_SUPPORTED');
+      demand((req.headers.get('content-type')??'').split(';')[0].trim()==='application/json','CONTENT_TYPE_REQUIRED',415);
+      const raw=await readBody(req),s=validateSubmission(parseStrict(raw));authenticate(req,s.buyer_key,raw,now);
+      // Pure structural validation, client authentication and issuer authority precede all storage/payment calls.
+      const trust=validateTrust(this.trustBundle,this.rootPin,now),issuer=issuerAuthority(this.keyId,s.bounds.scope,s.bounds.jurisdiction,trust);
+      const id=purchaseId(s,this.rootPin),requestHash=hash(s);
+      const paymentHeader=req.headers.get('payment-signature');const payment=paymentHeader?decode(paymentHeader,16384):null;
+      const expires=Math.min(now+600,issuer.valid_until,trust.profile.valid_until,trust.bundle.status_snapshot.payload.valid_until);
+      const quote=seal('WHP-STANDING-QUOTE-v1',{
+        purchase_id:id,request_hash:requestHash,buyer_key:s.buyer_key,profile_hash:PROFILE_HASH,issuer:trust.profile.issuer,
+        environment:trust.profile.environment,issued_at:now,expires_at:expires,
+        resource:{url:this.origin+'/v1/evaluations',description:'One bounded WHP Standing evaluation and durable retrieval',mimeType:'application/json'},
+        payment_requirements:this.requirements,
+        charge_policy:'One evaluation, regardless of outcome. No second charge for this purchase identity.'
+      },this.privateKey);
+      let row=await this.store.quote({id,buyer_key:s.buyer_key,client_reference:s.client_reference,request_hash:requestHash,state:'QUOTED',
+        submission:s,quote,trust_bundle:this.trustBundle,created_at:now});
+      if(row.state==='ISSUED')return result((await this.store.get(id)).result_bytes);
+      if(row.state!=='QUOTED') {
+        if(payment)demand(validatePayment(payment,row.quote,now,{allowExpired:true})===row.payment_key,'PURCHASE_ALREADY_BOUND',409);
+        return this.progress(row);
+      }
+      demand(now<row.quote.payload.expires_at,'QUOTE_EXPIRED',409);
+      if(!payment){const terms={x402Version:2,resource:row.quote.payload.resource,accepts:[row.quote.payload.payment_requirements],extensions:{'whp-standing':{info:{required:true,quote:row.quote},schema:{type:'object'}}}};
+        return json(402,terms,{'payment-required':encode(terms)});}
+      const paymentKey=validatePayment(payment,row.quote,now);
+      const observedBlock=await this.rail.startBlock();
+      await this.rail.verify(payment,row.quote.payload.payment_requirements);
+      const decision=evaluate(s,row.trust_bundle,this.rootPin,now);
+      demand(Buffer.byteLength(canonical({submission:s,decision,authority:row.trust_bundle,payment,quote:row.quote}))<=850000,'RESULT_CAPACITY_EXCEEDED',413);
+      // Demonstrate signer availability before exposing any settlement side effect.
+      seal('WHP-SIGNER-PREFLIGHT-v1',{purchase_id:id,decision_hash:hash(decision)},this.privateKey);
+      row=await this.store.reserve(id,requestHash,{payment_key:paymentKey,payment_payload:payment,decision,observed_block:observedBlock,scan_from:observedBlock,attempts:0,next_attempt_at:now});
+      await this.hooks.afterPrepared?.(row);
+      return this.progress(row);
+    }
+    const purchase=path.match(/^\/v1\/purchases\/([0-9a-f]{64})(\/result)?$/);
+    if(req.method==='GET'&&purchase){demand(!u.search,'QUERY_NOT_SUPPORTED');const row=await this.store.get(purchase[1]);demand(row,'PURCHASE_NOT_FOUND',404);authenticate(req,row.buyer_key,'',now);
+      if(row.state==='ISSUED')return result(row.result_bytes);
+      // Result retrieval is strictly read-only. Recovery is a separately named operation.
+      return json(202,{purchase_id:row.id,state:row.state,recovery_path:'/v1/purchases/'+row.id+'/recover',additional_charge:false}, {'retry-after':'5'});
+    }
+    const recover=path.match(/^\/v1\/purchases\/([0-9a-f]{64})\/recover$/);
+    if(req.method==='POST'&&recover){const raw=await readBody(req);demand(raw==='','RECOVERY_BODY_MUST_BE_EMPTY');const row=await this.store.get(recover[1]);demand(row,'PURCHASE_NOT_FOUND',404);authenticate(req,row.buyer_key,'',now);demand(row.state!=='QUOTED','PAYMENT_NOT_AUTHORIZED',409);return this.progress(row);}
+    const registry=path.match(/^\/v1\/registry\/([0-9a-f]{64})$/);
+    if(req.method==='GET'&&registry){const row=await this.store.get(registry[1]);demand(row?.state==='ISSUED','REGISTRY_ENTRY_NOT_FOUND',404);const events=await this.store.events(row.id);const parsed=parseStrict(row.result_bytes,1048576);
+      const currentTrust=validateTrust(this.trustBundle,this.rootPin,now);issuerAuthority(this.keyId,row.submission.bounds.scope,row.submission.bounds.jurisdiction,currentTrust);
+      const last=events.at(-1).payload;let status=last.status;if(status==='ACTIVE'&&now>=parsed.payload.expires_at)status='EXPIRED';
+      else if(status==='ACTIVE'&&!liveAuthorityIntact(parsed,currentTrust))status='LIMITED';
+      return json(200,seal('WHP-REGISTRY-SNAPSHOT-v1',{purchase_id:row.id,result_hash:row.result_hash,mark_id:parsed.payload.mark_id,status,
+        observed_at:now,valid_until:now+300,events,trust_bundle:this.trustBundle},this.privateKey));}
+    if(req.method==='POST'&&path==='/v1/reviews') {
+      const raw=await readBody(req),r=parseStrict(raw);demand(Object.keys(r).sort().join(',')==='client_reference,evidence_hashes,purchase_id,reason,reviewer_key','REVIEW_FIELDS_INVALID');
+      demand(/^[0-9a-f]{64}$/.test(r.purchase_id)&&typeof r.reason==='string'&&r.reason.length>0&&r.reason.length<=8192&&Array.isArray(r.evidence_hashes)&&r.evidence_hashes.length<=64&&r.evidence_hashes.every(h=>/^[0-9a-f]{64}$/.test(h)),'REVIEW_INVALID');
+      demand(typeof r.client_reference==='string'&&/^[A-Za-z0-9_-]{16,96}$/.test(r.client_reference),'REVIEW_REFERENCE_INVALID');
+      authenticate(req,r.reviewer_key,raw,now);const old=await this.store.get(r.purchase_id);demand(old?.state==='ISSUED','REGISTRY_ENTRY_NOT_FOUND',404);
+      const stored=await this.store.review({review_id:hash({reviewer:r.reviewer_key,reference:r.client_reference}),purchase_id:r.purchase_id,request:r,received_at:now,status:'RECEIVED_NOT_ADJUDICATED'});
+      return json(201,seal('WHP-REVIEW-RECEIPT-v1',stored,this.privateKey));
+    }
+    return json(404,{error:{code:'NOT_FOUND'}});
+  }
+  async progress(initial) {
+    if(initial.state==='ISSUED')return result((await this.store.get(initial.id)).result_bytes);
+    const id=initial.id,owner=randomHex(16),now=this.clock();
+    if(!await this.store.lease(id,owner,now))return json(202,{purchase_id:id,state:'IN_PROGRESS',additional_charge:false},{'retry-after':'5'});
+    try {
+      let row=await this.store.get(id);
+      if(row.state==='PREPARED')row=await this.store.update(id,owner,r=>({...r,state:'SETTLING'}));
+      if(row.state==='SETTLING') {
+        let proof=await this.rail.reconcile(row,now);
+        if(proof?.scan_only){row=await this.store.update(id,owner,r=>({...r,scan_from:proof.next_scan_from}));proof=null;}
+        if(!proof&&!row.transaction_hint&&now>=row.next_attempt_at&&BigInt(now)<BigInt(row.payment_payload.payload.authorization.validBefore)) {
+          row=await this.store.update(id,owner,r=>({...r,attempts:r.attempts+1,next_attempt_at:now+30}));
+          await this.hooks.beforeSettle?.(row);
+          let settled=null;
+          try{settled=await this.rail.settle(row.payment_payload,row.quote.payload.payment_requirements);}catch{}
+          await this.hooks.afterSettle?.(row,settled);
+          if(settled&&settled.network===row.payment_payload.accepted.network&&HEX32.test(settled.transaction??'')&&(!settled.payer||settled.payer.toLowerCase()===row.payment_payload.payload.authorization.from.toLowerCase()))
+            row=await this.store.update(id,owner,r=>({...r,transaction_hint:settled.transaction.toLowerCase()}));
+          proof=await this.rail.reconcile(row,now);
+          if(proof?.scan_only){const next=proof.next_scan_from;row=await this.store.update(id,owner,r=>({...r,scan_from:next}));proof=null;}
+        }
+        if(!proof)return json(202,{purchase_id:id,state:'RECONCILING',additional_charge:false,
+          instruction:'Recover this purchase using the stored authorization. Do not create or sign another payment for it.'},{'retry-after':'30'});
+        demand(proof.environment===row.trust_bundle.profile_authorization.payload.environment,'SETTLEMENT_ENVIRONMENT_MISMATCH',503);
+        demand(proof.network===row.payment_payload.accepted.network&&proof.payer.toLowerCase()===row.payment_payload.payload.authorization.from.toLowerCase()&&proof.pay_to.toLowerCase()===row.payment_payload.accepted.payTo.toLowerCase()&&proof.amount===row.payment_payload.accepted.amount&&proof.nonce===row.payment_payload.payload.authorization.nonce,'SETTLEMENT_IDENTITY_MISMATCH',503);
+        row=await this.store.update(id,owner,r=>({...r,state:'SETTLED',settlement:proof,issued_at:now}));
+        await this.hooks.afterDurableSettlement?.(row);
+      }
+      const bytes=assembleResult(row,this.privateKey,this.rootPin),parsed=parseStrict(bytes,1048576);
+      const event=seal('WHP-REGISTRY-EVENT-v1',{purchase_id:id,sequence:0,previous_hash:null,result_hash:hashBytes(bytes),
+        mark_id:parsed.payload.mark_id,status:parsed.payload.mark_id?'ACTIVE':'ASSESSED_NO_MARK',at:row.issued_at,reason:'Original issuance',command:null},this.privateKey);
+      await this.hooks.beforePersistResult?.(bytes);
+      const durable=await this.store.finish(id,owner,bytes,event);
+      await this.hooks.afterPersistResult?.(durable);
+      return result(durable);
+    }finally{await this.store.release(id,owner);}
+  }
+  async applyRegistryCommand(command) {
+    const c=openSeal(command,'WHP-REGISTRY-COMMAND-v1',this.trustBundle.root_public_key);
+    demand(Object.keys(c).sort().join(',')==='at,expected_previous_hash,purchase_id,reason,status','REGISTRY_COMMAND_FIELDS');
+    demand(['ACTIVE','SUSPENDED','WITHDRAWN','SUPERSEDED','DISPUTED','LIMITED'].includes(c.status)&&typeof c.reason==='string'&&c.reason.length>0&&c.at<=this.clock()+30,'REGISTRY_COMMAND_INVALID');
+    return this.store.appendEvent(c.purchase_id,(last,seq,prev)=>{
+      demand(prev===c.expected_previous_hash,'REGISTRY_CONCURRENT_CHANGE',409);
+      demand(last&&last.payload.mark_id,'NO_MARK_TO_CHANGE',409);
+      demand(!['WITHDRAWN','SUPERSEDED'].includes(last.payload.status),'REGISTRY_TERMINAL_STATUS',409);
+      demand(c.at>=last.payload.at,'REGISTRY_TIME_REVERSED',409);
+      return seal('WHP-REGISTRY-EVENT-v1',{purchase_id:c.purchase_id,sequence:seq,previous_hash:prev,
+        result_hash:last.payload.result_hash,mark_id:last.payload.mark_id,status:c.status,at:c.at,reason:c.reason,command},this.privateKey);
+    });
+  }
+}

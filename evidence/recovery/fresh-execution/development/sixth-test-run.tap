@@ -1,0 +1,494 @@
+TAP version 13
+# (node:1666) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: autonomous buyer discovers, enforces allowance, signs bound authorization, pays, independently verifies and retrieves without signing again
+ok 1 - autonomous buyer discovers, enforces allowance, signs bound authorization, pays, independently verifies and retrieves without signing again
+  ---
+  duration_ms: 1590.685164
+  type: 'test'
+  ...
+# Subtest: buyer rejects per-purchase maximum before invoking wallet signer
+ok 2 - buyer rejects per-purchase maximum before invoking wallet signer
+  ---
+  duration_ms: 20.63453
+  type: 'test'
+  ...
+# Subtest: buyer rejects recipient pin before invoking wallet signer
+ok 3 - buyer rejects recipient pin before invoking wallet signer
+  ---
+  duration_ms: 20.101282
+  type: 'test'
+  ...
+# Subtest: buyer rejects root pin before invoking wallet signer
+ok 4 - buyer rejects root pin before invoking wallet signer
+  ---
+  duration_ms: 15.10934
+  type: 'test'
+  ...
+# Subtest: buyer rejects token domain before invoking wallet signer
+ok 5 - buyer rejects token domain before invoking wallet signer
+  ---
+  duration_ms: 16.817613
+  type: 'test'
+  ...
+# Subtest: durable aggregate allowance prevents a second distinct purchase exceeding the cap
+ok 6 - durable aggregate allowance prevents a second distinct purchase exceeding the cap
+  ---
+  duration_ms: 892.997552
+  type: 'test'
+  ...
+# Subtest: buyer journal rejects a changed submitted object under the same reference
+ok 7 - buyer journal rejects a changed submitted object under the same reference
+  ---
+  duration_ms: 842.887025
+  type: 'test'
+  ...
+# Subtest: buyer process state survives journal reopen and a lost paid HTTP response without another wallet signature
+ok 8 - buyer process state survives journal reopen and a lost paid HTTP response without another wallet signature
+  ---
+  duration_ms: 736.457473
+  type: 'test'
+  ...
+# Subtest: real localhost HTTP service completes the autonomous test transaction
+ok 9 - real localhost HTTP service completes the autonomous test transaction
+  ---
+  duration_ms: 1556.033002
+  type: 'test'
+  ...
+# Subtest: buyer remembers the highest verified trust epoch and refuses rollback
+ok 10 - buyer remembers the highest verified trust epoch and refuses rollback
+  ---
+  duration_ms: 6.564092
+  type: 'test'
+  ...
+# (node:1667) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: strict JSON rejects duplicate keys before information is lost
+ok 11 - strict JSON rejects duplicate keys before information is lost
+  ---
+  duration_ms: 1.347971
+  type: 'test'
+  ...
+# Subtest: strict JSON rejects nested duplicates
+ok 12 - strict JSON rejects nested duplicates
+  ---
+  duration_ms: 0.208204
+  type: 'test'
+  ...
+# Subtest: strict JSON rejects nonintegral numbers, unsafe integers, negative zero and lone surrogates
+ok 13 - strict JSON rejects nonintegral numbers, unsafe integers, negative zero and lone surrogates
+  ---
+  duration_ms: 0.299802
+  type: 'test'
+  ...
+# Subtest: canonical ordering follows UTF-16 and preserves distinct Unicode strings
+ok 14 - canonical ordering follows UTF-16 and preserves distinct Unicode strings
+  ---
+  duration_ms: 0.203056
+  type: 'test'
+  ...
+# Subtest: Keccak known vectors agree with public Ethereum event selectors
+ok 15 - Keccak known vectors agree with public Ethereum event selectors
+  ---
+  duration_ms: 0.827137
+  type: 'test'
+  ...
+# Subtest: source-locked COPY establishes only its declared operation
+ok 16 - source-locked COPY establishes only its declared operation
+  ---
+  duration_ms: 11.145186
+  type: 'test'
+  ...
+# Subtest: qualifier stripping cannot receive a mark
+ok 17 - qualifier stripping cannot receive a mark
+  ---
+  duration_ms: 7.141472
+  type: 'test'
+  ...
+# Subtest: unknown concealment cannot receive a mark
+ok 18 - unknown concealment cannot receive a mark
+  ---
+  duration_ms: 7.676859
+  type: 'test'
+  ...
+# Subtest: changed copy content cannot receive a mark
+ok 19 - changed copy content cannot receive a mark
+  ---
+  duration_ms: 7.184256
+  type: 'test'
+  ...
+# Subtest: epistemic promotion cannot receive a mark
+ok 20 - epistemic promotion cannot receive a mark
+  ---
+  duration_ms: 6.63598
+  type: 'test'
+  ...
+# Subtest: force escalation cannot receive a mark
+ok 21 - force escalation cannot receive a mark
+  ---
+  duration_ms: 6.553937
+  type: 'test'
+  ...
+# Subtest: withdrawn source cannot receive a mark
+ok 22 - withdrawn source cannot receive a mark
+  ---
+  duration_ms: 8.01605
+  type: 'test'
+  ...
+# Subtest: jurisdiction drift cannot receive a mark
+ok 23 - jurisdiction drift cannot receive a mark
+  ---
+  duration_ms: 27.29988
+  type: 'test'
+  ...
+# Subtest: temporal narrowing below requested bounds cannot receive a mark
+ok 24 - temporal narrowing below requested bounds cannot receive a mark
+  ---
+  duration_ms: 9.550983
+  type: 'test'
+  ...
+# Subtest: client-declared authority without an admitted key fails closed
+ok 25 - client-declared authority without an admitted key fails closed
+  ---
+  duration_ms: 8.838049
+  type: 'test'
+  ...
+# Subtest: a different embedded root cannot appoint itself
+ok 26 - a different embedded root cannot appoint itself
+  ---
+  duration_ms: 6.339724
+  type: 'test'
+  ...
+# Subtest: explicit source revocation defeats standing
+ok 27 - explicit source revocation defeats standing
+  ---
+  duration_ms: 9.945157
+  type: 'test'
+  ...
+# Subtest: blocking unknown prevents EXECUTE
+ok 28 - blocking unknown prevents EXECUTE
+  ---
+  duration_ms: 6.661809
+  type: 'test'
+  ...
+# Subtest: unrelated source cannot disappear from the submitted graph
+ok 29 - unrelated source cannot disappear from the submitted graph
+  ---
+  duration_ms: 5.943937
+  type: 'test'
+  ...
+# Subtest: invalid requests stop before storage and all payment work
+ok 30 - invalid requests stop before storage and all payment work
+  ---
+  duration_ms: 23.447425
+  type: 'test'
+  ...
+# Subtest: first paid test issuance independently verifies in Python
+ok 31 - first paid test issuance independently verifies in Python
+  ---
+  duration_ms: 862.552191
+  type: 'test'
+  ...
+# Subtest: a failed assessment is paid once but receives no Standing Mark
+ok 32 - a failed assessment is paid once but receives no Standing Mark
+  ---
+  duration_ms: 771.763864
+  type: 'test'
+  ...
+# Subtest: durable retrieval and identical POST return exactly the original bytes with no payment calls
+ok 33 - durable retrieval and identical POST return exactly the original bytes with no payment calls
+  ---
+  duration_ms: 80.212139
+  type: 'test'
+  ...
+# Subtest: same buyer reference with changed object is a conflict, not another purchase
+ok 34 - same buyer reference with changed object is a conflict, not another purchase
+  ---
+  duration_ms: 12.978798
+  type: 'test'
+  ...
+# Subtest: payment nonce is bound to the exact quote and cannot buy a different input
+ok 35 - payment nonce is bound to the exact quote and cannot buy a different input
+  ---
+  duration_ms: 13.142806
+  type: 'test'
+  ...
+# Subtest: wrong recipient is rejected before facilitator verification
+ok 36 - wrong recipient is rejected before facilitator verification
+  ---
+  duration_ms: 13.951675
+  type: 'test'
+  ...
+# Subtest: wrong amount is rejected before facilitator verification
+ok 37 - wrong amount is rejected before facilitator verification
+  ---
+  duration_ms: 25.354499
+  type: 'test'
+  ...
+# Subtest: wrong network is rejected before facilitator verification
+ok 38 - wrong network is rejected before facilitator verification
+  ---
+  duration_ms: 14.098285
+  type: 'test'
+  ...
+# Subtest: wrong asset is rejected before facilitator verification
+ok 39 - wrong asset is rejected before facilitator verification
+  ---
+  duration_ms: 12.997016
+  type: 'test'
+  ...
+# Subtest: wrong resource is rejected before facilitator verification
+ok 40 - wrong resource is rejected before facilitator verification
+  ---
+  duration_ms: 13.993222
+  type: 'test'
+  ...
+# Subtest: failed facilitator verification never settles or issues
+ok 41 - failed facilitator verification never settles or issues
+  ---
+  duration_ms: 13.083276
+  type: 'test'
+  ...
+# Subtest: concurrent same-purchase requests converge on one transfer and one immutable result
+ok 42 - concurrent same-purchase requests converge on one transfer and one immutable result
+  ---
+  duration_ms: 80.230786
+  type: 'test'
+  ...
+# Subtest: an uncertain settlement never becomes an optimistic mark
+ok 43 - an uncertain settlement never becomes an optimistic mark
+  ---
+  duration_ms: 25.162279
+  type: 'test'
+  ...
+# Subtest: lost response after settlement recovers exact stored authorization, not a second charge
+ok 44 - lost response after settlement recovers exact stored authorization, not a second charge
+  ---
+  duration_ms: 21.693641
+  type: 'test'
+  ...
+# Subtest: crash after durable settlement resumes signing without another settlement
+ok 45 - crash after durable settlement resumes signing without another settlement
+  ---
+  duration_ms: 27.715957
+  type: 'test'
+  ...
+# Subtest: lost HTTP response after durable issuance retrieves byte-identically
+ok 46 - lost HTTP response after durable issuance retrieves byte-identically
+  ---
+  duration_ms: 44.283965
+  type: 'test'
+  ...
+# Subtest: a fresh process connection retrieves durable SQLite bytes
+ok 47 - a fresh process connection retrieves durable SQLite bytes
+  ---
+  duration_ms: 28.617536
+  type: 'test'
+  ...
+# Subtest: buyer A cannot retrieve buyer B private result
+ok 48 - buyer A cannot retrieve buyer B private result
+  ---
+  duration_ms: 25.355511
+  type: 'test'
+  ...
+# Subtest: independent verifier rejects altered signatures and a wrong root pin
+ok 49 - independent verifier rejects altered signatures and a wrong root pin
+  ---
+  duration_ms: 1569.78632
+  type: 'test'
+  ...
+# Subtest: independent replay rejects issuer-signed false promotion
+ok 50 - independent replay rejects issuer-signed false promotion
+  ---
+  duration_ms: 677.700371
+  type: 'test'
+  ...
+# Subtest: public registry binds the exact signed file and independent freshness check passes
+ok 51 - public registry binds the exact signed file and independent freshness check passes
+  ---
+  duration_ms: 1380.535065
+  type: 'test'
+  ...
+# Subtest: withdrawal appends history, does not rewrite a Mark, and cannot silently reactivate it
+ok 52 - withdrawal appends history, does not rewrite a Mark, and cannot silently reactivate it
+  ---
+  duration_ms: 29.008754
+  type: 'test'
+  ...
+# (node:1668) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: removing a signed revocation cannot silently change the admitted root status
+ok 53 - removing a signed revocation cannot silently change the admitted root status
+  ---
+  duration_ms: 8.844639
+  type: 'test'
+  ...
+# Subtest: removing an authority certificate cannot evade the signed status manifest
+ok 54 - removing an authority certificate cannot evade the signed status manifest
+  ---
+  duration_ms: 4.220791
+  type: 'test'
+  ...
+# Subtest: expired root status does not remain fresh because its signature is valid
+ok 55 - expired root status does not remain fresh because its signature is valid
+  ---
+  duration_ms: 2.988253
+  type: 'test'
+  ...
+# Subtest: ambiguous duplicated unknown IDs are rejected before evaluation/payment
+ok 56 - ambiguous duplicated unknown IDs are rejected before evaluation/payment
+  ---
+  duration_ms: 3.17843
+  type: 'test'
+  ...
+# Subtest: COMPOSE preserves separate exact member identities, qualifiers and unknowns
+ok 57 - COMPOSE preserves separate exact member identities, qualifiers and unknowns
+  ---
+  duration_ms: 9.993831
+  type: 'test'
+  ...
+# Subtest: graph cycle is denied rather than treated as self-grounding provenance
+ok 58 - graph cycle is denied rather than treated as self-grounding provenance
+  ---
+  duration_ms: 6.441657
+  type: 'test'
+  ...
+# Subtest: authority revoked after issuance limits current standing without rewriting historical Mark
+ok 59 - authority revoked after issuance limits current standing without rewriting historical Mark
+  ---
+  duration_ms: 971.091133
+  type: 'test'
+  ...
+# Subtest: appeal receipt is durable/idempotent and does not confer standing
+ok 60 - appeal receipt is durable/idempotent and does not confer standing
+  ---
+  duration_ms: 32.260816
+  type: 'test'
+  ...
+# Subtest: input depth reserves envelope capacity before any payment processing
+ok 61 - input depth reserves envelope capacity before any payment processing
+  ---
+  duration_ms: 2.513398
+  type: 'test'
+  ...
+# (node:1731) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: EVM adapter matches finalized canonical receipt, exact calldata, authorization nonce and value transfer under mocked RPC
+ok 62 - EVM adapter matches finalized canonical receipt, exact calldata, authorization nonce and value transfer under mocked RPC
+  ---
+  duration_ms: 38.532767
+  type: 'test'
+  ...
+# Subtest: EVM adapter refuses unmined evidence
+ok 63 - EVM adapter refuses unmined evidence
+  ---
+  duration_ms: 12.90654
+  type: 'test'
+  ...
+# Subtest: EVM adapter refuses failed transaction evidence
+ok 64 - EVM adapter refuses failed transaction evidence
+  ---
+  duration_ms: 10.890162
+  type: 'test'
+  ...
+# Subtest: EVM adapter refuses not finalized evidence
+ok 65 - EVM adapter refuses not finalized evidence
+  ---
+  duration_ms: 10.386372
+  type: 'test'
+  ...
+# Subtest: EVM adapter refuses reorged block evidence
+ok 66 - EVM adapter refuses reorged block evidence
+  ---
+  duration_ms: 11.013737
+  type: 'test'
+  ...
+# Subtest: EVM adapter refuses wrong token evidence
+ok 67 - EVM adapter refuses wrong token evidence
+  ---
+  duration_ms: 10.507925
+  type: 'test'
+  ...
+# Subtest: EVM adapter refuses wrong nonce event evidence
+ok 68 - EVM adapter refuses wrong nonce event evidence
+  ---
+  duration_ms: 10.000881
+  type: 'test'
+  ...
+# Subtest: EVM adapter refuses missing authorization event evidence
+ok 69 - EVM adapter refuses missing authorization event evidence
+  ---
+  duration_ms: 9.887711
+  type: 'test'
+  ...
+# Subtest: EVM adapter refuses wrong transfer amount evidence
+ok 70 - EVM adapter refuses wrong transfer amount evidence
+  ---
+  duration_ms: 11.798891
+  type: 'test'
+  ...
+# Subtest: EVM adapter refuses wrong recipient evidence
+ok 71 - EVM adapter refuses wrong recipient evidence
+  ---
+  duration_ms: 19.070749
+  type: 'test'
+  ...
+# Subtest: EVM adapter refuses removed event evidence
+ok 72 - EVM adapter refuses removed event evidence
+  ---
+  duration_ms: 28.512518
+  type: 'test'
+  ...
+# Subtest: EVM adapter refuses wrong calldata evidence
+ok 73 - EVM adapter refuses wrong calldata evidence
+  ---
+  duration_ms: 24.070033
+  type: 'test'
+  ...
+# Subtest: EVM adapter refuses different transaction identity evidence
+ok 74 - EVM adapter refuses different transaction identity evidence
+  ---
+  duration_ms: 17.907036
+  type: 'test'
+  ...
+# Subtest: EVM adapter refuses duplicate transfer event evidence
+ok 75 - EVM adapter refuses duplicate transfer event evidence
+  ---
+  duration_ms: 23.387394
+  type: 'test'
+  ...
+# Subtest: EVM adapter rejects wrong RPC chain even with matching-looking receipt
+ok 76 - EVM adapter rejects wrong RPC chain even with matching-looking receipt
+  ---
+  duration_ms: 33.98826
+  type: 'test'
+  ...
+# Subtest: settlement response success is not finality; recovery discovers exact authorization event
+ok 77 - settlement response success is not finality; recovery discovers exact authorization event
+  ---
+  duration_ms: 13.956032
+  type: 'test'
+  ...
+# (node:1760) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: published JSON Schemas validate submission, authority, requirements, positive Mark and negative assessment
+ok 78 - published JSON Schemas validate submission, authority, requirements, positive Mark and negative assessment
+  ---
+  duration_ms: 2076.950532
+  type: 'test'
+  ...
+# Subtest: discovery schema links resolve on the actual service and identify the correct wire contract
+ok 79 - discovery schema links resolve on the actual service and identify the correct wire contract
+  ---
+  duration_ms: 21.523014
+  type: 'test'
+  ...
+1..79
+# tests 79
+# suites 0
+# pass 79
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 5989.693587
