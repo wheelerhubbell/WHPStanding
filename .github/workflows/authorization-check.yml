@@ -53,3 +53,4 @@ jobs:
           name: whp-standing-authorization-${{ github.run_id }}
           path: evidence/production-authorization/latest-inspection.json
           retention-days: 90
+# Triggered after NETLIFY_AUTH_TOKEN was added on 2026-09-15.
