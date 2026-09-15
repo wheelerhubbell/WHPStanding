@@ -5,6 +5,16 @@ permissions:
 jobs:
   offline-verification:
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: whp_test
+          POSTGRES_PASSWORD: whp_test_ephemeral
+          POSTGRES_DB: whp_test
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U whp_test -d whp_test" --health-interval 5s --health-timeout 5s --health-retries 12
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -14,20 +24,21 @@ jobs:
         with:
           python-version: '3.13'
       - run: python -m pip install -r requirements-verification.txt
-      - name: Prepare isolated verifier when propagation source is present
-        run: |
-          if test -f scripts/build-cold-sandbox.sh; then
-            bash scripts/build-cold-sandbox.sh
-          fi
+      - run: npm ci --include=optional --ignore-scripts
+      - run: bash scripts/build-cold-sandbox.sh
       - run: npm run verify
+      - name: Verify durable PostgreSQL concurrency and separate-process retrieval
+        env:
+          WHP_TEST_POSTGRES_URL: postgresql://whp_test:whp_test_ephemeral@127.0.0.1:5432/whp_test
+        run: node scripts/test-postgres.mjs
       - name: Preserve actual verification evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: whp-standing-source-verification-${{ github.run_id }}
           path: |
-            evidence/verification.json
             evidence/propagation-extension/
             evidence/cold-agent/
+            evidence/postgresql/
           retention-days: 90
-      # No deployment, real database access, real payment, or LIVE issuance.
+      # No deployment, production database access, real payment, or LIVE issuance.
