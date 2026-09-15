@@ -1,0 +1,8 @@
+{
+  "format": "hash-checked-source-transition-v1",
+  "base": "67d4d3071eb98b5d430905bee90de754a4a8a428",
+  "encoding": "xz-base64-parts",
+  "parts": 7,
+  "source_transition_sha256": "04543e926874bb11bbbfc511319cc9a24f2062f87fbc9ca0d8a14f7f8294dfcf",
+  "purpose": "Atomic first-public-v1 source transition; no main promotion until inherited and mandatory sandboxed TEST cold proofs and ephemeral PostgreSQL proof pass. This staging record is not VERIFIED, LIVE, SOLD, ISSUED, or PROPAGATION-PROVEN."
+}

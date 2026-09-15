@@ -2,23 +2,107 @@ name: First public v1 isolated proof
 on:
   push:
     branches: ['work/first-public-v1-contract']
-    paths: ['.github/workflows/public-v1-proof.yml']
+    paths:
+      - '.github/workflows/public-v1-proof.yml'
+      - 'build-input/public-v1*'
   workflow_dispatch:
 permissions:
-  contents: read
+  contents: write
+concurrency:
+  group: first-public-v1-isolated
+  cancel-in-progress: false
 jobs:
-  source-snapshot:
+  public-v1:
+    if: github.ref == 'refs/heads/work/first-public-v1-contract'
     runs-on: ubuntu-latest
+    timeout-minutes: 25
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: standing
+          POSTGRES_PASSWORD: local-test-only
+          POSTGRES_DB: whp_test
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U standing -d whp_test"
+          --health-interval 5s --health-timeout 5s --health-retries 10
     steps:
       - uses: actions/checkout@v4
-      - name: Package exact reconciled source
-        run: |
-          git rev-parse HEAD > /tmp/SOURCE-COMMIT.txt
-          git archive --format=tar HEAD > /tmp/standing-source.tar
-      - uses: actions/upload-artifact@v4
         with:
-          name: standing-source
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.16.0'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Materialize one hash-checked coupled source contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import base64, hashlib, json, lzma, pathlib, subprocess
+          root = pathlib.Path('.').resolve()
+          parts = ''.join((root / f'build-input/public-v1.part{i}').read_text().strip() for i in range(7))
+          packed = base64.b64decode(parts, validate=True)
+          assert hashlib.sha256(packed).hexdigest() == '04543e926874bb11bbbfc511319cc9a24f2062f87fbc9ca0d8a14f7f8294dfcf', 'SOURCE_BUNDLE_INTEGRITY'
+          m = json.loads(lzma.decompress(packed))
+          assert m['format'] == 'hash-checked-source-transition-v1'
+          assert m['base'] == '67d4d3071eb98b5d430905bee90de754a4a8a428'
+          assert len(m['files']) == 55
+          seen = set()
+          for f in m['files']:
+              p = pathlib.PurePosixPath(f['path'])
+              assert not p.is_absolute() and '..' not in p.parts and '.git' not in p.parts
+              assert str(p) == f['path'] and str(p) not in seen
+              seen.add(str(p))
+              dest = root / p
+              actual = hashlib.sha256(dest.read_bytes()).hexdigest() if dest.exists() else None
+              assert actual == f['before_sha256'], f"SOURCE_BASE_MISMATCH: {p}: {actual}"
+          for f in m['files']:
+              if f.get('generated'):
+                  continue
+              if 'diff' in f:
+                  patch = f['diff'].encode()
+                  subprocess.run(['git', 'apply', '--check', '-'], input=patch, check=True)
+                  subprocess.run(['git', 'apply', '-'], input=patch, check=True)
+              else:
+                  dest = root / f['path']
+                  dest.parent.mkdir(parents=True, exist_ok=True)
+                  dest.write_bytes(f['content'].encode('utf-8'))
+          subprocess.run(['python3', 'scripts/generate-schemas.py'], check=True)
+          for f in m['files']:
+              actual = hashlib.sha256((root / f['path']).read_bytes()).hexdigest()
+              assert actual == f['sha256'], f"SOURCE_MATERIALIZATION_MISMATCH: {f['path']}: {actual}"
+          print(json.dumps({'verified': True, 'source_transition_sha256': hashlib.sha256(packed).hexdigest(), 'files':len(m['files']), 'base':m['base']}))
+          PY
+      - run: python3 -m pip install -r requirements-verification.txt
+      - run: npm install --include=optional --ignore-scripts --no-package-lock --no-audit --no-fund
+      - run: bash scripts/build-cold-sandbox.sh
+      - run: npm run verify
+      - run: npm run verify:postgres
+        env:
+          WHP_TEST_POSTGRES_URL: postgres://standing:local-test-only@127.0.0.1:5432/whp_test
+      - name: Commit coherent verified source to isolated work branch only
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git ls-remote origin refs/heads/work/first-public-v1-contract | cut -f1)" = "$GITHUB_SHA"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'Freeze and verify first public WHP Standing v1; inherited and sandboxed TEST propagation proof'
+          git push origin HEAD:refs/heads/work/first-public-v1-contract
+          git rev-parse HEAD > /tmp/IMPLEMENTED-COMMIT.txt
+          git archive --format=tar HEAD > /tmp/first-public-v1-source.tar
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: first-public-v1-isolated-${{ github.run_id }}
           path: |
-            /tmp/standing-source.tar
-            /tmp/SOURCE-COMMIT.txt
-          retention-days: 30
+            evidence/public-v1/
+            evidence/postgresql/
+            /tmp/IMPLEMENTED-COMMIT.txt
+            /tmp/first-public-v1-source.tar
+          retention-days: 90
