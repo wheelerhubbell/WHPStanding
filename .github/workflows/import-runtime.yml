@@ -2,7 +2,7 @@ name: Complete WHP Standing source import
 on:
   push:
     paths:
-      - '.source-import/chunks/part05'
+      - '.github/workflows/import-runtime.yml'
 permissions:
   contents: write
 jobs:
@@ -10,11 +10,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Reassemble verified candidate runtime
+      - name: Expand exact uploaded candidate
         run: |
-          cat .source-import/chunks/part* | base64 -d > /tmp/runtime.tgz
-          tar -xzf /tmp/runtime.tgz
-          rm -rf .source-import
+          unzip -o WHP-Standing-v1-candidate-1.zip
+          rm WHP-Standing-v1-candidate-1.zip
       - name: Verify source before commit
         run: |
           npm test
