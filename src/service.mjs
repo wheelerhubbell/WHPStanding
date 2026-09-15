@@ -4,13 +4,16 @@ import trustSchema from '../schemas/trust-bundle.schema.json' with {type:'json'}
 import requirementsSchema from '../schemas/payment-requirements.schema.json' with {type:'json'};
 import openapi from '../public/openapi.json' with {type:'json'};
 const publicSchemas={'/schemas/submission.schema.json':submissionSchema,'/schemas/result.schema.json':resultSchema,'/schemas/trust-bundle.schema.json':trustSchema,'/schemas/payment-requirements.schema.json':requirementsSchema};
-import { canonical, parseStrict, hash, hashBytes, seal, openSeal, keyId, publicDer, decode, encode, demand, Fault, randomHex } from './canonical.mjs';
+import { canonical, parseStrict, hash, hashBytes, seal, openSeal, keyId, publicDer, decode, encode, demand, Fault, randomHex, exact } from './canonical.mjs';
 import { validateSubmission } from './validation.mjs';
 import { validateTrust, issuerAuthority, liveAuthorityIntact } from './authority.mjs';
 import { evaluate } from './evaluator.mjs';
 import { assembleResult } from './mark.mjs';
 import { profile, PROFILE_HASH } from './profile.mjs';
 import { validatePayment, validateRequirements, HEX32 } from './payment.mjs';
+import {discoveryRoute,contract,profilePath,livePaymentDestination,bazaar} from './discovery.mjs';
+import {identity,RESOLUTION_PATH} from './protocol.mjs';
+import {mcpRoute} from './mcp.mjs';
 
 const headers={'content-type':'application/json; charset=utf-8','cache-control':'no-store','x-content-type-options':'nosniff'};
 const json=(status,body,extra={})=>new Response(canonical(body)+'\n',{status,headers:{...headers,...extra}});
@@ -20,7 +23,7 @@ export function clientProof(privateKey,method,path,body,at){return encode(seal('
 function authenticate(req,pub,body,now){
   const e=decode(req.headers.get('whp-client-proof')??'',4096);
   const p=openSeal(e,'WHP-CLIENT-PROOF-v1',pub);
-  demand(Object.keys(p).sort().join(',')==='body_hash,expires_at,issued_at,method,nonce,path','CLIENT_PROOF_FIELDS');
+  exact(p,['body_hash','expires_at','issued_at','method','nonce','path']);
   const u=new URL(req.url);
   demand(p.method===req.method&&p.path===u.pathname+u.search&&p.body_hash===hashBytes(body),'CLIENT_PROOF_BINDING',401);
   demand(Number.isSafeInteger(p.issued_at)&&Number.isSafeInteger(p.expires_at)&&p.issued_at<=now+30&&p.expires_at>now&&p.expires_at-p.issued_at<=120&&p.expires_at>p.issued_at,'CLIENT_PROOF_EXPIRED',401);
@@ -31,29 +34,34 @@ async function readBody(req){const reader=req.body?.getReader();if(!reader)retur
   try{return new TextDecoder('utf-8',{fatal:true}).decode(Buffer.concat(parts));}catch{throw new Fault('INVALID_UTF8');}}
 
 export class StandingService {
-  constructor({store,rail,privateKey,trustBundle,rootPin,origin,requirements,clock=()=>Math.floor(Date.now()/1000),hooks={}}) {
+  constructor({store,rail,privateKey,trustBundle,rootPin,origin,requirements,resolutionUrl=null,catalogUrl=null,clock=()=>Math.floor(Date.now()/1000),hooks={}}) {
     demand(/^https:\/\//.test(origin)||/^http:\/\/127\.0\.0\.1(?::[0-9]+)?$/.test(origin),'SERVICE_ORIGIN_INVALID',503);
     demand(!new URL(origin).search&&new URL(origin).pathname==='/'&&!new URL(origin).username,'SERVICE_ORIGIN_INVALID',503);
     this.store=store;this.rail=rail;this.privateKey=privateKey;this.trustBundle=trustBundle;this.rootPin=rootPin;this.origin=origin.replace(/\/$/,'');this.requirements=requirements;this.clock=clock;this.hooks=hooks;
-    this.keyId=keyId(publicDer(privateKey));
+    this.keyId=keyId(publicDer(privateKey));this._resolutionUrl=resolutionUrl;this.catalogUrl=catalogUrl;
     const trust=validateTrust(trustBundle,rootPin,clock());validateRequirements(requirements);
-    demand(trust.keys.get(this.keyId)?.roles.includes('ISSUER')&&trust.keys.get(this.keyId)?.roles.includes('REGISTRY'),'ISSUER_AND_REGISTRY_AUTHORITY_REQUIRED',503);
+    demand(trust.keys.get(this.keyId)?.roles.includes('ISSUER')&&trust.keys.get(this.keyId)?.roles.includes('REGISTRY')&&trust.keys.get(this.keyId)?.roles.includes('DISCOVERY'),'ISSUER_REGISTRY_DISCOVERY_AUTHORITY_REQUIRED',503);
     demand(requirements.scheme==='exact'&&requirements.extra.assetTransferMethod==='eip3009'&&requirements.extra.paymentFlow==='authorization','PAYMENT_SCHEME_UNSUPPORTED',503);
     demand(/^eip155:[1-9][0-9]*$/.test(requirements.network)&&/^0x[0-9a-f]{40}$/.test(requirements.asset)&&/^0x[0-9a-f]{40}$/.test(requirements.payTo)&&/^[1-9][0-9]*$/.test(requirements.amount),'PAYMENT_CONFIG_INVALID',503);
+    if(trust.profile.environment==='LIVE')livePaymentDestination(requirements);
     demand(trust.profile.environment!=='LIVE'||(origin.startsWith('https://')&&trust.profile.issuer==='Wheeler Hubbell Publishing'&&rail.constructor.name==='EvmRail'),'LIVE_CONFIGURATION_INVALID',503);
   }
+  get resolutionUrl(){return this._resolutionUrl??this.origin+RESOLUTION_PATH;}
   async handle(req){try{return await this.route(req);}catch(e){
     if(e instanceof Fault)return json(e.status,{error:{code:e.code,path:e.path}});
     // Never reflect internal DB errors, provider URLs, secret material or stack traces.
     return json(503,{error:{code:'SERVICE_UNAVAILABLE',retryable:true}});
   }}
   async route(req){const u=new URL(req.url),now=this.clock(),path=u.pathname;
+    const discovered=await discoveryRoute(this,req);if(discovered)return discovered;
+    if(path==='/mcp')return mcpRoute(this,req);
     if(req.method==='GET'&&['/schemas/submission.schema.json','/schemas/result.schema.json','/schemas/trust-bundle.schema.json','/schemas/payment-requirements.schema.json'].includes(path)){
       return json(200,publicSchemas[path]);}
-    if(req.method==='GET'&&path==='/v1/openapi.json')return json(200,openapi);
-    if(req.method==='GET'&&path==='/healthz')return json(200,{service:'WHP Standing',version:'1.0.0-candidate.1',live_completion_proven:false});
+    if(req.method==='GET'&&path==='/v1/openapi.json')return json(200,{...openapi,servers:[{url:this.origin}]});
+    if(req.method==='GET'&&path==='/healthz')return json(200,{service:'WHP Standing',version:'1.0.0',live_completion_proven:false});
     if(req.method==='GET'&&path==='/.well-known/whp-standing.json')return json(200,{
-      service:'WHP Standing',version:'1.0.0-candidate.1',environment:this.trustBundle.profile_authorization.payload.environment,
+      resolution_url:this.resolutionUrl,capability_id:'urn:whp:standing:capability:1',contract_url:this.origin+'/v1/contract',verification_url:this.origin+'/v1/verification',profile_url:this.origin+profilePath,mcp_url:this.origin+'/mcp',
+      service:'WHP Standing',version:'1.0.0',environment:this.trustBundle.profile_authorization.payload.environment,
       issuer:this.trustBundle.profile_authorization.payload.issuer,root_public_key:this.trustBundle.root_public_key,root_pin:this.rootPin,
       issuer_certificate:this.trustBundle.certificates.find(e=>keyId(e.payload.public_key)===this.keyId),
       profile:profile(),profile_authorization:this.trustBundle.profile_authorization,trust_bundle:this.trustBundle,
@@ -81,23 +89,23 @@ export class StandingService {
         charge_policy:'One evaluation, regardless of outcome. No second charge for this purchase identity.'
       },this.privateKey);
       let row=await this.store.quote({id,buyer_key:s.buyer_key,client_reference:s.client_reference,request_hash:requestHash,state:'QUOTED',
-        submission:s,quote,trust_bundle:this.trustBundle,created_at:now});
+        submission:s,quote,trust_bundle:this.trustBundle,discovery_identity:identity(this.resolutionUrl,id,this.rootPin,trust.profile.environment),created_at:now});
       if(row.state==='ISSUED')return result((await this.store.get(id)).result_bytes);
       if(row.state!=='QUOTED') {
         if(payment)demand(validatePayment(payment,row.quote,now,{allowExpired:true})===row.payment_key,'PURCHASE_ALREADY_BOUND',409);
         return this.progress(row);
       }
       demand(now<row.quote.payload.expires_at,'QUOTE_EXPIRED',409);
-      if(!payment){const terms={x402Version:2,resource:row.quote.payload.resource,accepts:[row.quote.payload.payment_requirements],extensions:{'whp-standing':{info:{required:true,quote:row.quote},schema:{type:'object'}}}};
+      if(!payment){const terms={x402Version:2,resource:row.quote.payload.resource,accepts:[row.quote.payload.payment_requirements],extensions:{'whp-standing':{info:{required:true,quote:row.quote},schema:{type:'object'}},bazaar:bazaar(this)}};
         return json(402,terms,{'payment-required':encode(terms)});}
       const paymentKey=validatePayment(payment,row.quote,now);
       const observedBlock=await this.rail.startBlock();
-      await this.rail.verify(payment,row.quote.payload.payment_requirements);
+      const verifiedPayment=await this.rail.verify(payment,row.quote.payload.payment_requirements);
       const decision=evaluate(s,row.trust_bundle,this.rootPin,now);
       demand(Buffer.byteLength(canonical({submission:s,decision,authority:row.trust_bundle,payment,quote:row.quote}))<=850000,'RESULT_CAPACITY_EXCEEDED',413);
       // Demonstrate signer availability before exposing any settlement side effect.
       seal('WHP-SIGNER-PREFLIGHT-v1',{purchase_id:id,decision_hash:hash(decision)},this.privateKey);
-      row=await this.store.reserve(id,requestHash,{payment_key:paymentKey,payment_payload:payment,decision,observed_block:observedBlock,scan_from:observedBlock,attempts:0,next_attempt_at:now});
+      row=await this.store.reserve(id,requestHash,{payment_key:paymentKey,payment_payload:payment,discovery_verification:verifiedPayment.whp_discovery_evidence??null,decision,observed_block:observedBlock,scan_from:observedBlock,attempts:0,next_attempt_at:now});
       await this.hooks.afterPrepared?.(row);
       return this.progress(row);
     }
@@ -112,12 +120,13 @@ export class StandingService {
     const registry=path.match(/^\/v1\/registry\/([0-9a-f]{64})$/);
     if(req.method==='GET'&&registry){const row=await this.store.get(registry[1]);demand(row?.state==='ISSUED','REGISTRY_ENTRY_NOT_FOUND',404);const events=await this.store.events(row.id);const parsed=parseStrict(row.result_bytes,1048576);
       const currentTrust=validateTrust(this.trustBundle,this.rootPin,now);issuerAuthority(this.keyId,row.submission.bounds.scope,row.submission.bounds.jurisdiction,currentTrust);
+      demand(currentTrust.keys.get(this.keyId)?.roles.includes('REGISTRY'),'REGISTRY_AUTHORITY_REQUIRED',503);
       const last=events.at(-1).payload;let status=last.status;if(status==='ACTIVE'&&now>=parsed.payload.expires_at)status='EXPIRED';
       else if(status==='ACTIVE'&&!liveAuthorityIntact(parsed,currentTrust))status='LIMITED';
       return json(200,seal('WHP-REGISTRY-SNAPSHOT-v1',{purchase_id:row.id,result_hash:row.result_hash,mark_id:parsed.payload.mark_id,status,
-        observed_at:now,valid_until:now+300,events,trust_bundle:this.trustBundle},this.privateKey));}
+        observed_at:now,valid_until:Math.min(now+300,currentTrust.bundle.status_snapshot.payload.valid_until,currentTrust.profile.valid_until,currentTrust.keys.get(this.keyId).valid_until),events,trust_bundle:this.trustBundle},this.privateKey));}
     if(req.method==='POST'&&path==='/v1/reviews') {
-      const raw=await readBody(req),r=parseStrict(raw);demand(Object.keys(r).sort().join(',')==='client_reference,evidence_hashes,purchase_id,reason,reviewer_key','REVIEW_FIELDS_INVALID');
+      const raw=await readBody(req),r=parseStrict(raw);exact(r,['client_reference','evidence_hashes','purchase_id','reason','reviewer_key']);
       demand(/^[0-9a-f]{64}$/.test(r.purchase_id)&&typeof r.reason==='string'&&r.reason.length>0&&r.reason.length<=8192&&Array.isArray(r.evidence_hashes)&&r.evidence_hashes.length<=64&&r.evidence_hashes.every(h=>/^[0-9a-f]{64}$/.test(h)),'REVIEW_INVALID');
       demand(typeof r.client_reference==='string'&&/^[A-Za-z0-9_-]{16,96}$/.test(r.client_reference),'REVIEW_REFERENCE_INVALID');
       authenticate(req,r.reviewer_key,raw,now);const old=await this.store.get(r.purchase_id);demand(old?.state==='ISSUED','REGISTRY_ENTRY_NOT_FOUND',404);
@@ -142,6 +151,7 @@ export class StandingService {
           let settled=null;
           try{settled=await this.rail.settle(row.payment_payload,row.quote.payload.payment_requirements);}catch{}
           await this.hooks.afterSettle?.(row,settled);
+          if(settled?.whp_discovery_evidence)row=await this.store.update(id,owner,r=>({...r,discovery_settlement:settled.whp_discovery_evidence}));
           if(settled&&settled.network===row.payment_payload.accepted.network&&HEX32.test(settled.transaction??'')&&(!settled.payer||settled.payer.toLowerCase()===row.payment_payload.payload.authorization.from.toLowerCase()))
             row=await this.store.update(id,owner,r=>({...r,transaction_hint:settled.transaction.toLowerCase()}));
           proof=await this.rail.reconcile(row,now);
@@ -150,7 +160,7 @@ export class StandingService {
         if(!proof)return json(202,{purchase_id:id,state:'RECONCILING',additional_charge:false,
           instruction:'Recover this purchase using the stored authorization. Do not create or sign another payment for it.'},{'retry-after':'30'});
         demand(proof.environment===row.trust_bundle.profile_authorization.payload.environment,'SETTLEMENT_ENVIRONMENT_MISMATCH',503);
-        demand(proof.network===row.payment_payload.accepted.network&&proof.payer.toLowerCase()===row.payment_payload.payload.authorization.from.toLowerCase()&&proof.pay_to.toLowerCase()===row.payment_payload.accepted.payTo.toLowerCase()&&proof.amount===row.payment_payload.accepted.amount&&proof.nonce===row.payment_payload.payload.authorization.nonce,'SETTLEMENT_IDENTITY_MISMATCH',503);
+        demand(proof.network===row.payment_payload.accepted.network&&proof.asset?.toLowerCase()===row.payment_payload.accepted.asset.toLowerCase()&&proof.payer.toLowerCase()===row.payment_payload.payload.authorization.from.toLowerCase()&&proof.pay_to.toLowerCase()===row.payment_payload.accepted.payTo.toLowerCase()&&proof.amount===row.payment_payload.accepted.amount&&proof.nonce===row.payment_payload.payload.authorization.nonce,'SETTLEMENT_IDENTITY_MISMATCH',503);
         row=await this.store.update(id,owner,r=>({...r,state:'SETTLED',settlement:proof,issued_at:now}));
         await this.hooks.afterDurableSettlement?.(row);
       }
@@ -165,7 +175,7 @@ export class StandingService {
   }
   async applyRegistryCommand(command) {
     const c=openSeal(command,'WHP-REGISTRY-COMMAND-v1',this.trustBundle.root_public_key);
-    demand(Object.keys(c).sort().join(',')==='at,expected_previous_hash,purchase_id,reason,status','REGISTRY_COMMAND_FIELDS');
+    exact(c,['at','expected_previous_hash','purchase_id','reason','status']);
     demand(['ACTIVE','SUSPENDED','WITHDRAWN','SUPERSEDED','DISPUTED','LIMITED'].includes(c.status)&&typeof c.reason==='string'&&c.reason.length>0&&c.at<=this.clock()+30,'REGISTRY_COMMAND_INVALID');
     return this.store.appendEvent(c.purchase_id,(last,seq,prev)=>{
       demand(prev===c.expected_previous_hash,'REGISTRY_CONCURRENT_CHANGE',409);

@@ -1,0 +1,111 @@
+name: Verify and promote WHP Standing propagation extension
+on:
+  push:
+    branches: ['standing-v1-propagation']
+    paths: ['.github/workflows/verify-propagation.yml', 'build-input/propagation-extension.json']
+  workflow_dispatch:
+permissions:
+  contents: write
+  actions: read
+concurrency:
+  group: whp-standing-propagation-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: whp_test
+          POSTGRES_PASSWORD: whp_test_ephemeral
+          POSTGRES_DB: whp_test
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U whp_test -d whp_test" --health-interval 5s --health-timeout 5s --health-retries 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.16.0'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Recover already-uploaded source payload without importing concurrent source edits
+        run: |
+          if ! test -f build-input/propagation-extension.json; then
+            git fetch --depth=1 origin 2004b4b6a738c13c3b6f5adaf46adf217de28ece
+            git restore --source=2004b4b6a738c13c3b6f5adaf46adf217de28ece --worktree -- build-input
+          fi
+      - name: Apply exact hash-checked source to recovered candidate
+        run: |
+          python - <<'PY'
+          import pathlib,json,hashlib,subprocess,base64,lzma
+          manifest=json.loads(pathlib.Path('build-input/propagation-extension.json').read_text())
+          if manifest.get('encoding')=='xz-base64-parts':
+              encoded=''.join(pathlib.Path(p).read_text().strip() for p in manifest['parts'])
+              blob=base64.b64decode(encoded,validate=True)
+              assert hashlib.sha256(blob).hexdigest()==manifest['sha256'],'Lossless transfer digest mismatch'
+              manifest=json.loads(lzma.decompress(blob))
+          def digest(p):return hashlib.sha256(p.read_bytes()).hexdigest() if p.exists() else None
+          for entry in manifest['files']:
+              p=pathlib.Path(entry['path'])
+              assert not p.is_absolute() and '..' not in p.parts and p.parts[0] not in ['.git','.github','evidence']
+              current=digest(p)
+              assert current in [entry['before'],entry['sha256']], 'Source conflict: '+str(p)
+              if current==entry['sha256']:continue
+              if 'diff' in entry:subprocess.run(['git','apply','--whitespace=nowarn','-'],input=entry['diff'].encode(),check=True)
+              elif 'content' in entry:p.parent.mkdir(parents=True,exist_ok=True);p.write_text(entry['content'])
+          for entry in manifest['files']:
+              p=pathlib.Path(entry['path'])
+              if 'copy_from' in entry:p.parent.mkdir(parents=True,exist_ok=True);p.write_bytes(pathlib.Path(entry['copy_from']).read_bytes())
+              assert digest(p)==entry['sha256'],'Post-apply hash mismatch: '+str(p)
+          out=pathlib.Path('evidence/propagation-extension');out.mkdir(parents=True,exist_ok=True)
+          (out/'source-identity.json').write_text(json.dumps({'recovered_candidate':manifest['recovered_candidate'],'concurrent_main_preserved':'2004b4b6a738c13c3b6f5adaf46adf217de28ece','files':[{k:v for k,v in e.items() if k in ['path','before','sha256']} for e in manifest['files']]},indent=2)+'\n')
+          PY
+      - name: Install verification and database dependencies
+        run: |
+          python -m pip install -r requirements-verification.txt
+          npm install --include=optional --ignore-scripts
+      - name: Build generic independent verifier sandbox without WHP source
+        run: bash scripts/build-cold-sandbox.sh
+      - name: Execute original and additional tests without skipped proof
+        run: npm run verify
+      - name: Execute isolated PostgreSQL and separate-process retrieval
+        env:
+          WHP_TEST_POSTGRES_URL: postgresql://whp_test:whp_test_ephemeral@127.0.0.1:5432/whp_test
+        run: node scripts/test-postgres.mjs
+      - name: Preserve executed authorization inspection
+        uses: actions/download-artifact@v4
+        with:
+          name: whp-standing-readiness-34961217519
+          run-id: 34961217519
+          github-token: ${{ github.token }}
+          path: evidence/production-authorization/
+      - name: Commit verified source and actual evidence to this release branch
+        run: |
+          python - <<'PY'
+          import pathlib,json,os
+          p=pathlib.Path('evidence/propagation-extension/verification.json');r=json.loads(p.read_text())
+          db=json.loads(pathlib.Path('evidence/postgresql/report.json').read_text());assert db['all_passed'] and not db['production_database_accessed']
+          r['postgresql_integration_tested']=True;r['postgresql_report']='evidence/postgresql/report.json';r['github_run_id']=os.environ['GITHUB_RUN_ID'];r['github_workflow_source_commit']=os.environ['GITHUB_SHA'];p.write_text(json.dumps(r,indent=2)+'\n')
+          PY
+          git config user.name 'WHP Standing Verification'
+          git config user.email 'actions@users.noreply.github.com'
+          git add -A
+          if git diff --cached --name-only | grep -q '^.github/workflows/'; then echo 'Workflow edits require connected API'; exit 1; fi
+          if ! git diff --cached --quiet; then
+            git commit -m 'Implement signed Mark discovery and isolated propagation proof; preserve recovered candidate'
+            git push origin "HEAD:${GITHUB_REF_NAME}"
+          fi
+      - name: Preserve actual evidence even when a proof fails
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: whp-standing-propagation-${{ github.run_id }}
+          path: |
+            evidence/propagation-extension/
+            evidence/cold-agent/
+            evidence/postgresql/
+            evidence/production-authorization/
+          retention-days: 90

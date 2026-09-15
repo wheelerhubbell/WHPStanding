@@ -1,0 +1,81 @@
+name: Recover exact WHP Standing candidate
+on:
+  push:
+    paths:
+      - '.github/workflows/import-runtime.yml'
+permissions:
+  contents: write
+concurrency:
+  group: whp-standing-candidate-recovery
+  cancel-in-progress: false
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.16.0'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Authenticate and extract the exact original candidate
+        run: |
+          python - <<'PY'
+          import hashlib, pathlib, zipfile, os
+          p = pathlib.Path('WHP-Standing-v1-candidate-1.zip')
+          raw = p.read_bytes()
+          assert hashlib.sha256(raw).hexdigest() == '37f38a3799baafcbdd149aa29e9994fa6ae39230d108ef35f93b842bcdea2056'
+          assert hashlib.sha1(b'blob '+str(len(raw)).encode()+b'\0'+raw).hexdigest() == '0f9317d7671d7c4d9bd9a2744f743dabe49fa078'
+          root = pathlib.Path(os.environ['RUNNER_TEMP']) / 'whp-exact-candidate'
+          with zipfile.ZipFile(p) as z:
+              for n in z.namelist():
+                  assert n.startswith('whp-standing-v1/') and '..' not in pathlib.PurePosixPath(n).parts
+              z.extractall(root)
+          PY
+      - name: Verify a separate copy without mutating original candidate evidence
+        run: |
+          cp -a "$RUNNER_TEMP/whp-exact-candidate/whp-standing-v1" "$RUNNER_TEMP/whp-candidate-test"
+          cd "$RUNNER_TEMP/whp-candidate-test"
+          python -m pip install -r requirements-verification.txt
+          npm test
+          npm run verify
+      - name: Promote exact bytes and record identity
+        run: |
+          python - <<'PY'
+          import pathlib, shutil, hashlib, json, os
+          root = pathlib.Path(os.environ['RUNNER_TEMP']) / 'whp-exact-candidate' / 'whp-standing-v1'
+          records = []
+          for src in sorted(root.rglob('*')):
+              if not src.is_file(): continue
+              rel = src.relative_to(root)
+              dst = pathlib.Path(rel)
+              data = src.read_bytes()
+              if str(rel).startswith('.github/workflows/'):
+                  assert dst.read_bytes() == data, 'Workflow must first be installed through authorized connected API: ' + str(rel)
+              else:
+                  dst.parent.mkdir(parents=True, exist_ok=True)
+                  shutil.copy2(src, dst)
+              assert dst.read_bytes() == data
+              records.append({'path':str(rel),'size':len(data),'sha256':hashlib.sha256(data).hexdigest()})
+          out = pathlib.Path('evidence/recovery')
+          out.mkdir(parents=True, exist_ok=True)
+          shutil.copytree(pathlib.Path(os.environ['RUNNER_TEMP'])/'whp-candidate-test'/'evidence', out/'fresh-execution', dirs_exist_ok=True)
+          (out/'candidate-identity.json').write_text(json.dumps({'source_repository':'wheelerhubbell/WHPStanding','source_commit':'513d321f5387946f135f147aeca0b79b9dff81cd','archive':'WHP-Standing-v1-candidate-1.zip','archive_git_blob':'0f9317d7671d7c4d9bd9a2744f743dabe49fa078','archive_sha256':'37f38a3799baafcbdd149aa29e9994fa6ae39230d108ef35f93b842bcdea2056','original_verified_run':34958976070,'recovery_run':os.environ['GITHUB_RUN_ID'],'all_candidate_files_byte_identical':True,'files':records},indent=2)+'\n')
+          PY
+      - name: Commit source and preserved execution evidence
+        run: |
+          git config user.name 'WHP Standing Recovery'
+          git config user.email 'actions@users.noreply.github.com'
+          git add -A
+          if git diff --cached --name-only | grep -q '^.github/workflows/'; then
+            echo 'Refusing any Actions-token workflow mutation'; exit 1
+          fi
+          git commit -m 'Recover exact verified WHP Standing v1 candidate with byte-identity evidence'
+          git push origin HEAD:main
+      - name: Preserve recovery artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: whp-standing-candidate-recovery-${{ github.run_id }}
+          path: evidence/recovery/
+          retention-days: 90

@@ -1,0 +1,93 @@
+[
+  {
+    "name": "missing identity",
+    "verified": false,
+    "error": "'discovery'",
+    "PROPAGATION-PROVEN": false,
+    "exit_code": 1
+  },
+  {
+    "name": "tampered signature",
+    "verified": false,
+    "error": "InvalidSignature",
+    "PROPAGATION-PROVEN": false,
+    "exit_code": 1
+  },
+  {
+    "name": "issuer-only contract substitution",
+    "verified": false,
+    "error": "CONTRACT_HASH",
+    "PROPAGATION-PROVEN": false,
+    "exit_code": 1
+  },
+  {
+    "name": "issuer-only contract substitution",
+    "verified": false,
+    "error": "ROOT_AUTHORIZED_CONTRACT",
+    "PROPAGATION-PROVEN": false,
+    "exit_code": 1
+  },
+  {
+    "name": "root substitution",
+    "verified": false,
+    "error": "RESOLUTION_IDENTITY_SUBSTITUTION",
+    "PROPAGATION-PROVEN": false,
+    "exit_code": 1
+  },
+  {
+    "name": "verifier substitution",
+    "verified": false,
+    "error": "VERIFIER_SOURCE_HASH",
+    "PROPAGATION-PROVEN": false,
+    "exit_code": 1
+  },
+  {
+    "name": "missing /v1/immutable/4244be9ed0012eaeba8e2efeb9d274ad3c1f3e188748838c191129054d24c5ab",
+    "verified": false,
+    "error": "DOCUMENT_UNAVAILABLE:404",
+    "PROPAGATION-PROVEN": false,
+    "exit_code": 1
+  },
+  {
+    "name": "missing /v1/contract",
+    "verified": false,
+    "error": "DOCUMENT_UNAVAILABLE:404",
+    "PROPAGATION-PROVEN": false,
+    "exit_code": 1
+  },
+  {
+    "name": "stale discovery",
+    "verified": false,
+    "error": "RESOLUTION_STALE",
+    "PROPAGATION-PROVEN": false,
+    "exit_code": 1
+  },
+  {
+    "name": "stale registry",
+    "verified": false,
+    "error": "INDEPENDENT_VERIFICATION_FAILED:{\"verified\": false, \"cryptographic_integrity\": \"VERIFIED\", \"evaluation_replay\": \"VERIFIED\", \"environment\": \"TEST\", \"purchase_id\": \"896e6ea5ab4dd9801806c543a4f2195fe429684c88f62962b9802c9f47b829f1\", \"mark_id\": \"WHP-SM-896e6ea5ab4dd9801806c543a4f2195fe429684c88f62962b9802c9f47b829f1\", \"assessment\": \"ESTABLISHED\", \"current_standing\": \"NOT_VERIFIED\", \"payment_chain_finality\": \"SIMULATED_NOT_LIVE\", \"expires_at\": 1789482722, \"historical_issuance\": \"VERIFIED\", \"institutional_root_admission\": \"CALLER_SUPPLIED_PIN_REQUIRED\", \"current_discovery\": {\"verified\": true, \"resolution_id\": \"urn:whp:standing:resolution:1\", \"capability_id\": \"urn:whp:standing:capability:1\", \"service_origin\": \"http://127.0.0.1:37729\", \"observed_at\": 1789479128, \"valid_until\": 1789479428}, \"error\": \"REGISTRY_SNAPSHOT_STALE\", \"live_completion_verified\": false}\n",
+    "PROPAGATION-PROVEN": false,
+    "exit_code": 1
+  },
+  {
+    "name": "payment term substitution",
+    "verified": false,
+    "error": "DOCUMENT_HASH_SUBSTITUTION",
+    "PROPAGATION-PROVEN": false,
+    "exit_code": 1
+  },
+  {
+    "name": "no compatible provider",
+    "verified": false,
+    "error": "NO_COMPATIBLE_PROVIDER",
+    "PROPAGATION-PROVEN": false,
+    "exit_code": 1
+  },
+  {
+    "name": "withdrawn registry",
+    "verified": false,
+    "error": "CURRENT_STANDING_NOT_ACTIVE",
+    "PROPAGATION-PROVEN": false,
+    "exit_code": 1
+  }
+]

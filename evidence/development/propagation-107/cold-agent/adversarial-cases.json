@@ -1,0 +1,62 @@
+[
+  {
+    "name": "missing carrier",
+    "verified": false,
+    "error": "'discovery'",
+    "exit_code": 1
+  },
+  {
+    "name": "tampered signature",
+    "verified": false,
+    "error": "InvalidSignature",
+    "exit_code": 1
+  },
+  {
+    "name": "signed semantic promotion",
+    "verified": false,
+    "error": "INDEPENDENT_VERIFICATION_FAILED:{\"verified\": false, \"error\": \"DISCOVERY_SEMANTIC_PROMOTION\"}\n",
+    "exit_code": 1
+  },
+  {
+    "name": "root substitution",
+    "verified": false,
+    "error": "ROOT_PIN_DIGEST",
+    "exit_code": 1
+  },
+  {
+    "name": "verifier hash substitution",
+    "verified": false,
+    "error": "VERIFIER_SOURCE_HASH",
+    "exit_code": 1
+  },
+  {
+    "name": "missing /v1/profiles/WHP-STANDING-STRUCTURED-PASSAGE/1.0.0",
+    "verified": false,
+    "error": "DISCOVERY_FETCH_404",
+    "exit_code": 1
+  },
+  {
+    "name": "missing /v1/contract",
+    "verified": false,
+    "error": "DISCOVERY_FETCH_404",
+    "exit_code": 1
+  },
+  {
+    "name": "stale registry",
+    "verified": false,
+    "error": "INDEPENDENT_VERIFICATION_FAILED:{\"verified\": false, \"error\": \"REGISTRY_SNAPSHOT_STALE\"}\n",
+    "exit_code": 1
+  },
+  {
+    "name": "changed payment terms",
+    "verified": false,
+    "error": "PUBLISHED_PAYMENT_REQUIREMENTS",
+    "exit_code": 1
+  },
+  {
+    "name": "withdrawn registry",
+    "verified": false,
+    "error": "CURRENT_STANDING_NOT_ACTIVE",
+    "exit_code": 1
+  }
+]

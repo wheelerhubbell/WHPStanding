@@ -1,0 +1,854 @@
+{
+  "payment_status": 402,
+  "payment_authorizations_created": 0,
+  "wallet_keys_available": false,
+  "payment_terms": {
+    "accepts": [
+      {
+        "amount": "1000000",
+        "asset": "0x1111111111111111111111111111111111111111",
+        "extra": {
+          "assetTransferMethod": "eip3009",
+          "name": "USDC",
+          "paymentFlow": "authorization",
+          "version": "2"
+        },
+        "maxTimeoutSeconds": 300,
+        "network": "eip155:8453",
+        "payTo": "0x2222222222222222222222222222222222222222",
+        "scheme": "exact"
+      }
+    ],
+    "extensions": {
+      "bazaar": {
+        "info": {
+          "input": {
+            "body": {
+              "bounds": {
+                "jurisdiction": "test-fixture-not-external-authority",
+                "scope": "submitted-example-only",
+                "valid_from": 1789461990,
+                "valid_until": 1789465690
+              },
+              "buyer_key": "MCowBQYDK2VwAyEAiFGW7CzLVQtiWUdA3AkabG+KuuQ1saPdwSDTGykJKsY=",
+              "client_reference": "test-75b338dd8640d75b06913abcfd8858ab",
+              "nodes": [
+                {
+                  "payload": {
+                    "content": {
+                      "count": 3,
+                      "statement": "Three items are present in this submitted fixture."
+                    },
+                    "epistemic_status": "REPORT",
+                    "id": "sample-observation",
+                    "jurisdiction": "test-fixture-not-external-authority",
+                    "locator": "urn:whp:test:source-1",
+                    "operations": [
+                      "INFORM",
+                      "RECOMMEND"
+                    ],
+                    "prior_hash": null,
+                    "qualifiers": [
+                      "Only this submitted fixture.",
+                      "No external-world truth claim."
+                    ],
+                    "scope": "submitted-example-only",
+                    "status": "ACTIVE",
+                    "unknowns": [
+                      {
+                        "blocks": [
+                          "EXECUTE"
+                        ],
+                        "description": "No outside-world evidence is supplied.",
+                        "id": "external-validity"
+                      }
+                    ],
+                    "valid_from": 1789461590,
+                    "valid_until": 1789469290,
+                    "version": "1"
+                  },
+                  "protected": {
+                    "algorithm": "Ed25519",
+                    "canonicalization": "WHP-JCS-I1",
+                    "key_id": "45459cb09fd25c1780246543b9c49dc7cdbae9e511e043541771b4549d265f8e",
+                    "type": "WHP-SOURCE-ATTESTATION-v1"
+                  },
+                  "signature": "RqEsYBc5k1fOOCM1drKWxetUu4BDk7S/CsHyomyV6ShYAyy8E84qE0ZocL7UUszE2dQfb5HwkI6mcy87w3baCA=="
+                },
+                {
+                  "payload": {
+                    "content": {
+                      "count": 3,
+                      "statement": "Three items are present in this submitted fixture."
+                    },
+                    "epistemic_status": "REPORT",
+                    "id": "preserved-representation",
+                    "jurisdiction": "test-fixture-not-external-authority",
+                    "locator": "urn:whp:test:representation-1",
+                    "operations": [
+                      "INFORM",
+                      "RECOMMEND"
+                    ],
+                    "prior_hash": null,
+                    "qualifiers": [
+                      "Only this submitted fixture.",
+                      "No external-world truth claim."
+                    ],
+                    "scope": "submitted-example-only",
+                    "status": "ACTIVE",
+                    "unknowns": [
+                      {
+                        "blocks": [
+                          "EXECUTE"
+                        ],
+                        "description": "No outside-world evidence is supplied.",
+                        "id": "external-validity"
+                      }
+                    ],
+                    "valid_from": 1789461590,
+                    "valid_until": 1789469290,
+                    "version": "1"
+                  },
+                  "protected": {
+                    "algorithm": "Ed25519",
+                    "canonicalization": "WHP-JCS-I1",
+                    "key_id": "45459cb09fd25c1780246543b9c49dc7cdbae9e511e043541771b4549d265f8e",
+                    "type": "WHP-SOURCE-ATTESTATION-v1"
+                  },
+                  "signature": "qHWKrTkD6zetYI5+tnbO7F5C9kZvZxosmSBcPShQe/qdSX19s72s+8uljoPBSz+/pc7Kk7eYO2rDVpqJcs1DAA=="
+                }
+              ],
+              "object": {
+                "id": "preserved-representation",
+                "root": "9f76fe2e3ccc2260d7f3432678f3666137f55312bfbbc8d1e55ecb0b72c0401b",
+                "version": "1"
+              },
+              "profile": {
+                "id": "WHP-STANDING-STRUCTURED-PASSAGE",
+                "sha256": "4244be9ed0012eaeba8e2efeb9d274ad3c1f3e188748838c191129054d24c5ab",
+                "version": "1.0.0"
+              },
+              "requested_operation": "INFORM",
+              "transitions": [
+                {
+                  "payload": {
+                    "from": [
+                      "67677c7a07e0c626a20cf9e891f1f64494c71ca0fc771a729e9cc26bebe8a41d"
+                    ],
+                    "jurisdiction": "test-fixture-not-external-authority",
+                    "operations": [
+                      "INFORM",
+                      "RECOMMEND"
+                    ],
+                    "scope": "submitted-example-only",
+                    "to": "9f76fe2e3ccc2260d7f3432678f3666137f55312bfbbc8d1e55ecb0b72c0401b",
+                    "transform": "COPY",
+                    "valid_from": 1789461590,
+                    "valid_until": 1789469290,
+                    "warrant": {
+                      "evidence_hashes": [
+                        "67677c7a07e0c626a20cf9e891f1f64494c71ca0fc771a729e9cc26bebe8a41d"
+                      ],
+                      "statement": "Exact COPY of this source for INFORM or RECOMMEND only; all qualifiers and unknowns retained."
+                    }
+                  },
+                  "protected": {
+                    "algorithm": "Ed25519",
+                    "canonicalization": "WHP-JCS-I1",
+                    "key_id": "6bcaba2897b7e9f517dce43d83c1b872df2be42319b07b9af13e861791ad6d50",
+                    "type": "WHP-TRANSITION-WARRANT-v1"
+                  },
+                  "signature": "H4PlHUdLluqAXjtPxxQWQ/7PQu1o7R/eppBh1pHcA43V3+NC2e8gt0suC3ZR97jb0oaIuTAzBWczrZakFgDLBA=="
+                }
+              ],
+              "version": "WHP-STANDING-SUBMISSION-v1"
+            },
+            "bodyType": "json",
+            "headers": {
+              "whp-client-proof": "See http://127.0.0.1:45885/v1/contract for a fresh Ed25519 HTTP proof; this is not a wallet key."
+            },
+            "method": "POST",
+            "type": "http"
+          },
+          "output": {
+            "type": "json"
+          }
+        },
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "properties": {
+            "input": {
+              "additionalProperties": false,
+              "properties": {
+                "body": {
+                  "$ref": "http://127.0.0.1:45885/schemas/submission.schema.json",
+                  "description": "TEST wire-shape example only. A LIVE evaluation requires currently admitted SOURCE and TRANSITION attestations. The complete purchase and authentication contract is http://127.0.0.1:45885/v1/contract"
+                },
+                "bodyType": {
+                  "enum": [
+                    "json"
+                  ],
+                  "type": "string"
+                },
+                "headers": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "type": "object"
+                },
+                "method": {
+                  "enum": [
+                    "POST"
+                  ],
+                  "type": "string"
+                },
+                "type": {
+                  "const": "http",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "type",
+                "method",
+                "bodyType",
+                "body"
+              ],
+              "type": "object"
+            },
+            "output": {
+              "additionalProperties": false,
+              "properties": {
+                "type": {
+                  "const": "json",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "type"
+              ],
+              "type": "object"
+            }
+          },
+          "required": [
+            "input"
+          ],
+          "type": "object"
+        }
+      },
+      "whp-standing": {
+        "info": {
+          "quote": {
+            "payload": {
+              "buyer_key": "MCowBQYDK2VwAyEA+G9aD/giiq4h3R5fDFxin59eGOppVWAayaItymV/eZc=",
+              "charge_policy": "One evaluation, regardless of outcome. No second charge for this purchase identity.",
+              "environment": "TEST",
+              "expires_at": 1789479723,
+              "issued_at": 1789479123,
+              "issuer": "WHP Standing test issuer — not an institutional issuance",
+              "payment_requirements": {
+                "amount": "1000000",
+                "asset": "0x1111111111111111111111111111111111111111",
+                "extra": {
+                  "assetTransferMethod": "eip3009",
+                  "name": "USDC",
+                  "paymentFlow": "authorization",
+                  "version": "2"
+                },
+                "maxTimeoutSeconds": 300,
+                "network": "eip155:8453",
+                "payTo": "0x2222222222222222222222222222222222222222",
+                "scheme": "exact"
+              },
+              "profile_hash": "4244be9ed0012eaeba8e2efeb9d274ad3c1f3e188748838c191129054d24c5ab",
+              "purchase_id": "8b58adb5b60abc5c112858a5dcd0e29b3df2fd0c9b66f8b770e9bb75f13f4382",
+              "request_hash": "6262721b6843e633711a076a0c93350420bf816ce2844deefdcb5a2858f99fb5",
+              "resource": {
+                "description": "One bounded WHP Standing evaluation and durable retrieval",
+                "mimeType": "application/json",
+                "url": "http://127.0.0.1:45885/v1/evaluations"
+              }
+            },
+            "protected": {
+              "algorithm": "Ed25519",
+              "canonicalization": "WHP-JCS-I1",
+              "key_id": "1df55083cf0cd3d26d9ac75f4753137121febb5e69af220826fa3221a6fe123e",
+              "type": "WHP-STANDING-QUOTE-v1"
+            },
+            "signature": "5M5LHFxvaDltRyzBH9YM/AnPxZRt4xA6lNvgxgy1GVuRbSjDJbWmKBgkhz2lKJ0WeZfp9SGNK/WqCh0JAmUtDw=="
+          },
+          "required": true
+        },
+        "schema": {
+          "type": "object"
+        }
+      }
+    },
+    "resource": {
+      "description": "One bounded WHP Standing evaluation and durable retrieval",
+      "mimeType": "application/json",
+      "url": "http://127.0.0.1:45885/v1/evaluations"
+    },
+    "x402Version": 2
+  },
+  "probe_request_hash": "6262721b6843e633711a076a0c93350420bf816ce2844deefdcb5a2858f99fb5",
+  "external_object": {
+    "id": "preserved-representation",
+    "version": "1",
+    "content_sha256": "0a4c8e63279868494406120ac9765753afe5d057779a90252eaa08e36b5eb2bb"
+  },
+  "contemplated_action": {
+    "scope": "submitted-example-only",
+    "jurisdiction": "test-fixture-not-external-authority",
+    "operation": "INFORM"
+  },
+  "probe_authority_established": false,
+  "provider_id": "urn:whp:standing:capability:1",
+  "verified": true,
+  "test": "A",
+  "environment": "TEST",
+  "artifact_type": "WHP-STANDING-MARK-v1",
+  "artifact_name": "WHP Standing Mark v1",
+  "meaning": {
+    "artifact_id": "WHP-SM-896e6ea5ab4dd9801806c543a4f2195fe429684c88f62962b9802c9f47b829f1",
+    "authority": {
+      "certificates": [
+        {
+          "payload": {
+            "jurisdictions": [
+              "test-fixture-not-external-authority"
+            ],
+            "operations": [
+              "INFORM",
+              "RECOMMEND",
+              "EXECUTE"
+            ],
+            "profile_hash": "4244be9ed0012eaeba8e2efeb9d274ad3c1f3e188748838c191129054d24c5ab",
+            "public_key": "MCowBQYDK2VwAyEAngN9Tmi7iFBpr5xo6NnkkUmnAr1j1fmoGQeKww/iR4s=",
+            "roles": [
+              "ISSUER",
+              "REGISTRY",
+              "DISCOVERY"
+            ],
+            "scopes": [
+              "submitted-example-only"
+            ],
+            "subject": "test-issuer",
+            "valid_from": 1789478122,
+            "valid_until": 1790083922
+          },
+          "protected": {
+            "algorithm": "Ed25519",
+            "canonicalization": "WHP-JCS-I1",
+            "key_id": "93458ab87efbed0f73c0e7fedc566e9f7db20fb686e2d755489bb8fb37b13f5f",
+            "type": "WHP-AUTHORITY-CERTIFICATE-v1"
+          },
+          "signature": "/k/59VRXamyVTGO5MAn1zHBoWXkiRcP5EHQQm7uMWXs2u4Imj1vtEnScCej/PAKelF2x+5SgkejZnTJd8BObBw=="
+        },
+        {
+          "payload": {
+            "jurisdictions": [
+              "test-fixture-not-external-authority"
+            ],
+            "operations": [
+              "INFORM",
+              "RECOMMEND",
+              "EXECUTE"
+            ],
+            "profile_hash": "4244be9ed0012eaeba8e2efeb9d274ad3c1f3e188748838c191129054d24c5ab",
+            "public_key": "MCowBQYDK2VwAyEAt3OPo79HoysHceW7Fq7adVqrrrCBNIKuKrCBoUsubf8=",
+            "roles": [
+              "SOURCE"
+            ],
+            "scopes": [
+              "submitted-example-only"
+            ],
+            "subject": "test-source-attestor",
+            "valid_from": 1789478122,
+            "valid_until": 1790083922
+          },
+          "protected": {
+            "algorithm": "Ed25519",
+            "canonicalization": "WHP-JCS-I1",
+            "key_id": "93458ab87efbed0f73c0e7fedc566e9f7db20fb686e2d755489bb8fb37b13f5f",
+            "type": "WHP-AUTHORITY-CERTIFICATE-v1"
+          },
+          "signature": "tMd2yF5Gl0/VKnb1tDetgE8j/5QSpvkXYqcjPrEwV0E/oSjl/BDENKormqrdy1/f2W8ur82voWx5k5eNjGpBCw=="
+        },
+        {
+          "payload": {
+            "jurisdictions": [
+              "test-fixture-not-external-authority"
+            ],
+            "operations": [
+              "INFORM",
+              "RECOMMEND",
+              "EXECUTE"
+            ],
+            "profile_hash": "4244be9ed0012eaeba8e2efeb9d274ad3c1f3e188748838c191129054d24c5ab",
+            "public_key": "MCowBQYDK2VwAyEAJcRJR+LeimZAgk3Fi9l/TAt3avpG0qxPn3drEDqzc+g=",
+            "roles": [
+              "TRANSITION"
+            ],
+            "scopes": [
+              "submitted-example-only"
+            ],
+            "subject": "test-transition-authority",
+            "valid_from": 1789478122,
+            "valid_until": 1790083922
+          },
+          "protected": {
+            "algorithm": "Ed25519",
+            "canonicalization": "WHP-JCS-I1",
+            "key_id": "93458ab87efbed0f73c0e7fedc566e9f7db20fb686e2d755489bb8fb37b13f5f",
+            "type": "WHP-AUTHORITY-CERTIFICATE-v1"
+          },
+          "signature": "fumcyBhWccFek01srLrei6s2PvEpFLv7vCfKy+eWP7HMfBQDhz/Rq0cyhcM9Z37Zas0ZjORxY+YtAxBkWzCRAQ=="
+        }
+      ],
+      "profile_authorization": {
+        "payload": {
+          "contract_hash": "dd433c055fe0ad0bdb0326479b3339eea018204ccef44cd6ef247520a29c8e75",
+          "environment": "TEST",
+          "issuer": "WHP Standing test issuer — not an institutional issuance",
+          "profile_hash": "4244be9ed0012eaeba8e2efeb9d274ad3c1f3e188748838c191129054d24c5ab",
+          "ratified": true,
+          "valid_from": 1789478122,
+          "valid_until": 1790083922,
+          "verifier_sha256": "bb8cb78205f1892dcbf00d845cf85e504a0efacf2a0d8a793313fa8c0e99b833"
+        },
+        "protected": {
+          "algorithm": "Ed25519",
+          "canonicalization": "WHP-JCS-I1",
+          "key_id": "93458ab87efbed0f73c0e7fedc566e9f7db20fb686e2d755489bb8fb37b13f5f",
+          "type": "WHP-PROFILE-AUTHORIZATION-v1"
+        },
+        "signature": "DChmueFoxsEG1kJ5BO/Rqu88tcOL9Qu2paaCzUQntDEEAH5mYrhmdq8qEZBQYIq7H17jbI1ii1hvPXDLgd5nDQ=="
+      },
+      "revocations": [],
+      "root_public_key": "MCowBQYDK2VwAyEAp7hLzS5mnqMRkMBHokexSBrSTpS5U6nOVgwSBYl54Dw=",
+      "status_snapshot": {
+        "payload": {
+          "certificates_hash": "886c37e5f0e1590805b02b71fb4ce733b4090b5d231e89fd68c4f770bf970177",
+          "previous_hash": null,
+          "profile_authorization_hash": "4313de63ee7257755a10661c119bdc8294259ea86e940f6037018d0a5fbce006",
+          "revocations_hash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "sequence": 0,
+          "valid_from": 1789478122,
+          "valid_until": 1790083922
+        },
+        "protected": {
+          "algorithm": "Ed25519",
+          "canonicalization": "WHP-JCS-I1",
+          "key_id": "93458ab87efbed0f73c0e7fedc566e9f7db20fb686e2d755489bb8fb37b13f5f",
+          "type": "WHP-TRUST-STATUS-v1"
+        },
+        "signature": "XevGjKnVPlsxzvyDcJwr3p2hgJZMiCGGPe3b1xd1mHbAouMNM3dFHf+HbEMBX3Sz5PIvGGaf6zUEisnEQU63Dg=="
+      }
+    },
+    "bounds": {
+      "jurisdiction": "test-fixture-not-external-authority",
+      "scope": "submitted-example-only",
+      "valid_from": 1789479022,
+      "valid_until": 1789482722
+    },
+    "components": {
+      "ACTION_BOUNDARY": "NOT_ASSESSED",
+      "CONTEXT": "ESTABLISHED",
+      "CONTINUITY": "NOT_ASSESSED",
+      "PASSAGE": "ESTABLISHED",
+      "RELATION": "ESTABLISHED",
+      "SOURCE": "ESTABLISHED",
+      "UNKNOWN": "ESTABLISHED"
+    },
+    "determination": "ESTABLISHED",
+    "does_not_establish": [
+      "Substantive truth of source assertions",
+      "Authenticity of an external locator beyond the admitted signer's attestation",
+      "Completeness of evidence outside the submitted graph",
+      "General natural-language inference",
+      "Execution or behavior of a submitted external workflow",
+      "External legal or domain authority",
+      "Legal compliance, safety or universal truth",
+      "Continuity of versions outside the submitted graph"
+    ],
+    "effective_at": 1789479122,
+    "establishes": "Exact submitted signed JSON artifacts and COPY/COMPOSE transitions under admitted authority certificates. Relations assessed here are only the declared COPY and COMPOSE relations.",
+    "expires_at": 1789482722,
+    "issued_at": 1789479122,
+    "issuer": "WHP Standing test issuer — not an institutional issuance",
+    "object": {
+      "id": "preserved-representation",
+      "root": "98ca5e4d5c7bac406d4ff8ebf9be7ac485ca4e382235b6d9e25eab4023455266",
+      "version": "1"
+    },
+    "operation": "INFORM",
+    "provenance": {
+      "bounds": {
+        "jurisdiction": "test-fixture-not-external-authority",
+        "scope": "submitted-example-only",
+        "valid_from": 1789479022,
+        "valid_until": 1789482722
+      },
+      "buyer_key": "MCowBQYDK2VwAyEAPafZm8d6ojloxde3n1Ed6WSTjVuHJoTFatZr/i8OGKY=",
+      "client_reference": "test-8db0ce42d8f4910b40b63c46b89a0e1d",
+      "nodes": [
+        {
+          "payload": {
+            "content": {
+              "count": 3,
+              "statement": "Three items are present in this submitted fixture."
+            },
+            "epistemic_status": "REPORT",
+            "id": "sample-observation",
+            "jurisdiction": "test-fixture-not-external-authority",
+            "locator": "urn:whp:test:source-1",
+            "operations": [
+              "INFORM",
+              "RECOMMEND"
+            ],
+            "prior_hash": null,
+            "qualifiers": [
+              "Only this submitted fixture.",
+              "No external-world truth claim."
+            ],
+            "scope": "submitted-example-only",
+            "status": "ACTIVE",
+            "unknowns": [
+              {
+                "blocks": [
+                  "EXECUTE"
+                ],
+                "description": "No outside-world evidence is supplied.",
+                "id": "external-validity"
+              }
+            ],
+            "valid_from": 1789478622,
+            "valid_until": 1789486322,
+            "version": "1"
+          },
+          "protected": {
+            "algorithm": "Ed25519",
+            "canonicalization": "WHP-JCS-I1",
+            "key_id": "3bfaeca8cc8c95d9e5de33f880f9d6b489d0c01f64a9dc13a4dff045bab32b78",
+            "type": "WHP-SOURCE-ATTESTATION-v1"
+          },
+          "signature": "G1xThsFhZlHKlVj3FdwDAGIPoOfycb2MvC3FyrMn4YpmP0B2QPCSZH7OMahvCbbXqO2+yM9gfG1mVtwvxkAkDA=="
+        },
+        {
+          "payload": {
+            "content": {
+              "count": 3,
+              "statement": "Three items are present in this submitted fixture."
+            },
+            "epistemic_status": "REPORT",
+            "id": "preserved-representation",
+            "jurisdiction": "test-fixture-not-external-authority",
+            "locator": "urn:whp:test:representation-1",
+            "operations": [
+              "INFORM",
+              "RECOMMEND"
+            ],
+            "prior_hash": null,
+            "qualifiers": [
+              "Only this submitted fixture.",
+              "No external-world truth claim."
+            ],
+            "scope": "submitted-example-only",
+            "status": "ACTIVE",
+            "unknowns": [
+              {
+                "blocks": [
+                  "EXECUTE"
+                ],
+                "description": "No outside-world evidence is supplied.",
+                "id": "external-validity"
+              }
+            ],
+            "valid_from": 1789478622,
+            "valid_until": 1789486322,
+            "version": "1"
+          },
+          "protected": {
+            "algorithm": "Ed25519",
+            "canonicalization": "WHP-JCS-I1",
+            "key_id": "3bfaeca8cc8c95d9e5de33f880f9d6b489d0c01f64a9dc13a4dff045bab32b78",
+            "type": "WHP-SOURCE-ATTESTATION-v1"
+          },
+          "signature": "RrSOtHSZ7GpZmHVrjxls/lo3y25lg/5ZXWxepidwWe77SfhljObqzkgEf5NLGMP67y0rpzQesf9Mfl9UaAPoDQ=="
+        }
+      ],
+      "object": {
+        "id": "preserved-representation",
+        "root": "98ca5e4d5c7bac406d4ff8ebf9be7ac485ca4e382235b6d9e25eab4023455266",
+        "version": "1"
+      },
+      "profile": {
+        "id": "WHP-STANDING-STRUCTURED-PASSAGE",
+        "sha256": "4244be9ed0012eaeba8e2efeb9d274ad3c1f3e188748838c191129054d24c5ab",
+        "version": "1.0.0"
+      },
+      "requested_operation": "INFORM",
+      "transitions": [
+        {
+          "payload": {
+            "from": [
+              "70ab52883c8754a75d6d5ace0d9e7a77a3dc82bc232ead57e008e34e9f6fb7f3"
+            ],
+            "jurisdiction": "test-fixture-not-external-authority",
+            "operations": [
+              "INFORM",
+              "RECOMMEND"
+            ],
+            "scope": "submitted-example-only",
+            "to": "98ca5e4d5c7bac406d4ff8ebf9be7ac485ca4e382235b6d9e25eab4023455266",
+            "transform": "COPY",
+            "valid_from": 1789478622,
+            "valid_until": 1789486322,
+            "warrant": {
+              "evidence_hashes": [
+                "70ab52883c8754a75d6d5ace0d9e7a77a3dc82bc232ead57e008e34e9f6fb7f3"
+              ],
+              "statement": "Exact COPY of this source for INFORM or RECOMMEND only; all qualifiers and unknowns retained."
+            }
+          },
+          "protected": {
+            "algorithm": "Ed25519",
+            "canonicalization": "WHP-JCS-I1",
+            "key_id": "500ddd0c244b73027d838c261d9e1a05884b6e0d16b07883a6c4b3f33d61a395",
+            "type": "WHP-TRANSITION-WARRANT-v1"
+          },
+          "signature": "b+0nRcWZ/zpCLHwcgF19L96ewKUZzfDMyJFfA9FdrXHUrom8Fy/ThYoANJfg1WO1dahXf7ABigmyYtJzCCTbDQ=="
+        }
+      ],
+      "version": "WHP-STANDING-SUBMISSION-v1"
+    },
+    "qualifications": [
+      {
+        "payload": {
+          "content": {
+            "count": 3,
+            "statement": "Three items are present in this submitted fixture."
+          },
+          "epistemic_status": "REPORT",
+          "id": "sample-observation",
+          "jurisdiction": "test-fixture-not-external-authority",
+          "locator": "urn:whp:test:source-1",
+          "operations": [
+            "INFORM",
+            "RECOMMEND"
+          ],
+          "prior_hash": null,
+          "qualifiers": [
+            "Only this submitted fixture.",
+            "No external-world truth claim."
+          ],
+          "scope": "submitted-example-only",
+          "status": "ACTIVE",
+          "unknowns": [
+            {
+              "blocks": [
+                "EXECUTE"
+              ],
+              "description": "No outside-world evidence is supplied.",
+              "id": "external-validity"
+            }
+          ],
+          "valid_from": 1789478622,
+          "valid_until": 1789486322,
+          "version": "1"
+        },
+        "protected": {
+          "algorithm": "Ed25519",
+          "canonicalization": "WHP-JCS-I1",
+          "key_id": "3bfaeca8cc8c95d9e5de33f880f9d6b489d0c01f64a9dc13a4dff045bab32b78",
+          "type": "WHP-SOURCE-ATTESTATION-v1"
+        },
+        "signature": "G1xThsFhZlHKlVj3FdwDAGIPoOfycb2MvC3FyrMn4YpmP0B2QPCSZH7OMahvCbbXqO2+yM9gfG1mVtwvxkAkDA=="
+      },
+      {
+        "payload": {
+          "content": {
+            "count": 3,
+            "statement": "Three items are present in this submitted fixture."
+          },
+          "epistemic_status": "REPORT",
+          "id": "preserved-representation",
+          "jurisdiction": "test-fixture-not-external-authority",
+          "locator": "urn:whp:test:representation-1",
+          "operations": [
+            "INFORM",
+            "RECOMMEND"
+          ],
+          "prior_hash": null,
+          "qualifiers": [
+            "Only this submitted fixture.",
+            "No external-world truth claim."
+          ],
+          "scope": "submitted-example-only",
+          "status": "ACTIVE",
+          "unknowns": [
+            {
+              "blocks": [
+                "EXECUTE"
+              ],
+              "description": "No outside-world evidence is supplied.",
+              "id": "external-validity"
+            }
+          ],
+          "valid_from": 1789478622,
+          "valid_until": 1789486322,
+          "version": "1"
+        },
+        "protected": {
+          "algorithm": "Ed25519",
+          "canonicalization": "WHP-JCS-I1",
+          "key_id": "3bfaeca8cc8c95d9e5de33f880f9d6b489d0c01f64a9dc13a4dff045bab32b78",
+          "type": "WHP-SOURCE-ATTESTATION-v1"
+        },
+        "signature": "RrSOtHSZ7GpZmHVrjxls/lo3y25lg/5ZXWxepidwWe77SfhljObqzkgEf5NLGMP67y0rpzQesf9Mfl9UaAPoDQ=="
+      }
+    ],
+    "unknowns": [
+      {
+        "source_hash": "70ab52883c8754a75d6d5ace0d9e7a77a3dc82bc232ead57e008e34e9f6fb7f3",
+        "unknowns": [
+          {
+            "blocks": [
+              "EXECUTE"
+            ],
+            "description": "No outside-world evidence is supplied.",
+            "id": "external-validity"
+          }
+        ]
+      },
+      {
+        "source_hash": "98ca5e4d5c7bac406d4ff8ebf9be7ac485ca4e382235b6d9e25eab4023455266",
+        "unknowns": [
+          {
+            "blocks": [
+              "EXECUTE"
+            ],
+            "description": "No outside-world evidence is supplied.",
+            "id": "external-validity"
+          }
+        ]
+      }
+    ]
+  },
+  "completed_path": [
+    "Mark",
+    "meaning",
+    "historical verification and replay",
+    "profile",
+    "fresh current status",
+    "canonical capability",
+    "current discovery",
+    "purchase contract",
+    "x402 payment boundary"
+  ],
+  "independent_verifier": {
+    "verified": true,
+    "cryptographic_integrity": "VERIFIED",
+    "evaluation_replay": "VERIFIED",
+    "environment": "TEST",
+    "purchase_id": "896e6ea5ab4dd9801806c543a4f2195fe429684c88f62962b9802c9f47b829f1",
+    "mark_id": "WHP-SM-896e6ea5ab4dd9801806c543a4f2195fe429684c88f62962b9802c9f47b829f1",
+    "assessment": "ESTABLISHED",
+    "current_standing": "ACTIVE",
+    "payment_chain_finality": "SIMULATED_NOT_LIVE",
+    "expires_at": 1789482722,
+    "historical_issuance": "VERIFIED",
+    "institutional_root_admission": "CALLER_SUPPLIED_PIN_REQUIRED",
+    "current_discovery": {
+      "verified": true,
+      "resolution_id": "urn:whp:standing:resolution:1",
+      "capability_id": "urn:whp:standing:capability:1",
+      "service_origin": "http://127.0.0.1:45885",
+      "observed_at": 1789479122,
+      "valid_until": 1789479422
+    },
+    "technical_live_issuance_verified": false,
+    "outside_buyer_relationship": "NOT_ESTABLISHED_BY_THIS_VERIFIER",
+    "live_completion_verified": false
+  },
+  "sandbox": {
+    "image": "sha256:95915462064c432f1867afa50e9847c322e2d8ab64da688d471ce524694ca59e",
+    "network": "none",
+    "root_filesystem": "read-only",
+    "capabilities": "ALL_DROPPED",
+    "uid": 65534,
+    "mounts": "PUBLIC_DOWNLOADED_ARTIFACTS_ONLY",
+    "producer_source": false,
+    "private_keys": false
+  },
+  "root_admission": "TEST_SELF_CONSISTENT_ROOT",
+  "mark_sha256": "e39dea49faa352a8b6a1b966f8480cd67077ecb441bda0486557bff343670c0e",
+  "input_files": 1,
+  "prior_provider_configuration": false,
+  "repository_imports": false,
+  "trace": [
+    {
+      "url": "http://127.0.0.1:45885/.well-known/standing-capability.json",
+      "method": "GET",
+      "status": 200,
+      "sha256": "e99bfda297441f6bef70c907b9f72c4cde201ac5a9a3e5914302574e47557035"
+    },
+    {
+      "url": "http://127.0.0.1:45885/v1/immutable/4244be9ed0012eaeba8e2efeb9d274ad3c1f3e188748838c191129054d24c5ab",
+      "method": "GET",
+      "status": 200,
+      "sha256": "a63a242f3e128b58a51fcf4d146c841c246ef0123dbdca7a959ba7b181a8180a"
+    },
+    {
+      "url": "http://127.0.0.1:45885/v1/immutable/dd433c055fe0ad0bdb0326479b3339eea018204ccef44cd6ef247520a29c8e75",
+      "method": "GET",
+      "status": 200,
+      "sha256": "b4bd83b39ad49546ac7be0c5a6e5a1725608bcfe10e28ae1c69df329a1819394"
+    },
+    {
+      "url": "http://127.0.0.1:45885/v1/immutable/17a18f8d7400f010aa02d5e26946b8ae282b00667f5a1ad4d664465042311a54",
+      "method": "GET",
+      "status": 200,
+      "sha256": "c4448d6a56aafae2fd4aa7ec44f4aa3b8b6797d29fdfe463232fb6b8c8c889d1"
+    },
+    {
+      "url": "http://127.0.0.1:45885/verification/bb8cb78205f1892dcbf00d845cf85e504a0efacf2a0d8a793313fa8c0e99b833.py",
+      "method": "GET",
+      "status": 200,
+      "sha256": "bb8cb78205f1892dcbf00d845cf85e504a0efacf2a0d8a793313fa8c0e99b833"
+    },
+    {
+      "url": "http://127.0.0.1:45885/v1/registry/896e6ea5ab4dd9801806c543a4f2195fe429684c88f62962b9802c9f47b829f1",
+      "method": "GET",
+      "status": 200,
+      "sha256": "c1cf65a0480a3b278b43b4f59295a57f16992a30f852c29e05b120b1130984e7"
+    },
+    {
+      "url": "http://127.0.0.1:45885/v1/contract",
+      "method": "GET",
+      "status": 200,
+      "sha256": "3c05ffa579e00dd0fc548b1d429f9c2cd2bcd9b0ace94b11b751e021bc0de979"
+    },
+    {
+      "url": "http://127.0.0.1:45885/v1/openapi.json",
+      "method": "GET",
+      "status": 200,
+      "sha256": "ee810812bea628f595d6dc5534f1ef38039ba35fd196279e49f9795ff462ab22"
+    },
+    {
+      "url": "http://127.0.0.1:45885/schemas/submission.schema.json",
+      "method": "GET",
+      "status": 200,
+      "sha256": "578fb3e09dd64e5bb4f7c75f2b366028a4629cb5a4a61f9d705dd01a791521f8"
+    },
+    {
+      "url": "http://127.0.0.1:45885/v1/evaluations",
+      "method": "POST",
+      "status": 402,
+      "sha256": "2474baa268164d4c946d787062027466d352fddcf4cb12149a5f6a8ab1f217c8"
+    }
+  ],
+  "PROPAGATION-PROVEN": "TEST",
+  "production_completion_claim": false,
+  "trust_limit": "Cryptographic self-consistency relative to a discovered TEST root, not institutional admission, open-internet discovery or a sale."
+}

@@ -1,0 +1,137 @@
+{
+  "build": "WHP Standing first public v1",
+  "version": "1.0.0",
+  "started_at": "2026-09-15T13:32:01.187Z",
+  "completed_at": "2026-09-15T13:32:20.103Z",
+  "node": "v22.16.0",
+  "python": "Python 3.13.15",
+  "python_packages": {
+    "cryptography": "46.0.4",
+    "jsonschema": "4.26.0"
+  },
+  "source_manifest_sha256": "4197ed493a343d744b3ea910b77b7b32731147b53b12506e7bc5ada35346ab17",
+  "source_unchanged_during_proof": true,
+  "contract_commitments": {
+    "contract_sha256": "dd433c055fe0ad0bdb0326479b3339eea018204ccef44cd6ef247520a29c8e75",
+    "profile_sha256": "4244be9ed0012eaeba8e2efeb9d274ad3c1f3e188748838c191129054d24c5ab",
+    "schema_sha256": "17a18f8d7400f010aa02d5e26946b8ae282b00667f5a1ad4d664465042311a54",
+    "verifier_sha256": "bb8cb78205f1892dcbf00d845cf85e504a0efacf2a0d8a793313fa8c0e99b833",
+    "checked_without_writes": true
+  },
+  "javascript_syntax_files": 39,
+  "python_syntax_files": 6,
+  "test_counts": {
+    "tests": 129,
+    "pass": 129,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0
+  },
+  "inherited_invariant_tests_passed": 83,
+  "schemas_validated": true,
+  "real_local_http_transaction_executed": true,
+  "separate_process_retrieval_executed": true,
+  "independent_python_verifier_executed": true,
+  "test_artifact_refused_as_live": true,
+  "cold_agent_test_environment": "TEST",
+  "cold_agent_report": {
+    "verified": true,
+    "environment": "TEST",
+    "PROPAGATION-PROVEN": "TEST",
+    "tests": [
+      "A",
+      "B",
+      "C"
+    ],
+    "test_reports": {
+      "A": "A.stdout.json",
+      "B": "B.stdout.json",
+      "C": "C.stdout.json",
+      "migration": "migration.stdout.json"
+    },
+    "mark_sha256": "e39dea49faa352a8b6a1b966f8480cd67077ecb441bda0486557bff343670c0e",
+    "catalog_queries": [
+      {
+        "capability_class": "urn:capability:machine-verifiable-standing:1",
+        "requirements": "explicit-authority,explicit-bounds,provenance-integrity,qualification-preservation,unknown-preservation,independent-verification,durable-evidence",
+        "scope": "submitted-example-only",
+        "jurisdiction": "test-fixture-not-external-authority"
+      },
+      {
+        "capability_class": "urn:capability:machine-verifiable-standing:1",
+        "requirements": "explicit-authority,explicit-bounds,provenance-integrity,qualification-preservation,unknown-preservation,independent-verification,durable-evidence",
+        "scope": "submitted-example-only",
+        "jurisdiction": "test-fixture-not-external-authority"
+      },
+      {
+        "capability_class": "urn:capability:machine-verifiable-standing:1",
+        "requirements": "explicit-authority,explicit-bounds,provenance-integrity,qualification-preservation,unknown-preservation,independent-verification,durable-evidence",
+        "scope": "submitted-example-only",
+        "jurisdiction": "test-fixture-not-external-authority"
+      }
+    ],
+    "original_simulated_settlements": 1,
+    "simulated_transfers": 1,
+    "next_payment_authorizations": 0,
+    "durable_byte_identical_retrieval": true,
+    "service_origin_migration_proven": true,
+    "negative_cases": 13,
+    "production_completion": false,
+    "open_internet_catalog_or_institutional_root_admission": false
+  },
+  "demonstration": {
+    "purchase_id": "261214a03f61cd98cae23b209ec0fd47e16bb1c23dad1a7416641934a71abe7e",
+    "mark_id": "WHP-SM-261214a03f61cd98cae23b209ec0fd47e16bb1c23dad1a7416641934a71abe7e",
+    "mark_sha256": "515d8f8d07ab3acf60f952f4b8997aefdc367116ac352b499cd04b57d8ae6547",
+    "root_pin": "c7c17451b109b4fe47343856536d9af497918d6b0b9df0b831ab4942645f327b",
+    "wallet_signing_calls": 1,
+    "settlement_calls": 1,
+    "simulated_transfers": 1
+  },
+  "evidence_states": {
+    "DESIGNED": true,
+    "IMPLEMENTED": true,
+    "VERIFIED": true,
+    "PROPAGATION-PROVEN": "TEST",
+    "DEPLOYED": false,
+    "LIVE": false,
+    "SOLD": false,
+    "ISSUED": false
+  },
+  "postgresql_integration_tested": true,
+  "complete_thread_proof": true,
+  "production_credentials_used": false,
+  "production_database_accessed": false,
+  "production_deployment_performed": false,
+  "live_facilitator_integration_tested": false,
+  "live_completion": false,
+  "external_security_audit_performed": false,
+  "github": {
+    "run_id": "34975529469",
+    "run_attempt": "1",
+    "workflow_ref": "wheelerhubbell/WHPStanding/.github/workflows/public-v1-stage.yml@refs/heads/public-v1-contract-20260915",
+    "checkout_commit": "f33baab60646882b60568d04017dae0130cedf5a"
+  },
+  "postgresql": {
+    "started_at": "2026-09-15T13:32:19.595Z",
+    "completed_at": "2026-09-15T13:32:20.018Z",
+    "backend": "PostgreSQL",
+    "source_manifest_sha256": "4197ed493a343d744b3ea910b77b7b32731147b53b12506e7bc5ada35346ab17",
+    "environment": "TEST",
+    "checks": [
+      "concurrent HTTP requests converge on one transfer and one registry entry",
+      "identical POST and authenticated GET return byte-identical original result without settling",
+      "buyer isolation",
+      "same identity changed object conflicts",
+      "fresh separate process retrieves exact durable PostgreSQL bytes after producer pool closes"
+    ],
+    "all_passed": true,
+    "mark_sha256": "c8f20e28d0d9d7a50571780ea15bd13f799b995e5d11bdffceb090b4b3abd376",
+    "simulated_transfers": 1,
+    "settlement_calls": 1,
+    "production_database_accessed": false,
+    "live_payment_executed": false
+  },
+  "completion_scope": "First public v1 cryptographic contract and complete inherited plus bounded TEST propagation proof. No production assertion."
+}

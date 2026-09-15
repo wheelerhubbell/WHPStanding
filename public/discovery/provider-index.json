@@ -1,1 +1,8 @@
-{"version":"STANDING-PROVIDER-INDEX-v1","capability":"urn:capability:machine-verifiable-standing:1","open_provider_model":true,"providers":[{"provider":"WHP Standing","description":"machine-verifiable standing under explicit authority and bounds","capability":"/discovery/capability.json","discovery":"/.well-known/whp-standing.json","openapi":"/v1/openapi.json","profileIndex":"/v1/profiles","evaluation":"/v1/evaluations"}]}
+{
+  "interface": "capability-catalog-v1",
+  "providers": [],
+  "self_description_path": "/discovery/capability.json",
+  "runtime_provider_index_path": "/discovery/provider-index.json",
+  "static_file_is_not_current_service_resolution": true,
+  "external_registration_established": false
+}

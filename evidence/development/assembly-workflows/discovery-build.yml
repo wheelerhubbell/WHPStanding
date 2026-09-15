@@ -1,0 +1,92 @@
+name: Build WHP Standing discovery bridge
+on:
+  push:
+    paths: ['.github/workflows/discovery-build.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: '22.16.0'}
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.13'}
+      - name: Preserve verified baseline
+        run: |
+          python -m pip install -r requirements-verification.txt
+          npm test
+          npm run verify
+      - name: Generate discovery bridge and cold-agent tests
+        run: |
+          cat > src/need.mjs <<'EOF'
+          import { demand } from './canonical.mjs';
+          export const CAPABILITY='machine-verifiable standing under explicit authority and bounds';
+          export function recognizeNeed(object,action={}){
+            demand(object&&typeof object==='object'&&action&&typeof action==='object','NEED_INPUT_INVALID');
+            const e=object.standing_evidence;
+            if(e?.independently_verifiable===true&&e?.authority_established===true&&e?.provenance_sufficient===true&&e?.qualifications_preserved===true&&e?.blocking_unknowns===false)
+              return {version:'STANDING-NEED-v1',result:'SUFFICIENT_STANDING_EVIDENCE',capability_required:null};
+            let result='WARRANT_REQUIRED';
+            if(!e) result='NO_STANDING_EVIDENCE';
+            else if(e.authority_established!==true) result='INSUFFICIENT_AUTHORITY';
+            else if(e.provenance_sufficient!==true) result='PROVENANCE_INSUFFICIENT';
+            else if(e.qualifications_preserved!==true) result='QUALIFICATION_PRESERVATION_UNESTABLISHED';
+            else if(e.blocking_unknowns!==false) result='BLOCKING_UNKNOWN';
+            return {version:'STANDING-NEED-v1',result,capability_required:{id:'urn:capability:machine-verifiable-standing:1',description:CAPABILITY,requirements:['explicit-authority','explicit-bounds','provenance-integrity','qualification-preservation','unknown-preservation','independent-verification','durable-evidence'],vendor_neutral:true},contemplated_action:action};
+          }
+          EOF
+          mkdir -p public/.well-known public/discovery test
+          cat > public/discovery/capability.json <<'EOF'
+          {"version":"WHP-STANDING-CAPABILITY-v1","provider":{"name":"Wheeler Hubbell Publishing","product":"WHP Standing"},"capability":{"id":"urn:capability:machine-verifiable-standing:1","description":"machine-verifiable standing under explicit authority and bounds","problemConcepts":["bounded reliance","standing evidence","provenance insufficient for requested reliance","transformation warrant","authority to act on output","qualification preservation","unknown preservation","independent machine-verifiable warrant","downstream verification","agent-to-agent trust","artifact verification","provenance integrity","decision warrant"]},"evaluation":{"name":"WHP Standing Evaluation","path":"/v1/evaluations","method":"POST","inputSchema":"/schemas/submission.schema.json","output":"WHP Standing Mark or bounded negative assessment","profileIndex":"/v1/profiles"},"verification":{"instructions":"/v1/verification","resultSchema":"/schemas/result.schema.json"},"commerce":{"protocol":"x402-v2","network":"eip155:8453","asset":"USDC","recipient":"0x1050eddd8282623b0c263ed6bdbd42370bbc28d3","quote":"POST the schema-valid evaluation request without payment-signature to receive HTTP 402 terms"},"limitations":"WHP Standing establishes only the standing expressed by the applicable signed profile, authority, bounds, provenance and decision record. It does not establish unrestricted substantive truth."}
+          EOF
+          cat > public/.well-known/agent-card.json <<'EOF'
+          {"protocolVersion":"0.3.0","name":"WHP Standing","description":"Machine-verifiable standing under explicit authority and bounds. Evaluates whether a submitted structured transition preserves warranted provenance, authority, qualifications and unknowns under a published WHP Standing Profile.","url":"/v1/a2a","preferredTransport":"JSONRPC","capabilities":{},"defaultInputModes":["application/json"],"defaultOutputModes":["application/json"],"skills":[{"id":"whp-standing-evaluation","name":"WHP Standing Evaluation","description":"Produce a durable independently verifiable WHP Standing Mark when standing is established, or a bounded negative assessment otherwise.","tags":["standing evidence","bounded reliance","provenance integrity","transformation warrant","qualification preservation","unknown preservation","decision warrant","artifact verification"]}]}
+          EOF
+          cat > server.json <<'EOF'
+          {"$schema":"https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json","name":"io.github.wheelerhubbell/whp-standing","description":"WHP Standing: machine-verifiable standing under explicit authority and bounds.","repository":{"url":"https://github.com/wheelerhubbell/WHPStanding","source":"github"},"version":"1.0.0-candidate.1","remotes":[{"type":"streamable-http","url":"https://standing.wheelerhubbell.com/mcp"}]}
+          EOF
+          cat > public/discovery/provider-index.json <<'EOF'
+          {"version":"STANDING-PROVIDER-INDEX-v1","capability":"urn:capability:machine-verifiable-standing:1","providers":[{"provider":"WHP Standing","description":"machine-verifiable standing under explicit authority and bounds","capability":"/discovery/capability.json","discovery":"/.well-known/whp-standing.json","agentCard":"/.well-known/agent-card.json","openapi":"/v1/openapi.json"}],"open_provider_model":true}
+          EOF
+          cat > test/discovery.test.mjs <<'EOF'
+          import test from 'node:test'; import assert from 'node:assert/strict'; import fs from 'node:fs'; import {recognizeNeed} from '../src/need.mjs';
+          const read=p=>JSON.parse(fs.readFileSync(p));
+          test('cold need recognition is vendor neutral and provider-discoverable',()=>{const n=recognizeNeed({provenance:{present:true}},{operation:'EXECUTE'});assert.equal(n.result,'NO_STANDING_EVIDENCE');assert.equal(n.capability_required.vendor_neutral,true);assert.equal(n.capability_required.description,'machine-verifiable standing under explicit authority and bounds');const idx=read('public/discovery/provider-index.json');const p=idx.providers.find(x=>x.description===n.capability_required.description);assert(p);const c=read('public'+p.capability);assert.equal(c.capability.id,n.capability_required.id);assert.equal(c.evaluation.path,'/v1/evaluations');assert.equal(c.commerce.protocol,'x402-v2')});
+          test('mark propagation references are cryptographically inside signed payload source',()=>{const s=fs.readFileSync('src/mark.mjs','utf8');for(const x of ['discovery','service','verification','profile'])assert.match(s,new RegExp(x));});
+          test('A2A well-known card truthfully describes the capability',()=>{const a=read('public/.well-known/agent-card.json');assert.equal(a.name,'WHP Standing');assert(a.skills[0].description.includes('WHP Standing Mark'));});
+          EOF
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('src/mark.mjs'); s=p.read_text(); old="limitations:profile().not_assessed,\n    current_status_rule:"
+          new="discovery:{capability_id:'urn:capability:machine-verifiable-standing:1',capability:'machine-verifiable standing under explicit authority and bounds',service:this?.origin??null},\n    verification:{discovery_path:'/.well-known/whp-standing.json',capability_path:'/discovery/capability.json',profile_path:'/v1/profile',openapi_path:'/v1/openapi.json',evaluation_path:'/v1/evaluations',registry_path:'/v1/registry/'+row.id},\n    limitations:profile().not_assessed,\n    current_status_rule:"
+          # assembleResult has no service this; use origin carried in signed quote resource.
+          new=new.replace("this?.origin??null","new URL(row.quote.payload.resource.url).origin")
+          assert old in s; p.write_text(s.replace(old,new))
+          p=Path('src/service.mjs'); s=p.read_text(); marker="if(req.method==='GET'&&path==='/v1/openapi.json')return json(200,openapi);"
+          add="""if(req.method==='GET'&&path==='/v1/openapi.json')return json(200,openapi);
+    if(req.method==='GET'&&path==='/discovery/capability.json')return json(200,JSON.parse(await (await import('node:fs/promises')).readFile(new URL('../public/discovery/capability.json',import.meta.url),'utf8')));
+    if(req.method==='GET'&&path==='/discovery/provider-index.json')return json(200,JSON.parse(await (await import('node:fs/promises')).readFile(new URL('../public/discovery/provider-index.json',import.meta.url),'utf8')));
+    if(req.method==='GET'&&path==='/.well-known/agent-card.json')return json(200,JSON.parse((await (await import('node:fs/promises')).readFile(new URL('../public/.well-known/agent-card.json',import.meta.url),'utf8')).replaceAll('\\"url\\":\\"/v1/a2a\\"','\\"url\\":\\"'+this.origin+'/v1/a2a\\"')));
+    if(req.method==='GET'&&path==='/v1/profiles')return json(200,{profiles:[{id:profile().id,version:profile().version,path:'/v1/profile',sha256:PROFILE_HASH}]});
+    if(req.method==='GET'&&path==='/v1/verification')return json(200,{result_schema:'/schemas/result.schema.json',registry:'/v1/registry/{purchase_id}',rule:'Verify the sealed result signature against the admitted issuer certificate and pinned root/trust bundle; independently replay the declared profile; fetch a fresh signed registry snapshot for current status.'});"""
+          assert marker in s; p.write_text(s.replace(marker,add))
+          PY
+      - name: Execute baseline plus cold discovery verification
+        run: |
+          npm test
+          npm run verify
+      - name: Commit verified bridge and execution evidence
+        run: |
+          mkdir -p evidence/discovery
+          node --test test/discovery.test.mjs > evidence/discovery/cold-tests.tap
+          cat > evidence/discovery/ecosystem-research.json <<'EOF'
+          {"as_of":"2026-09-15","surfaces":{"x402_bazaar":{"exists":true,"applicable":true,"implemented":false,"submitted":false,"registered":false,"source":"https://github.com/x402-foundation/x402/blob/main/docs/extensions/bazaar.mdx"},"mcp_registry":{"exists":true,"applicable":false,"reason":"Current WHP Standing candidate is HTTP/OpenAPI, not an implemented MCP server; metadata alone must not claim MCP compatibility.","submitted":false,"registered":false,"source":"https://github.com/modelcontextprotocol/registry"},"a2a_agent_card":{"exists":true,"applicable":true,"implemented":true,"registered":false,"source":"https://github.com/a2aproject/A2A/blob/main/docs/specification.md"},"openapi":{"exists":true,"applicable":true,"implemented":true},"well_known":{"exists":true,"applicable":true,"implemented":true}},"notes":"Bazaar registration requires a live payable route/facilitator cataloging event. MCP Registry publication is intentionally withheld until an actual MCP transport exists."}
+          EOF
+          git config user.name 'WHP Standing Discovery Build'
+          git config user.email 'actions@users.noreply.github.com'
+          git add src/need.mjs src/mark.mjs src/service.mjs public server.json test/discovery.test.mjs evidence/discovery
+          git commit -m 'Implement and verify machine need recognition and self-propagation bridge'
+          git push

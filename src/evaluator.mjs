@@ -24,7 +24,7 @@ export function evaluate(s, trustBundle, rootPin, evaluatedAt) {
     const n=e.payload;
     try {const {certificate}=authorize(e,'WHP-SOURCE-ATTESTATION-v1','SOURCE',{...context,operations:n.operations},trust);
       check('SOURCE_AUTHORITY',h,certificateFits(certificate),'An admitted source key must attest within its signed scope, operations and validity.'); expiry=Math.min(expiry,certificate.valid_until);
-    } catch(error) { check('SOURCE_AUTHORITY',h,false,error.code??'SOURCE_AUTHORITY_ERROR'); }
+    } catch(error) { check('SOURCE_AUTHORITY',h,false,'An admitted source key must attest within its signed scope, operations and validity.'); }
     check('SOURCE_ACTIVE',h,n.status==='ACTIVE','Non-active source versions cannot carry operative standing in this profile.');
     check('SOURCE_BOUNDS',h,within(n),'Source jurisdiction and scope must match the requested bounds exactly.');
     check('SOURCE_TIME',h,timeFits(n),'Source validity must contain the requested time window.'); expiry=Math.min(expiry,n.valid_until);
@@ -40,7 +40,7 @@ export function evaluate(s, trustBundle, rootPin, evaluatedAt) {
     const t=e.payload, h=hash(t), parents=t.from.map(x=>nodes.get(x)?.payload), target=nodes.get(t.to)?.payload;
     try{const {certificate}=authorize(e,'WHP-TRANSITION-WARRANT-v1','TRANSITION',{...context,operations:t.operations},trust);
       check('TRANSITION_AUTHORITY',h,certificateFits(certificate),'A separately admitted transition authority must sign the exact passage.');expiry=Math.min(expiry,certificate.valid_until);
-    }catch(error){check('TRANSITION_AUTHORITY',h,false,error.code??'TRANSITION_AUTHORITY_ERROR');}
+    }catch(error){check('TRANSITION_AUTHORITY',h,false,'A separately admitted transition authority must sign the exact passage.');}
     check('TRANSITION_BOUNDS',h,within(t)&&timeFits(t),'The warrant must contain the requested temporal and jurisdictional bounds.');expiry=Math.min(expiry,t.valid_until);intersect(t.operations);
     check('WARRANT_EVIDENCE',h,t.warrant.evidence_hashes.length>0&&t.warrant.evidence_hashes.every(x=>nodes.has(x)),'The signed warrant must name inspectable evidence in the submitted graph.');
     if(!target||parents.some(x=>!x)){check('TRANSITION_REFERENCES',h,false,'Unknown source or target hash.');continue;}

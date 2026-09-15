@@ -1,5 +1,6 @@
 import { demand, openSeal, keyId, keyObject, exact, timeWindow, array, text, hash, canonical } from './canonical.mjs';
 import { PROFILE_HASH } from './profile.mjs';
+import { CONTRACT_HASH, VERIFIER_HASH } from './protocol.mjs';
 
 // Trust is supplied out of band. Embedded certificates never appoint their own root.
 export function validateTrust(bundle, pinnedRoot, at) {
@@ -7,8 +8,8 @@ export function validateTrust(bundle, pinnedRoot, at) {
   exact(bundle,['root_public_key','profile_authorization','certificates','revocations','status_snapshot']);
   demand(keyId(bundle.root_public_key)===pinnedRoot,'UNTRUSTED_ROOT'); keyObject(bundle.root_public_key);
   const pa=openSeal(bundle.profile_authorization,'WHP-PROFILE-AUTHORIZATION-v1',bundle.root_public_key);
-  exact(pa,['profile_hash','ratified','issuer','environment','valid_from','valid_until']);timeWindow(pa);
-  demand(pa.profile_hash===PROFILE_HASH && pa.ratified===true && pa.valid_from<=at && at<pa.valid_until,'PROFILE_NOT_AUTHORIZED');
+  exact(pa,['profile_hash','contract_hash','verifier_sha256','ratified','issuer','environment','valid_from','valid_until']);timeWindow(pa);
+  demand(pa.profile_hash===PROFILE_HASH && pa.contract_hash===CONTRACT_HASH && pa.verifier_sha256===VERIFIER_HASH && pa.ratified===true && pa.valid_from<=at && at<pa.valid_until,'PROFILE_NOT_AUTHORIZED');
   demand(['TEST','LIVE'].includes(pa.environment),'ENVIRONMENT_INVALID');text(pa.issuer);
   array(bundle.certificates,128);array(bundle.revocations,128);
   const status=openSeal(bundle.status_snapshot,'WHP-TRUST-STATUS-v1',bundle.root_public_key);
@@ -23,7 +24,7 @@ export function validateTrust(bundle, pinnedRoot, at) {
     exact(c,['public_key','subject','roles','scopes','jurisdictions','operations','profile_hash','valid_from','valid_until']);
     keyObject(c.public_key);text(c.subject);timeWindow(c);
     for(const k of ['roles','scopes','jurisdictions','operations']) {array(c[k],64); c[k].forEach(x=>text(x));}
-    demand(c.roles.every(x=>['SOURCE','TRANSITION','ISSUER','REGISTRY'].includes(x)), 'CERTIFICATE_ROLE_INVALID');
+    demand(c.roles.every(x=>['SOURCE','TRANSITION','ISSUER','REGISTRY','DISCOVERY'].includes(x)), 'CERTIFICATE_ROLE_INVALID');
     demand(c.profile_hash===PROFILE_HASH,'CERTIFICATE_PROFILE_MISMATCH');
     const id=keyId(c.public_key);demand(!keys.has(id),'DUPLICATE_AUTHORITY'); keys.set(id,c);
   }

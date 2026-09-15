@@ -14,8 +14,12 @@ export function canonical(x, depth = 0) {
   if (typeof x === 'boolean') return x ? 'true' : 'false';
   if (typeof x === 'number') { demand(Number.isSafeInteger(x) && !Object.is(x, -0), 'INTEGER_REQUIRED'); return String(x); }
   if (typeof x === 'string') { demand(x.isWellFormed(), 'INVALID_UNICODE'); return JSON.stringify(x); }
-  if (Array.isArray(x)) return '[' + x.map(v => canonical(v, depth + 1)).join(',') + ']';
+  if (Array.isArray(x)) {
+    demand(Reflect.ownKeys(x).length===x.length+1 && Array.from({length:x.length},(_,i)=>Object.getOwnPropertyDescriptor(x,String(i))).every(d=>d && 'value' in d && d.enumerable),'JSON_ARRAY_PROPERTIES');
+    return '[' + x.map(v => canonical(v, depth + 1)).join(',') + ']';
+  }
   demand(x && typeof x === 'object' && [Object.prototype, null].includes(Object.getPrototypeOf(x)), 'JSON_OBJECT_REQUIRED');
+  demand(Reflect.ownKeys(x).every(k=>typeof k==='string' && Object.getOwnPropertyDescriptor(x,k).enumerable && 'value' in Object.getOwnPropertyDescriptor(x,k)),'JSON_OBJECT_PROPERTIES');
   return '{' + Object.keys(x).sort().map(k => canonical(k, depth + 1) + ':' + canonical(x[k], depth + 1)).join(',') + '}';
 }
 // A parser, not JSON.parse with a reviver: duplicate keys must be rejected before loss.
@@ -44,7 +48,7 @@ export function parseStrict(text, maxBytes = 262144) {
     }
     for (const [s, v] of [['true', true], ['false', false], ['null', null]]) if (text.startsWith(s, i)) { i += s.length; return v; }
     const m = text.slice(i).match(/^-?(?:0|[1-9][0-9]*)(?:\.[0-9]+)?(?:[eE][+-]?[0-9]+)?/);
-    demand(m, 'INVALID_JSON'); i += m[0].length; const n = Number(m[0]); canonical(n); return n;
+    demand(m, 'INVALID_JSON'); demand(!/[.eE]/.test(m[0]) && m[0] !== '-0', 'INTEGER_TOKEN_REQUIRED'); i += m[0].length; const n = Number(m[0]); canonical(n); return n;
   }
   const out = val(0); ws(); demand(i === text.length, 'INVALID_JSON'); canonical(out); return out;
 }
@@ -82,7 +86,7 @@ export function openSeal(envelope, type, pub) {
 }
 export function exact(o, fields, path = '$') {
   demand(o && !Array.isArray(o) && typeof o === 'object', 'OBJECT_REQUIRED', 400, path);
-  demand(Object.keys(o).sort().join('\0') === [...fields].sort().join('\0'), 'FIELDS_INVALID', 400, path);
+  demand(Object.keys(o).length === fields.length && fields.every(k=>Object.hasOwn(o,k)), 'FIELDS_INVALID', 400, path);
 }
 export function text(s, path = '$', max = 4096) { demand(typeof s === 'string' && s.length > 0 && s.length <= max && s.isWellFormed(), 'TEXT_REQUIRED', 400, path); }
 export function array(a, max = 128, path = '$') { demand(Array.isArray(a) && a.length <= max, 'ARRAY_INVALID', 400, path); }

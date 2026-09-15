@@ -1,0 +1,17 @@
+{
+  "verified": true,
+  "cryptographic_integrity": "VERIFIED",
+  "evaluation_replay": "VERIFIED",
+  "environment": "TEST",
+  "purchase_id": "261214a03f61cd98cae23b209ec0fd47e16bb1c23dad1a7416641934a71abe7e",
+  "mark_id": "WHP-SM-261214a03f61cd98cae23b209ec0fd47e16bb1c23dad1a7416641934a71abe7e",
+  "assessment": "ESTABLISHED",
+  "current_standing": "ACTIVE",
+  "payment_chain_finality": "SIMULATED_NOT_LIVE",
+  "expires_at": 1789465690,
+  "historical_issuance": "VERIFIED",
+  "institutional_root_admission": "CALLER_SUPPLIED_PIN_REQUIRED",
+  "technical_live_issuance_verified": false,
+  "outside_buyer_relationship": "NOT_ESTABLISHED_BY_THIS_VERIFIER",
+  "live_completion_verified": false
+}

@@ -1,0 +1,140 @@
+{
+  "version": "WHP-STANDING-SUBMISSION-v1",
+  "client_reference": "test-75b338dd8640d75b06913abcfd8858ab",
+  "buyer_key": "MCowBQYDK2VwAyEAiFGW7CzLVQtiWUdA3AkabG+KuuQ1saPdwSDTGykJKsY=",
+  "profile": {
+    "id": "WHP-STANDING-STRUCTURED-PASSAGE",
+    "version": "1.0.0",
+    "sha256": "4244be9ed0012eaeba8e2efeb9d274ad3c1f3e188748838c191129054d24c5ab"
+  },
+  "object": {
+    "id": "preserved-representation",
+    "version": "1",
+    "root": "9f76fe2e3ccc2260d7f3432678f3666137f55312bfbbc8d1e55ecb0b72c0401b"
+  },
+  "bounds": {
+    "scope": "submitted-example-only",
+    "jurisdiction": "test-fixture-not-external-authority",
+    "valid_from": 1789461990,
+    "valid_until": 1789465690
+  },
+  "requested_operation": "INFORM",
+  "nodes": [
+    {
+      "protected": {
+        "type": "WHP-SOURCE-ATTESTATION-v1",
+        "algorithm": "Ed25519",
+        "canonicalization": "WHP-JCS-I1",
+        "key_id": "45459cb09fd25c1780246543b9c49dc7cdbae9e511e043541771b4549d265f8e"
+      },
+      "payload": {
+        "id": "sample-observation",
+        "version": "1",
+        "content": {
+          "statement": "Three items are present in this submitted fixture.",
+          "count": 3
+        },
+        "locator": "urn:whp:test:source-1",
+        "epistemic_status": "REPORT",
+        "qualifiers": [
+          "Only this submitted fixture.",
+          "No external-world truth claim."
+        ],
+        "unknowns": [
+          {
+            "id": "external-validity",
+            "description": "No outside-world evidence is supplied.",
+            "blocks": [
+              "EXECUTE"
+            ]
+          }
+        ],
+        "operations": [
+          "INFORM",
+          "RECOMMEND"
+        ],
+        "scope": "submitted-example-only",
+        "jurisdiction": "test-fixture-not-external-authority",
+        "valid_from": 1789461590,
+        "valid_until": 1789469290,
+        "status": "ACTIVE",
+        "prior_hash": null
+      },
+      "signature": "RqEsYBc5k1fOOCM1drKWxetUu4BDk7S/CsHyomyV6ShYAyy8E84qE0ZocL7UUszE2dQfb5HwkI6mcy87w3baCA=="
+    },
+    {
+      "protected": {
+        "type": "WHP-SOURCE-ATTESTATION-v1",
+        "algorithm": "Ed25519",
+        "canonicalization": "WHP-JCS-I1",
+        "key_id": "45459cb09fd25c1780246543b9c49dc7cdbae9e511e043541771b4549d265f8e"
+      },
+      "payload": {
+        "id": "preserved-representation",
+        "version": "1",
+        "content": {
+          "statement": "Three items are present in this submitted fixture.",
+          "count": 3
+        },
+        "locator": "urn:whp:test:representation-1",
+        "epistemic_status": "REPORT",
+        "qualifiers": [
+          "Only this submitted fixture.",
+          "No external-world truth claim."
+        ],
+        "unknowns": [
+          {
+            "id": "external-validity",
+            "description": "No outside-world evidence is supplied.",
+            "blocks": [
+              "EXECUTE"
+            ]
+          }
+        ],
+        "operations": [
+          "INFORM",
+          "RECOMMEND"
+        ],
+        "scope": "submitted-example-only",
+        "jurisdiction": "test-fixture-not-external-authority",
+        "valid_from": 1789461590,
+        "valid_until": 1789469290,
+        "status": "ACTIVE",
+        "prior_hash": null
+      },
+      "signature": "qHWKrTkD6zetYI5+tnbO7F5C9kZvZxosmSBcPShQe/qdSX19s72s+8uljoPBSz+/pc7Kk7eYO2rDVpqJcs1DAA=="
+    }
+  ],
+  "transitions": [
+    {
+      "protected": {
+        "type": "WHP-TRANSITION-WARRANT-v1",
+        "algorithm": "Ed25519",
+        "canonicalization": "WHP-JCS-I1",
+        "key_id": "6bcaba2897b7e9f517dce43d83c1b872df2be42319b07b9af13e861791ad6d50"
+      },
+      "payload": {
+        "from": [
+          "67677c7a07e0c626a20cf9e891f1f64494c71ca0fc771a729e9cc26bebe8a41d"
+        ],
+        "to": "9f76fe2e3ccc2260d7f3432678f3666137f55312bfbbc8d1e55ecb0b72c0401b",
+        "transform": "COPY",
+        "operations": [
+          "INFORM",
+          "RECOMMEND"
+        ],
+        "scope": "submitted-example-only",
+        "jurisdiction": "test-fixture-not-external-authority",
+        "valid_from": 1789461590,
+        "valid_until": 1789469290,
+        "warrant": {
+          "statement": "Exact COPY of this source for INFORM or RECOMMEND only; all qualifiers and unknowns retained.",
+          "evidence_hashes": [
+            "67677c7a07e0c626a20cf9e891f1f64494c71ca0fc771a729e9cc26bebe8a41d"
+          ]
+        }
+      },
+      "signature": "H4PlHUdLluqAXjtPxxQWQ/7PQu1o7R/eppBh1pHcA43V3+NC2e8gt0suC3ZR97jb0oaIuTAzBWczrZakFgDLBA=="
+    }
+  ]
+}

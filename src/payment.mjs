@@ -47,9 +47,20 @@ export class EvmRail {
   async request(url,body){const r=await this.fetch(url,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(body),signal:AbortSignal.timeout(15000),redirect:'error'});demand(r.ok,'PAYMENT_PROVIDER_UNAVAILABLE',503);const text=await r.text();demand(text.length<=2000000,'PAYMENT_PROVIDER_RESPONSE_TOO_LARGE',503);return JSON.parse(text);}
   async rpc(method,params){const r=await this.request(this.config.rpc_url,{jsonrpc:'2.0',id:1,method,params});demand(!r.error,'CHAIN_READ_UNAVAILABLE',503);return r.result;}
   async startBlock(){const chain=await this.rpc('eth_chainId',[]);demand('eip155:'+BigInt(chain).toString()===this.config.network,'RPC_CHAIN_MISMATCH',503);return Number(BigInt(await this.rpc('eth_blockNumber',[])));}
-  async verify(payment,requirements){this.verifyCalls++;const r=await this.request(this.config.facilitator_url.replace(/\/$/,'')+'/verify',{x402Version:2,paymentPayload:payment,paymentRequirements:requirements});
+  facilitatorPayload(payment){return this.config.discovery_extensions?{...payment,extensions:this.config.discovery_extensions}:payment;}
+  async facilitatorRequest(phase,payment,requirements){
+    const url=this.config.facilitator_url.replace(/\/$/,'')+'/'+phase;
+    const payload=this.facilitatorPayload(payment);
+    const r=await this.fetch(url,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({x402Version:2,paymentPayload:payload,paymentRequirements:requirements}),signal:AbortSignal.timeout(15000),redirect:'error'});
+    demand(r.ok,'PAYMENT_PROVIDER_UNAVAILABLE',503);const text=await r.text();demand(text.length<=2000000,'PAYMENT_PROVIDER_RESPONSE_TOO_LARGE',503);
+    const out=JSON.parse(text),raw=r.headers.get('extension-responses');
+    // Provider metadata is recorded, not trusted as proof of standing or settlement.
+    out.whp_discovery_evidence={phase,facilitator_origin:new URL(url).origin,metadata_sha256:hash(payload.extensions??{}),extension_responses_base64:raw&&raw.length<=32768?raw:null,observed_at:Math.floor(Date.now()/1000),registration_claim:false};
+    return out;
+  }
+  async verify(payment,requirements){this.verifyCalls++;const r=await this.facilitatorRequest('verify',payment,requirements);
     demand(r.isValid===true&&typeof r.payer==='string'&&r.payer.toLowerCase()===payment.payload.authorization.from.toLowerCase(),'PAYMENT_SIGNATURE_OR_STATE_INVALID',402);return r;}
-  async settle(payment,requirements){this.settleCalls++;return this.request(this.config.facilitator_url.replace(/\/$/,'')+'/settle',{x402Version:2,paymentPayload:payment,paymentRequirements:requirements});}
+  async settle(payment,requirements){this.settleCalls++;return this.facilitatorRequest('settle',payment,requirements);}
   async evidence(payment,transaction,at) {
     if(!HEX32.test(transaction??''))return null;
     const chain=await this.rpc('eth_chainId',[]);demand('eip155:'+BigInt(chain).toString()===payment.accepted.network,'RPC_CHAIN_MISMATCH',503);

@@ -55,3 +55,8 @@ The CLI is LIVE-only and rejects TEST policies. For the no-money, no-wallet proo
 The public review route only records a challenge. An issuer administrator must adjudicate it under the appropriate authority; no positive standing follows from a review receipt.
 
 `StandingService.applyRegistryCommand` accepts a root-signed `WHP-REGISTRY-COMMAND-v1` with `purchase_id`, `expected_previous_hash`, `status`, `reason`, and `at`. It appends an issuer-signed event without editing the old Mark. This library method is not exposed as an unauthenticated HTTP admin endpoint. Production administrator authentication, key custody and case-management operations remain deployment responsibilities.
+
+
+## First-public v1 additions
+
+`WHP_RESOLUTION_URL` selects the stable immutable capability resolver captured in each durable quotation before payment. `WHP_CAPABILITY_CATALOG_URL` optionally points to a generic current provider-discovery interface; it is not signed into historical standing. The first public root authorization must bind the exact profile, contract and verifier hashes reported by `python3 scripts/freeze-contract.py --check`. Current issuer credentials require explicit ISSUER, REGISTRY and DISCOVERY roles. Old candidate authorizations do not qualify. Production admission and publication remain separate from TEST proof.

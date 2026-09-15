@@ -1,0 +1,45 @@
+{
+  "verified": true,
+  "environment": "TEST",
+  "PROPAGATION-PROVEN": "TEST",
+  "tests": [
+    "A",
+    "B",
+    "C"
+  ],
+  "test_reports": {
+    "A": "A.stdout.json",
+    "B": "B.stdout.json",
+    "C": "C.stdout.json",
+    "migration": "migration.stdout.json"
+  },
+  "mark_sha256": "e39dea49faa352a8b6a1b966f8480cd67077ecb441bda0486557bff343670c0e",
+  "catalog_queries": [
+    {
+      "capability_class": "urn:capability:machine-verifiable-standing:1",
+      "requirements": "explicit-authority,explicit-bounds,provenance-integrity,qualification-preservation,unknown-preservation,independent-verification,durable-evidence",
+      "scope": "submitted-example-only",
+      "jurisdiction": "test-fixture-not-external-authority"
+    },
+    {
+      "capability_class": "urn:capability:machine-verifiable-standing:1",
+      "requirements": "explicit-authority,explicit-bounds,provenance-integrity,qualification-preservation,unknown-preservation,independent-verification,durable-evidence",
+      "scope": "submitted-example-only",
+      "jurisdiction": "test-fixture-not-external-authority"
+    },
+    {
+      "capability_class": "urn:capability:machine-verifiable-standing:1",
+      "requirements": "explicit-authority,explicit-bounds,provenance-integrity,qualification-preservation,unknown-preservation,independent-verification,durable-evidence",
+      "scope": "submitted-example-only",
+      "jurisdiction": "test-fixture-not-external-authority"
+    }
+  ],
+  "original_simulated_settlements": 1,
+  "simulated_transfers": 1,
+  "next_payment_authorizations": 0,
+  "durable_byte_identical_retrieval": true,
+  "service_origin_migration_proven": true,
+  "negative_cases": 13,
+  "production_completion": false,
+  "open_internet_catalog_or_institutional_root_admission": false
+}

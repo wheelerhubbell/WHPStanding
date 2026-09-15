@@ -1,0 +1,444 @@
+{
+  "build": "WHP Standing v1",
+  "version": "1.0.0-candidate.1+discovery.1",
+  "started_at": "2026-09-15T11:55:57.180Z",
+  "completed_at": "2026-09-15T11:56:04.783Z",
+  "node": "v22.16.0",
+  "python": "Python 3.13.15",
+  "python_packages": {
+    "cryptography": "46.0.4",
+    "jsonschema": "4.26.0"
+  },
+  "javascript_syntax_files": 33,
+  "python_syntax_files": 5,
+  "test_counts": {
+    "tests": 107,
+    "pass": 107,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0
+  },
+  "schemas_validated": true,
+  "real_local_http_transaction_executed": true,
+  "separate_process_retrieval_executed": true,
+  "independent_python_verifier_executed": true,
+  "test_artifact_refused_as_live": true,
+  "cold_agent_test_environment": "TEST",
+  "cold_agent_report": {
+    "verified": true,
+    "environment": "TEST",
+    "completed_path": [
+      "Mark",
+      "meaning",
+      "independent cryptographic verification and replay",
+      "discovery",
+      "applicable profile",
+      "purchase contract",
+      "payment boundary"
+    ],
+    "input_files": 1,
+    "prior_issuer_configuration": false,
+    "repository_imports": false,
+    "root_pin_source": "http://127.0.0.1:39769/.well-known/whp-standing.json",
+    "meaning": {
+      "authority_pointer": "/payload/authority",
+      "does_not_establish": [
+        "Substantive truth of source assertions",
+        "Authenticity of an external locator beyond the admitted signer's attestation",
+        "Completeness of evidence outside the submitted graph",
+        "General natural-language inference",
+        "Execution or behavior of a submitted external workflow",
+        "External legal or domain authority",
+        "Legal compliance, safety or universal truth",
+        "Continuity of versions outside the submitted graph"
+      ],
+      "establishes": "Exact submitted signed JSON artifacts and COPY/COMPOSE transitions under admitted authority certificates. Relations assessed here are only the declared COPY and COMPOSE relations.",
+      "limitations_pointer": "/payload/limitations",
+      "provenance_pointer": "/payload/submission",
+      "scope_pointer": "/payload/standing/bounds",
+      "statement": "The exact submitted object meets only the declared Standing Profile checks, at issuance, under its signed authority and bounds. Current standing is separately checked."
+    },
+    "independent_verifier": {
+      "verified": true,
+      "cryptographic_integrity": "VERIFIED",
+      "evaluation_replay": "VERIFIED",
+      "environment": "TEST",
+      "purchase_id": "b07189e12f818b170849c92f22040bb02b7ced5e5ee6cc5af1a9b2f9f14570c0",
+      "mark_id": "WHP-SM-b07189e12f818b170849c92f22040bb02b7ced5e5ee6cc5af1a9b2f9f14570c0",
+      "assessment": "ESTABLISHED",
+      "current_standing": "ACTIVE",
+      "payment_chain_finality": "SIMULATED_NOT_LIVE",
+      "expires_at": 1789476958,
+      "live_completion_verified": false
+    },
+    "sandbox_image": "sha256:3aafac124ac08a138d31c02cf2227f34588e6b0b79c6310e89c7fd37f8a4d300",
+    "sandbox_network": "none",
+    "sandbox_host_mounts": "only public downloaded artifacts, read-only",
+    "payment_status": 402,
+    "payment_authorizations_created": 0,
+    "wallet_keys_available": false,
+    "payment_terms": {
+      "accepts": [
+        {
+          "amount": "1000000",
+          "asset": "0x1111111111111111111111111111111111111111",
+          "extra": {
+            "assetTransferMethod": "eip3009",
+            "name": "USDC",
+            "paymentFlow": "authorization",
+            "version": "2"
+          },
+          "maxTimeoutSeconds": 300,
+          "network": "eip155:8453",
+          "payTo": "0x2222222222222222222222222222222222222222",
+          "scheme": "exact"
+        }
+      ],
+      "extensions": {
+        "bazaar": {
+          "info": {
+            "input": {
+              "body": {
+                "bounds": {
+                  "jurisdiction": "test-fixture-not-external-authority",
+                  "scope": "submitted-example-only",
+                  "valid_from": 1789461990,
+                  "valid_until": 1789465690
+                },
+                "buyer_key": "MCowBQYDK2VwAyEAKEm+9KA63lccHUEBF7bUeunJblKrZ+FAdkptxRu8nok=",
+                "client_reference": "test-a436414e95c23434e5308a772df8f9bf",
+                "nodes": [
+                  {
+                    "payload": {
+                      "content": {
+                        "count": 3,
+                        "statement": "Three items are present in this submitted fixture."
+                      },
+                      "epistemic_status": "REPORT",
+                      "id": "sample-observation",
+                      "jurisdiction": "test-fixture-not-external-authority",
+                      "locator": "urn:whp:test:source-1",
+                      "operations": [
+                        "INFORM",
+                        "RECOMMEND"
+                      ],
+                      "prior_hash": null,
+                      "qualifiers": [
+                        "Only this submitted fixture.",
+                        "No external-world truth claim."
+                      ],
+                      "scope": "submitted-example-only",
+                      "status": "ACTIVE",
+                      "unknowns": [
+                        {
+                          "blocks": [
+                            "EXECUTE"
+                          ],
+                          "description": "No outside-world evidence is supplied.",
+                          "id": "external-validity"
+                        }
+                      ],
+                      "valid_from": 1789461590,
+                      "valid_until": 1789469290,
+                      "version": "1"
+                    },
+                    "protected": {
+                      "algorithm": "Ed25519",
+                      "canonicalization": "WHP-JCS-I1",
+                      "key_id": "f2256c1fc60b9e0bc6571d99ef60b6b52d15547bf7ed0651c6bbe03e82118b41",
+                      "type": "WHP-SOURCE-ATTESTATION-v1"
+                    },
+                    "signature": "V4Om6VcFsLIzl0UZyMe/oxJrTjkksVol0dcqSx39wcv8U4XGoDR/aewQGkOa1wGob26PnFVz5h8lS7U2XZelAQ=="
+                  },
+                  {
+                    "payload": {
+                      "content": {
+                        "count": 3,
+                        "statement": "Three items are present in this submitted fixture."
+                      },
+                      "epistemic_status": "REPORT",
+                      "id": "preserved-representation",
+                      "jurisdiction": "test-fixture-not-external-authority",
+                      "locator": "urn:whp:test:representation-1",
+                      "operations": [
+                        "INFORM",
+                        "RECOMMEND"
+                      ],
+                      "prior_hash": null,
+                      "qualifiers": [
+                        "Only this submitted fixture.",
+                        "No external-world truth claim."
+                      ],
+                      "scope": "submitted-example-only",
+                      "status": "ACTIVE",
+                      "unknowns": [
+                        {
+                          "blocks": [
+                            "EXECUTE"
+                          ],
+                          "description": "No outside-world evidence is supplied.",
+                          "id": "external-validity"
+                        }
+                      ],
+                      "valid_from": 1789461590,
+                      "valid_until": 1789469290,
+                      "version": "1"
+                    },
+                    "protected": {
+                      "algorithm": "Ed25519",
+                      "canonicalization": "WHP-JCS-I1",
+                      "key_id": "f2256c1fc60b9e0bc6571d99ef60b6b52d15547bf7ed0651c6bbe03e82118b41",
+                      "type": "WHP-SOURCE-ATTESTATION-v1"
+                    },
+                    "signature": "8R7jJrFQYvC6OO/fGarBJy20KmY+n5WjRdIUFxQeD4x8Q98gfdSOsxtvs1oxyagrv/3YZrXzEped9IybPjuFCg=="
+                  }
+                ],
+                "object": {
+                  "id": "preserved-representation",
+                  "root": "9f76fe2e3ccc2260d7f3432678f3666137f55312bfbbc8d1e55ecb0b72c0401b",
+                  "version": "1"
+                },
+                "profile": {
+                  "id": "WHP-STANDING-STRUCTURED-PASSAGE",
+                  "sha256": "dc25aa63cadad8b5b02ba3cbaac552ca8273c6d6793b4eefdef16aadd180046e",
+                  "version": "1.0.0"
+                },
+                "requested_operation": "INFORM",
+                "transitions": [
+                  {
+                    "payload": {
+                      "from": [
+                        "67677c7a07e0c626a20cf9e891f1f64494c71ca0fc771a729e9cc26bebe8a41d"
+                      ],
+                      "jurisdiction": "test-fixture-not-external-authority",
+                      "operations": [
+                        "INFORM",
+                        "RECOMMEND"
+                      ],
+                      "scope": "submitted-example-only",
+                      "to": "9f76fe2e3ccc2260d7f3432678f3666137f55312bfbbc8d1e55ecb0b72c0401b",
+                      "transform": "COPY",
+                      "valid_from": 1789461590,
+                      "valid_until": 1789469290,
+                      "warrant": {
+                        "evidence_hashes": [
+                          "67677c7a07e0c626a20cf9e891f1f64494c71ca0fc771a729e9cc26bebe8a41d"
+                        ],
+                        "statement": "Exact COPY of this source for INFORM or RECOMMEND only; all qualifiers and unknowns retained."
+                      }
+                    },
+                    "protected": {
+                      "algorithm": "Ed25519",
+                      "canonicalization": "WHP-JCS-I1",
+                      "key_id": "112853f6c28a7b7616f20f8df36d43429941688318049946df233b4e1b7fb000",
+                      "type": "WHP-TRANSITION-WARRANT-v1"
+                    },
+                    "signature": "w7isyH9I1aWQpWHyI0QbYfcng/Mxyu7WdeWxEGBeuValsVm8++wvTsq5kroE4OG4NE/K+byMjW81mbHKAXiJDw=="
+                  }
+                ],
+                "version": "WHP-STANDING-SUBMISSION-v1"
+              },
+              "bodyType": "json",
+              "headers": {
+                "whp-client-proof": "See http://127.0.0.1:39769/v1/contract for a fresh Ed25519 HTTP proof; this is not a wallet key."
+              },
+              "method": "POST",
+              "type": "http"
+            },
+            "output": {
+              "type": "json"
+            }
+          },
+          "schema": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "properties": {
+              "input": {
+                "additionalProperties": false,
+                "properties": {
+                  "body": {
+                    "$ref": "http://127.0.0.1:39769/schemas/submission.schema.json",
+                    "description": "TEST wire-shape example only. A LIVE evaluation requires currently admitted SOURCE and TRANSITION attestations. The complete purchase and authentication contract is http://127.0.0.1:39769/v1/contract"
+                  },
+                  "bodyType": {
+                    "enum": [
+                      "json"
+                    ],
+                    "type": "string"
+                  },
+                  "headers": {
+                    "additionalProperties": {
+                      "type": "string"
+                    },
+                    "type": "object"
+                  },
+                  "method": {
+                    "enum": [
+                      "POST"
+                    ],
+                    "type": "string"
+                  },
+                  "type": {
+                    "const": "http",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "type",
+                  "method",
+                  "bodyType",
+                  "body"
+                ],
+                "type": "object"
+              },
+              "output": {
+                "additionalProperties": false,
+                "properties": {
+                  "type": {
+                    "const": "json",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "type"
+                ],
+                "type": "object"
+              }
+            },
+            "required": [
+              "input"
+            ],
+            "type": "object"
+          }
+        },
+        "whp-standing": {
+          "info": {
+            "quote": {
+              "payload": {
+                "buyer_key": "MCowBQYDK2VwAyEAjXKoLSFYMCVLPt7JkmwOBpRsdE5PXJkFc6HW9INLjMs=",
+                "charge_policy": "One evaluation, regardless of outcome. No second charge for this purchase identity.",
+                "environment": "TEST",
+                "expires_at": 1789473959,
+                "issued_at": 1789473359,
+                "issuer": "WHP Standing test issuer \u2014 not an institutional issuance",
+                "payment_requirements": {
+                  "amount": "1000000",
+                  "asset": "0x1111111111111111111111111111111111111111",
+                  "extra": {
+                    "assetTransferMethod": "eip3009",
+                    "name": "USDC",
+                    "paymentFlow": "authorization",
+                    "version": "2"
+                  },
+                  "maxTimeoutSeconds": 300,
+                  "network": "eip155:8453",
+                  "payTo": "0x2222222222222222222222222222222222222222",
+                  "scheme": "exact"
+                },
+                "profile_hash": "dc25aa63cadad8b5b02ba3cbaac552ca8273c6d6793b4eefdef16aadd180046e",
+                "purchase_id": "e8d65c394f71bd60aad2921a631580a5a61b319635361516318410c0f1fefa28",
+                "request_hash": "5cce91817e477a690f17d5eaddabb850ca2bd0c247171efa6c950541398c32ee",
+                "resource": {
+                  "description": "One bounded WHP Standing evaluation and durable retrieval",
+                  "mimeType": "application/json",
+                  "url": "http://127.0.0.1:39769/v1/evaluations"
+                }
+              },
+              "protected": {
+                "algorithm": "Ed25519",
+                "canonicalization": "WHP-JCS-I1",
+                "key_id": "ab8ed66e9cd4b754f87426d1b59b162fdcb86b37fcd10b608103c776cf4527e1",
+                "type": "WHP-STANDING-QUOTE-v1"
+              },
+              "signature": "eEs2StSFRlXQh/IQ3XYQLtaquDcK6ypGfFQt9LqyYDBfTLXgoLpVdqw4fAXpFvbbbN93wn9q25LY10Q3PHkyCQ=="
+            },
+            "required": true
+          },
+          "schema": {
+            "type": "object"
+          }
+        }
+      },
+      "resource": {
+        "description": "One bounded WHP Standing evaluation and durable retrieval",
+        "mimeType": "application/json",
+        "url": "http://127.0.0.1:39769/v1/evaluations"
+      },
+      "x402Version": 2
+    },
+    "trace": [
+      {
+        "url": "http://127.0.0.1:39769/.well-known/whp-standing.json",
+        "method": "GET",
+        "status": 200,
+        "sha256": "c9056f9fd127454ebb78567f7e7ac7baa6790f5f484f77c0ae46eba55f33e8d8"
+      },
+      {
+        "url": "http://127.0.0.1:39769/v1/verification",
+        "method": "GET",
+        "status": 200,
+        "sha256": "fa5f791964050744a97fbe0884eb01c6a1bf8b5a7f03c6b7b0e170790413fa13"
+      },
+      {
+        "url": "http://127.0.0.1:39769/verification/30053d078472d0da7970d3e89dc6f71546c38d6a0078068c5108a10d93769dec.py",
+        "method": "GET",
+        "status": 200,
+        "sha256": "30053d078472d0da7970d3e89dc6f71546c38d6a0078068c5108a10d93769dec"
+      },
+      {
+        "url": "http://127.0.0.1:39769/v1/profiles/WHP-STANDING-STRUCTURED-PASSAGE/1.0.0",
+        "method": "GET",
+        "status": 200,
+        "sha256": "0ea0a18190b4978faff91aa08d118cf99cfc7c2fc5a1a588998c5aff1ae31f9c"
+      },
+      {
+        "url": "http://127.0.0.1:39769/v1/registry/b07189e12f818b170849c92f22040bb02b7ced5e5ee6cc5af1a9b2f9f14570c0",
+        "method": "GET",
+        "status": 200,
+        "sha256": "bce197fa65deb073c2d138e618e875531d0a46442e4f7deeb3e0e90c3998e5fa"
+      },
+      {
+        "url": "http://127.0.0.1:39769/v1/contract",
+        "method": "GET",
+        "status": 200,
+        "sha256": "4867b5b408fbec2dfd0890be36bc9052fb21fe42888f310eeaf575f9a3a6dabc"
+      },
+      {
+        "url": "http://127.0.0.1:39769/schemas/submission.schema.json",
+        "method": "GET",
+        "status": 200,
+        "sha256": "da424200acfe153c0f54fa20ee7f234d7c32e0825d786052d7d60a8dd4b7cfa9"
+      },
+      {
+        "url": "http://127.0.0.1:39769/v1/evaluations",
+        "method": "POST",
+        "status": 402,
+        "sha256": "669da3396fbb488be74fdf2b3c61d64cb004313697a087152cfab2ca361a1334"
+      }
+    ],
+    "trust_limit": "The discovered root is bound to the authenticated HTTPS origin. Legal institutional attribution requires separate issuer admission; this traversal does not create it.",
+    "PROPAGATION-PROVEN": false,
+    "production_completion_claim": false,
+    "mark_sha256": "c8d8e86477c7b6d21883df0958b7d1eed97bb31723ae33d0cb6691ca3d2a6881",
+    "original_test_settlements": 1,
+    "byte_identical_retrieval": true
+  },
+  "demonstration": {
+    "purchase_id": "66b04ad0dc7d02ea6b3efd5fbd98a6e365ec1ea58063097574908ddb38586be7",
+    "mark_id": "WHP-SM-66b04ad0dc7d02ea6b3efd5fbd98a6e365ec1ea58063097574908ddb38586be7",
+    "mark_sha256": "10f9fd4b2f4c7dc5cb73338317d4b09cd92f045df6948aa5bbc65df01e32c64f",
+    "root_pin": "04fa5308abf9977ea80d3fe8f665d9b4efe5fcbf8f0a00dcc030a2fce110f7e5",
+    "wallet_signing_calls": 1,
+    "settlement_calls": 1,
+    "simulated_transfers": 1
+  },
+  "exact_completion_boundary": "OPEN \u2014 no real buyer payment or institutional WHP Standing Mark was issued.",
+  "live_completion": false,
+  "production_deployment_performed": false,
+  "postgresql_integration_tested": true,
+  "live_facilitator_integration_tested": false,
+  "external_security_audit_performed": false,
+  "postgresql_report": "evidence/postgresql/report.json",
+  "github_run_id": "34965923192",
+  "github_workflow_source_commit": "186609720a6fed4b0e789efd41f90f9d120fa08d"
+}
