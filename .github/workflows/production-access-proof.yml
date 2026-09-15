@@ -1,0 +1,49 @@
+name: WHP production access proof
+on:
+  push:
+    branches: [standing-v1-propagation]
+    paths: [.github/workflows/production-access-proof.yml]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.16.0'
+      - name: Probe authorized API capabilities with no private key payloads
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+        run: |
+          mkdir -p /tmp/whp-access
+          node --input-type=module <<'JS'
+          import {writeFile} from 'node:fs/promises';
+          const site='914e2d6d-ec82-4b03-aa58-785fcf3b453b',account='6aa6fb2da06f6afa962eee67';
+          const base='https://api.netlify.com/api/v1',token=process.env.NETLIFY_AUTH_TOKEN;
+          const out={checked_at:new Date().toISOString(),source_commit:process.env.GITHUB_SHA,run_id:process.env.GITHUB_RUN_ID,private_material_used_in_probes:false,probes:[]};
+          const req=async(path,method='GET',body)=>{const r=await fetch(base+path,{method,headers:{Authorization:'Bearer '+token,'content-type':'application/json'},body:body===undefined?undefined:JSON.stringify(body)});const text=await r.text();let data;try{data=JSON.parse(text)}catch{data=null}return {status:r.status,data,text}};
+          const envpath='/accounts/'+account+'/env?site_id='+site;
+          const env=await req(envpath);out.environment_read_status=env.status;out.present_keys=Array.isArray(env.data)?env.data.map(e=>({key:e.key,is_secret:e.is_secret,contexts:e.values?.map(v=>v.context)})):[];
+          const a=await req('/accounts/'+account);out.account_read_status=a.status;if(a.status===200)out.account={type:a.data.type,type_name:a.data.type_name,capabilities:a.data.capabilities};
+          for(const secret of [true,false]){
+            const key='WHP_PUBLIC_ACCESS_PROBE_'+(secret?'SECRET_FLAG':'STANDARD');
+            const payload=[{key,scopes:['builds','functions','runtime','post-processing'],is_secret:secret,values:[{context:'dev',value:'public-probe-not-secret'}]}];
+            const r=await req(envpath,'POST',payload);
+            // Probe request contains only public data, never actual custody or credentials.
+            out.probes.push({operation:'create context-isolated site variable',secret_controller_flag:secret,status:r.status,error:r.status>=400?r.data:null});
+            if(r.status>=200&&r.status<300){const d=await req('/accounts/'+account+'/env/'+key+'?site_id='+site,'DELETE');out.probes.push({operation:'delete public probe',status:d.status});}
+          }
+          const db=await req('/sites/'+site+'/database');out.database={status:db.status,connection_string_present:Boolean(db.data?.connection_string),error:db.status>=400?db.data:null};
+          const endpoints=['https://facilitator.payai.network/supported','https://docs.payai.network/x402/facilitators/authentication','https://docs.payai.network/x402/facilitators/pricing'];
+          for(const url of endpoints){try{const r=await fetch(url,{signal:AbortSignal.timeout(20000)});const text=await r.text();if(url.endsWith('/supported'))out.facilitator_supported={url,status:r.status,body:text.slice(0,15000)};else await writeFile('/tmp/whp-access/'+url.split('/').pop()+'.html',text);}catch(e){out.probes.push({url,error:e.name});}}
+          await writeFile('/tmp/whp-access/access.json',JSON.stringify(out,null,2)+'\n');console.log(JSON.stringify(out,null,2));
+          JS
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: whp-production-access-${{ github.run_id }}
+          path: /tmp/whp-access/
+          retention-days: 7
