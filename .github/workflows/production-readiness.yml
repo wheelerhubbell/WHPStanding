@@ -1,7 +1,5 @@
 name: Inspect WHP Standing production readiness
 on:
-  push:
-    paths: ['.github/workflows/production-readiness.yml']
   workflow_dispatch:
 permissions:
   contents: read

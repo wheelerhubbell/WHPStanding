@@ -1,12 +1,12 @@
-name: Verify first-public-v1 contract
+name: Isolated first-public-v1 completion proof
 on:
   push:
-    branches: [main]
-  workflow_dispatch:
+    branches: [public-v1-contract-20260915]
+    paths: ['build-input/public-v1-source/**', 'build-input/public-v1-stage.py', '.github/workflows/public-v1-stage.yml']
 permissions:
-  contents: read
+  contents: write
 jobs:
-  verify:
+  prove:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     services:
@@ -15,13 +15,16 @@ jobs:
         env:
           POSTGRES_PASSWORD: ephemeral-ci-only
           POSTGRES_DB: whp_test
-        ports: ["5432:5432"]
+        ports: ['5432:5432']
         options: >-
           --health-cmd pg_isready --health-interval 5s --health-timeout 5s --health-retries 10
     steps:
       - uses: actions/checkout@v4
         with:
+          fetch-depth: 0
           persist-credentials: false
+      - name: Reconstruct complete hash-bound source without changing any ref
+        run: python3 build-input/public-v1-stage.py
       - uses: actions/setup-node@v4
         with:
           node-version: '22.16.0'
@@ -33,18 +36,25 @@ jobs:
       - run: python -m pip install -r verify/requirements.txt
       - name: Build generic no-network verifier sandbox
         run: bash scripts/build-cold-sandbox.sh
-      - name: Full inherited and public-v1 proof
+      - name: Full inherited and cold-agent cryptographic proof
         run: npm run verify
-      - name: Shared durable persistence proof
+      - name: Isolated PostgreSQL durable retrieval proof
         run: node scripts/test-postgres.mjs
         env:
           WHP_TEST_POSTGRES_URL: postgresql://postgres:ephemeral-ci-only@127.0.0.1:5432/whp_test
-      - name: Complete evidence gate
+      - name: Require every evidence gate
         run: node scripts/finish-proof.mjs
+      - name: Create verified Git tree object only; no commit, ref update, or deployment
+        run: python3 build-input/public-v1-stage.py
+        env:
+          STAGE_ACTION: publish
+          GH_TREE_TOKEN: ${{ github.token }}
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: first-public-v1-executable-evidence
-          path: evidence/public-v1/
+          name: first-public-v1-stage-proof
+          path: |
+            evidence/public-v1/
+            publication/
           if-no-files-found: error
           retention-days: 90
