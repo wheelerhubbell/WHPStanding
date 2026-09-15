@@ -1,0 +1,52 @@
+name: Inspect WHP Standing production readiness
+on:
+  push:
+    paths: ['.github/workflows/production-readiness.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Inspect configured authority and deployment access without exposing values
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+          WHP_ORIGIN: ${{ vars.WHP_ORIGIN }}
+          WHP_ROOT_PIN: ${{ vars.WHP_ROOT_PIN }}
+          WHP_TRUST_BUNDLE_JSON: ${{ secrets.WHP_TRUST_BUNDLE_JSON }}
+          WHP_ISSUER_PRIVATE_KEY: ${{ secrets.WHP_ISSUER_PRIVATE_KEY }}
+          WHP_PAYMENT_REQUIREMENTS_JSON: ${{ secrets.WHP_PAYMENT_REQUIREMENTS_JSON }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          WHP_RPC_URL: ${{ secrets.WHP_RPC_URL }}
+          WHP_FACILITATOR_URL: ${{ vars.WHP_FACILITATOR_URL }}
+        run: |
+          python - <<'PY'
+          import os,json,urllib.request,datetime,pathlib
+          names=['NETLIFY_AUTH_TOKEN','NETLIFY_SITE_ID','WHP_ORIGIN','WHP_ROOT_PIN','WHP_TRUST_BUNDLE_JSON','WHP_ISSUER_PRIVATE_KEY','WHP_PAYMENT_REQUIREMENTS_JSON','DATABASE_URL','WHP_RPC_URL','WHP_FACILITATOR_URL']
+          report={'checked_at':datetime.datetime.now(datetime.timezone.utc).isoformat(),'repository':'wheelerhubbell/WHPStanding','commit':os.environ['GITHUB_SHA'],'run_id':os.environ['GITHUB_RUN_ID'],'configured':{n:bool(os.environ.get(n)) for n in names},'live_authority_verified':False,'deployed':False,'sold':False,'issued':False,'secret_values_exported':False}
+          def get(url,headers={}):
+              with urllib.request.urlopen(urllib.request.Request(url,headers=headers),timeout=20) as r:return json.load(r)
+          token=os.environ.get('NETLIFY_AUTH_TOKEN')
+          if token:
+              try:
+                  sites=get('https://api.netlify.com/api/v1/sites?per_page=100',{'Authorization':'Bearer '+token})
+                  report['netlify_access']='VERIFIED_READ'
+                  report['matching_sites']=[{'id':s['id'],'name':s['name'],'url':s.get('ssl_url'),'repository':(s.get('build_settings') or {}).get('repo_url')} for s in sites if 'WHPStanding' in str((s.get('build_settings') or {}).get('repo_url',''))]
+              except Exception as e:report['netlify_access_error']=type(e).__name__
+          else:report['netlify_access']='AUTHORIZATION_NOT_CONFIGURED_IN_REPOSITORY'
+          try:
+              supported=get('https://facilitator.payai.network/supported')
+              report['payai_supported']=supported
+          except Exception as e:report['payai_probe_error']=type(e).__name__
+          pathlib.Path('readiness').mkdir(exist_ok=True)
+          pathlib.Path('readiness/production-authorization-inspection.json').write_text(json.dumps(report,indent=2)+'\n')
+          print(json.dumps(report,indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: whp-standing-readiness-${{ github.run_id }}
+          path: readiness/
+          retention-days: 90
