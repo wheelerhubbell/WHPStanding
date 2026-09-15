@@ -1,6 +1,6 @@
 {
-  "checked_at": "2026-09-15T13:43:59.550Z",
-  "source_commit": "bde94b2c79816be21f55c2aca6de9d608dd5a5c0",
+  "checked_at": "2026-09-15T13:44:49.777Z",
+  "source_commit": "2058870be2c17bb64cb2758274ac91513eb17771",
   "payment_executed": false,
   "paid_plan_enabled": false,
   "account_plan": "Free",
@@ -35,5 +35,7 @@
     "usdc_code_present": true,
     "logs_readable": true
   },
-  "failure": "42501"
+  "database_stage": "migration",
+  "failure": "42501",
+  "permission_error": "permission denied for schema public"
 }
