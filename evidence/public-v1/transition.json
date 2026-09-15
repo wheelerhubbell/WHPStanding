@@ -1,0 +1,31 @@
+{
+  "authoritative_source_base": "67d4d3071eb98b5d430905bee90de754a4a8a428",
+  "reconciled_main": "2004b4b6a738c13c3b6f5adaf46adf217de28ece",
+  "candidate_role": "Development provenance only. No public compatibility contract.",
+  "candidate_execution": {
+    "tests": 83,
+    "pass": 83,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0
+  },
+  "candidate_evidence_files": {
+    "WHP-Standing-v1-candidate-1.zip": "37f38a3799baafcbdd149aa29e9994fa6ae39230d108ef35f93b842bcdea2056",
+    "evidence/verification.json": "fbc4680fe479c78241a972d3799e6cab2a8eb9a7b85b3767f2a89cf45de5f81a",
+    "evidence/tests.tap": "05e775dceee6c9916fc6bc012ed8aae1ef22b895b3c25f15346700b4dc6a4b4a",
+    "evidence/recovery/candidate-identity.json": "89959513a8e46d58d4a411c68844252f0307e232cbe6f42391b5007136d95cfd"
+  },
+  "staged_extension_compressed_sha256": "597a8b7e02d00b8f32b8368a790266778b7f32733f22815bf0a3772f3f9c056f",
+  "initial_design_checkpoint": {
+    "contract": "WHP Standing v1",
+    "source_base": "67d4d3071eb98b5d430905bee90de754a4a8a428",
+    "stage": "DESIGNED",
+    "frozen_at": "2026-09-15T11:56:17.816400+00:00",
+    "specification": "contracts/WHP-STANDING-v1.md",
+    "sha256": "b697b9c2105ccbeb95090237b4d9aa5429bd9d7cb62406c168e42f3126d933a4",
+    "candidate_role": "development provenance; no public version compatibility"
+  },
+  "closed_wire_transition": "All public semantic changes implemented together; no optional carrier fallback or dual public wire format.",
+  "initial_design_checkpoint_status": "Superseded during pre-public implementation review; final exact semantics are bound by public-v1-lock.json."
+}

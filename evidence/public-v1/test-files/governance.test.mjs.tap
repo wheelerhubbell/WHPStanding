@@ -1,0 +1,66 @@
+TAP version 13
+# (node:4382) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: removing a signed revocation cannot silently change the admitted root status
+ok 1 - removing a signed revocation cannot silently change the admitted root status
+  ---
+  duration_ms: 9.668601
+  type: 'test'
+  ...
+# Subtest: removing an authority certificate cannot evade the signed status manifest
+ok 2 - removing an authority certificate cannot evade the signed status manifest
+  ---
+  duration_ms: 4.103522
+  type: 'test'
+  ...
+# Subtest: expired root status does not remain fresh because its signature is valid
+ok 3 - expired root status does not remain fresh because its signature is valid
+  ---
+  duration_ms: 3.38365
+  type: 'test'
+  ...
+# Subtest: ambiguous duplicated unknown IDs are rejected before evaluation/payment
+ok 4 - ambiguous duplicated unknown IDs are rejected before evaluation/payment
+  ---
+  duration_ms: 3.742169
+  type: 'test'
+  ...
+# Subtest: COMPOSE preserves separate exact member identities, qualifiers and unknowns
+ok 5 - COMPOSE preserves separate exact member identities, qualifiers and unknowns
+  ---
+  duration_ms: 11.353924
+  type: 'test'
+  ...
+# Subtest: graph cycle is denied rather than treated as self-grounding provenance
+ok 6 - graph cycle is denied rather than treated as self-grounding provenance
+  ---
+  duration_ms: 12.719911
+  type: 'test'
+  ...
+# Subtest: authority revoked after issuance limits current standing without rewriting historical Mark
+ok 7 - authority revoked after issuance limits current standing without rewriting historical Mark
+  ---
+  duration_ms: 320.833231
+  type: 'test'
+  ...
+# Subtest: appeal receipt is durable/idempotent and does not confer standing
+ok 8 - appeal receipt is durable/idempotent and does not confer standing
+  ---
+  duration_ms: 45.701178
+  type: 'test'
+  ...
+# Subtest: input depth reserves envelope capacity before any payment processing
+ok 9 - input depth reserves envelope capacity before any payment processing
+  ---
+  duration_ms: 2.899738
+  type: 'test'
+  ...
+1..9
+# tests 9
+# suites 0
+# pass 9
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 497.672471

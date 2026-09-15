@@ -1,0 +1,72 @@
+TAP version 13
+# (node:3381) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: autonomous buyer discovers, enforces allowance, signs bound authorization, pays, independently verifies and retrieves without signing again
+ok 1 - autonomous buyer discovers, enforces allowance, signs bound authorization, pays, independently verifies and retrieves without signing again
+  ---
+  duration_ms: 560.886865
+  type: 'test'
+  ...
+# Subtest: buyer rejects per-purchase maximum before invoking wallet signer
+ok 2 - buyer rejects per-purchase maximum before invoking wallet signer
+  ---
+  duration_ms: 19.179393
+  type: 'test'
+  ...
+# Subtest: buyer rejects recipient pin before invoking wallet signer
+ok 3 - buyer rejects recipient pin before invoking wallet signer
+  ---
+  duration_ms: 17.67095
+  type: 'test'
+  ...
+# Subtest: buyer rejects root pin before invoking wallet signer
+ok 4 - buyer rejects root pin before invoking wallet signer
+  ---
+  duration_ms: 7.463858
+  type: 'test'
+  ...
+# Subtest: buyer rejects token domain before invoking wallet signer
+ok 5 - buyer rejects token domain before invoking wallet signer
+  ---
+  duration_ms: 16.643376
+  type: 'test'
+  ...
+# Subtest: durable aggregate allowance prevents a second distinct purchase exceeding the cap
+ok 6 - durable aggregate allowance prevents a second distinct purchase exceeding the cap
+  ---
+  duration_ms: 291.796541
+  type: 'test'
+  ...
+# Subtest: buyer journal rejects a changed submitted object under the same reference
+ok 7 - buyer journal rejects a changed submitted object under the same reference
+  ---
+  duration_ms: 257.778342
+  type: 'test'
+  ...
+# Subtest: buyer process state survives journal reopen and a lost paid HTTP response without another wallet signature
+ok 8 - buyer process state survives journal reopen and a lost paid HTTP response without another wallet signature
+  ---
+  duration_ms: 283.235899
+  type: 'test'
+  ...
+# Subtest: real localhost HTTP service completes the autonomous test transaction
+ok 9 - real localhost HTTP service completes the autonomous test transaction
+  ---
+  duration_ms: 532.863309
+  type: 'test'
+  ...
+# Subtest: buyer remembers the highest verified trust epoch and refuses rollback
+ok 10 - buyer remembers the highest verified trust epoch and refuses rollback
+  ---
+  duration_ms: 6.833975
+  type: 'test'
+  ...
+1..10
+# tests 10
+# suites 0
+# pass 10
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2097.805213

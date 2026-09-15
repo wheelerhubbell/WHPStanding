@@ -1,0 +1,134 @@
+TAP version 13
+# (node:3426) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: generic cold source contains no WHP names, service paths, producer imports, injected pins or URLs
+ok 1 - generic cold source contains no WHP names, service paths, producer imports, injected pins or URLs
+  ---
+  duration_ms: 6.427166
+  type: 'test'
+  ...
+# Subtest: COLD A: Mark-only isolated process independently verifies and reaches current payment boundary; attacks fail closed
+    # Subtest: one input Mark, networkless independent Python replay, exact profile, current status, canonical resolution and actual 402
+    ok 1 - one input Mark, networkless independent Python replay, exact profile, current status, canonical resolution and actual 402
+      ---
+      duration_ms: 862.521268
+      type: 'test'
+      ...
+    # Subtest: missing discovery cannot fall back to hidden repository or service knowledge
+    ok 2 - missing discovery cannot fall back to hidden repository or service knowledge
+      ---
+      duration_ms: 152.317675
+      type: 'test'
+      ...
+    # Subtest: invalid signature is rejected before discovery
+    ok 3 - invalid signature is rejected before discovery
+      ---
+      duration_ms: 161.962142
+      type: 'test'
+      ...
+    # Subtest: fresh issuer signature cannot enlarge the established claim
+    ok 4 - fresh issuer signature cannot enlarge the established claim
+      ---
+      duration_ms: 570.098159
+      type: 'test'
+      ...
+    # Subtest: resolver cannot substitute its own root
+    ok 5 - resolver cannot substitute its own root
+      ---
+      duration_ms: 201.04612
+      type: 'test'
+      ...
+    # Subtest: stale but correctly signed current resolution is rejected
+    ok 6 - stale but correctly signed current resolution is rejected
+      ---
+      duration_ms: 196.247925
+      type: 'test'
+      ...
+    # Subtest: changed content-addressed verifier fails before downloaded code executes
+    ok 7 - changed content-addressed verifier fails before downloaded code executes
+      ---
+      duration_ms: 212.162078
+      type: 'test'
+      ...
+    # Subtest: missing immutable profile and contract each prevent a false completion
+    ok 8 - missing immutable profile and contract each prevent a false completion
+      ---
+      duration_ms: 760.276849
+      type: 'test'
+      ...
+    # Subtest: freshly signed stale registry status cannot inherit signature validity
+    ok 9 - freshly signed stale registry status cannot inherit signature validity
+      ---
+      duration_ms: 207.389176
+      type: 'test'
+      ...
+    # Subtest: current contract, schema and OpenAPI mutations violate their independent digest commitments
+    ok 10 - current contract, schema and OpenAPI mutations violate their independent digest commitments
+      ---
+      duration_ms: 1726.704983
+      type: 'test'
+      ...
+    # Subtest: current hosting can change without changing one byte of an old Mark
+    ok 11 - current hosting can change without changing one byte of an old Mark
+      ---
+      duration_ms: 848.786576
+      type: 'test'
+      ...
+    # Subtest: withdrawal stops current propagation without rewriting historical Mark bytes
+    ok 12 - withdrawal stops current propagation without rewriting historical Mark bytes
+      ---
+      duration_ms: 566.379923
+      type: 'test'
+      ...
+    1..12
+ok 2 - COLD A: Mark-only isolated process independently verifies and reaches current payment boundary; attacks fail closed
+  ---
+  duration_ms: 6560.089547
+  type: 'test'
+  ...
+# Subtest: COLD B: need-only process discovers by neutral compatibility, preserves external object/action and reaches 402
+    # Subtest: cold requirement and multi-provider discovery reach a real 402 without issuer knowledge
+    ok 1 - cold requirement and multi-provider discovery reach a real 402 without issuer knowledge
+      ---
+      duration_ms: 458.404608
+      type: 'test'
+      ...
+    # Subtest: provider-order and different-root trap proves that discovery is not hard-coded to one provider
+    ok 2 - provider-order and different-root trap proves that discovery is not hard-coded to one provider
+      ---
+      duration_ms: 449.947585
+      type: 'test'
+      ...
+    # Subtest: a directory containing only a branded but incompatible decoy fails closed
+    ok 3 - a directory containing only a branded but incompatible decoy fails closed
+      ---
+      duration_ms: 173.292155
+      type: 'test'
+      ...
+    1..3
+ok 3 - COLD B: need-only process discovers by neutral compatibility, preserves external object/action and reaches 402
+  ---
+  duration_ms: 1095.125698
+  type: 'test'
+  ...
+# Subtest: COLD C: one clean reader joins a first verified Mark to a later unsupported object/action and rediscovers the next payment boundary
+ok 4 - COLD C: one clean reader joins a first verified Mark to a later unsupported object/action and rediscovers the next payment boundary
+  ---
+  duration_ms: 1158.120632
+  type: 'test'
+  ...
+# Subtest: stateful recursive consumer rejects a signed discovery mapping rollback after first contact
+ok 5 - stateful recursive consumer rejects a signed discovery mapping rollback after first contact
+  ---
+  duration_ms: 902.252771
+  type: 'test'
+  ...
+1..5
+# tests 20
+# suites 0
+# pass 20
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 9825.393006

@@ -1,0 +1,108 @@
+TAP version 13
+# (node:4442) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: EVM adapter matches finalized canonical receipt, exact calldata, authorization nonce and value transfer under mocked RPC
+ok 1 - EVM adapter matches finalized canonical receipt, exact calldata, authorization nonce and value transfer under mocked RPC
+  ---
+  duration_ms: 41.845807
+  type: 'test'
+  ...
+# Subtest: EVM adapter refuses unmined evidence
+ok 2 - EVM adapter refuses unmined evidence
+  ---
+  duration_ms: 16.642482
+  type: 'test'
+  ...
+# Subtest: EVM adapter refuses failed transaction evidence
+ok 3 - EVM adapter refuses failed transaction evidence
+  ---
+  duration_ms: 13.135192
+  type: 'test'
+  ...
+# Subtest: EVM adapter refuses not finalized evidence
+ok 4 - EVM adapter refuses not finalized evidence
+  ---
+  duration_ms: 15.325356
+  type: 'test'
+  ...
+# Subtest: EVM adapter refuses reorged block evidence
+ok 5 - EVM adapter refuses reorged block evidence
+  ---
+  duration_ms: 12.755844
+  type: 'test'
+  ...
+# Subtest: EVM adapter refuses wrong token evidence
+ok 6 - EVM adapter refuses wrong token evidence
+  ---
+  duration_ms: 12.689852
+  type: 'test'
+  ...
+# Subtest: EVM adapter refuses wrong nonce event evidence
+ok 7 - EVM adapter refuses wrong nonce event evidence
+  ---
+  duration_ms: 12.613239
+  type: 'test'
+  ...
+# Subtest: EVM adapter refuses missing authorization event evidence
+ok 8 - EVM adapter refuses missing authorization event evidence
+  ---
+  duration_ms: 11.36952
+  type: 'test'
+  ...
+# Subtest: EVM adapter refuses wrong transfer amount evidence
+ok 9 - EVM adapter refuses wrong transfer amount evidence
+  ---
+  duration_ms: 12.939528
+  type: 'test'
+  ...
+# Subtest: EVM adapter refuses wrong recipient evidence
+ok 10 - EVM adapter refuses wrong recipient evidence
+  ---
+  duration_ms: 11.622442
+  type: 'test'
+  ...
+# Subtest: EVM adapter refuses removed event evidence
+ok 11 - EVM adapter refuses removed event evidence
+  ---
+  duration_ms: 11.531402
+  type: 'test'
+  ...
+# Subtest: EVM adapter refuses wrong calldata evidence
+ok 12 - EVM adapter refuses wrong calldata evidence
+  ---
+  duration_ms: 10.923037
+  type: 'test'
+  ...
+# Subtest: EVM adapter refuses different transaction identity evidence
+ok 13 - EVM adapter refuses different transaction identity evidence
+  ---
+  duration_ms: 11.394306
+  type: 'test'
+  ...
+# Subtest: EVM adapter refuses duplicate transfer event evidence
+ok 14 - EVM adapter refuses duplicate transfer event evidence
+  ---
+  duration_ms: 14.163349
+  type: 'test'
+  ...
+# Subtest: EVM adapter rejects wrong RPC chain even with matching-looking receipt
+ok 15 - EVM adapter rejects wrong RPC chain even with matching-looking receipt
+  ---
+  duration_ms: 10.815286
+  type: 'test'
+  ...
+# Subtest: settlement response success is not finality; recovery discovers exact authorization event
+ok 16 - settlement response success is not finality; recovery discovers exact authorization event
+  ---
+  duration_ms: 12.310214
+  type: 'test'
+  ...
+1..16
+# tests 16
+# suites 0
+# pass 16
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 319.548569

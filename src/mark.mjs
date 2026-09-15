@@ -1,25 +1,17 @@
+import {evaluate} from './evaluator.mjs';
+import resultSchema from '../schemas/result.schema.json' with {type:'json'};
+import {validateContract} from './schema-contract.mjs';
 import { seal, hash, canonical, keyId, publicDer, demand } from './canonical.mjs';
 import { validateTrust, issuerAuthority } from './authority.mjs';
 import { profile } from './profile.mjs';
+import {immutableDiscovery,assertResultContract,CURRENT_STATUS_RULE,ASSESSOR,commerceRelationship} from './contract.mjs';
 
 export function assembleResult(row,privateKey,rootPin) {
   demand(row.state==='SETTLED' && row.settlement && row.decision,'RESULT_NOT_READY',503);
   const trust=validateTrust(row.trust_bundle,rootPin,row.issued_at);
   const cert=issuerAuthority(keyId(publicDer(privateKey)),row.submission.bounds.scope,row.submission.bounds.jurisdiction,trust);
+  demand(hash(row.decision)===hash(evaluate(row.submission,row.trust_bundle,rootPin,row.decision.evaluated_at)),'DECISION_REPLAY_REQUIRED_BEFORE_SIGNING',503);
   const isMark=row.decision.outcome==='ESTABLISHED';
-  const origin=new URL(row.quote.payload.resource.url).origin;
-  const discovery={
-    capability_id:'urn:capability:machine-verifiable-standing:1',
-    capability:'machine-verifiable standing under explicit authority and bounds',
-    service_origin:origin,
-    discovery_path:'/.well-known/whp-standing.json',
-    capability_path:'/discovery/capability.json',
-    profile_path:'/v1/profile',
-    verification_path:'/v1/verification',
-    openapi_path:'/v1/openapi.json',
-    evaluation_path:'/v1/evaluations',
-    payment_protocol:'x402-v2'
-  };
   const p={
     version:'WHP-STANDING-RESULT-v1',environment:trust.profile.environment,
     issuer:trust.profile.issuer,issuer_key_id:keyId(publicDer(privateKey)),
@@ -31,16 +23,17 @@ export function assembleResult(row,privateKey,rootPin) {
     submission:row.submission,submission_hash:row.request_hash,
     decision_record:row.decision,decision_record_ref:'urn:sha256:'+hash(row.decision),
     standing:isMark?{operation:row.submission.requested_operation,components:row.decision.components,bounds:row.submission.bounds}:null,
-    discovery,
     commerce:{quote:row.quote,payment_identity:row.payment_key,payment_payload:row.payment_payload,
       settlement:row.settlement,assessment_paid_by:row.payment_payload.payload.authorization.from,
-      relationship:trust.profile.environment==='TEST'?'Simulated buyer and test issuer only. No Wheeler Hubbell Publishing sale or real funds transfer occurred.':'The buyer pays Wheeler Hubbell Publishing for assessment. Payment does not determine the assessment outcome.',
-      assessor:'WHP Standing deterministic Structured Passage evaluator 1.0.0'},
+      relationship:commerceRelationship(trust.profile.environment),
+      assessor:ASSESSOR},
     retrieval:{purchase_path:'/v1/purchases/'+row.id,result_path:'/v1/purchases/'+row.id+'/result',
       registry_path:'/v1/registry/'+row.id,authentication:'Buyer Ed25519 proof bound to HTTP method, path and body',additional_charge:false},
     limitations:profile().not_assessed,
-    current_status_rule:'This immutable record proves issuance-time assessment. Current standing requires a fresh signed registry response and current trust/revocation information.'
+    current_status_rule:CURRENT_STATUS_RULE
   };
+  p.discovery=immutableDiscovery(p,row.discovery_resolution);
+  assertResultContract(p);
   const type=isMark?'WHP-STANDING-MARK-v1':'WHP-STANDING-ASSESSMENT-v1';
-  return canonical(seal(type,p,privateKey))+'\n';
+  return canonical(validateContract(seal(type,p,privateKey),resultSchema))+'\n';
 }

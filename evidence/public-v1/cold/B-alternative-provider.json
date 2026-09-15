@@ -1,0 +1,394 @@
+{
+  "verified": true,
+  "kind": "NEED_ONLY",
+  "environment": "TEST",
+  "PROPAGATION-PROVEN": "TEST",
+  "input_files": 1,
+  "prior_issuer_configuration": false,
+  "repository_imports": false,
+  "institutional_authority_admission": "NOT_ESTABLISHED",
+  "source_authority": "NOT_ESTABLISHED",
+  "requirement": {
+    "version": "STANDING-NEED-v1",
+    "result": "NO_STANDING_EVIDENCE",
+    "capability_required": {
+      "description": "machine-verifiable standing under explicit authority and bounds",
+      "id": "urn:capability:machine-verifiable-standing:1",
+      "requirements": [
+        "explicit-authority",
+        "explicit-bounds",
+        "provenance-integrity",
+        "qualification-preservation",
+        "unknown-preservation",
+        "independent-verification",
+        "durable-evidence"
+      ],
+      "vendor_neutral": true
+    },
+    "object_sha256": "1eef8ff12f8a9929e24a78734ad47079df09dc2e80479c71c59c00c746caa314",
+    "contemplated_action": {
+      "operation": "EXECUTE",
+      "purpose": "A later reliance not warranted by the first marked object"
+    },
+    "action_sha256": "ff83a94090f8e0a26ac7e417d1111a51d70914a6db17ebb1e25d3fc41ac7d3c0"
+  },
+  "directory_candidates_inspected": 3,
+  "compatible_candidates_inspected": 1,
+  "selected_capability_id": "urn:whp:standing:v1:89599d81c8e50c4586a70bb28e139ea658163068b613255b9305bca73fec60e5",
+  "provider_selection": "requirement compatibility and verified current contract; not provider name or fixed URL",
+  "completed_path": [
+    "external object and contemplated action",
+    "vendor-neutral missing-warrant requirement",
+    "multi-provider discovery",
+    "verified current provider resolution",
+    "purchase contract",
+    "x402 payment boundary"
+  ],
+  "external_object_sha256": "1eef8ff12f8a9929e24a78734ad47079df09dc2e80479c71c59c00c746caa314",
+  "submitted_content_sha256": "1eef8ff12f8a9929e24a78734ad47079df09dc2e80479c71c59c00c746caa314",
+  "provider_attempt_failures": [],
+  "trace": [
+    {
+      "url": "http://127.0.0.1:35289/catalog",
+      "method": "GET",
+      "status": 200,
+      "sha256": "88e855240abac9616cf8d8e77a2b6e7ddafe1c2f35c362689dda680b577ccfa4"
+    },
+    {
+      "url": "http://127.0.0.1:41201/.well-known/standing-resolution.json",
+      "method": "GET",
+      "status": 200,
+      "sha256": "c8782320a108951516a2197f2029a747cc49ff3bee18ec82d9524befae5cea85"
+    },
+    {
+      "url": "http://127.0.0.1:41201/v1/contract",
+      "method": "GET",
+      "status": 200,
+      "sha256": "777b465ca578efe1473460ac250e5294fb51b2170674ced1ef465158d0ac24ad"
+    },
+    {
+      "url": "http://127.0.0.1:41201/v1/openapi.json",
+      "method": "GET",
+      "status": 200,
+      "sha256": "b6cc70a02356253871434790ed509f9f4239910d26fe8c65777f8236bd1995ce"
+    },
+    {
+      "url": "http://127.0.0.1:41201/v1/material/sha256/c31929b04e3ca4e267b45ae0d76d65feb3d9ed249612a32b6190808c385a4da5",
+      "method": "GET",
+      "status": 200,
+      "sha256": "c31929b04e3ca4e267b45ae0d76d65feb3d9ed249612a32b6190808c385a4da5"
+    },
+    {
+      "url": "http://127.0.0.1:41201/schemas/submission.schema.json",
+      "method": "GET",
+      "status": 200,
+      "sha256": "0d4716a3e4c22043bbab694e7cd2ff6023f63682041b487439e1df55891e989c"
+    },
+    {
+      "url": "http://127.0.0.1:41201/v1/evaluations",
+      "method": "POST",
+      "status": 402,
+      "sha256": "9cba5fd920af0b19604684e051dce1129e43a085c68c23ce2a284854f2c1d55f"
+    }
+  ],
+  "production_completion_claim": false,
+  "payment_status": 402,
+  "purchase_url": "http://127.0.0.1:41201/v1/evaluations",
+  "payment_terms": {
+    "accepts": [
+      {
+        "amount": "1000000",
+        "asset": "0x1111111111111111111111111111111111111111",
+        "extra": {
+          "assetTransferMethod": "eip3009",
+          "name": "USDC",
+          "paymentFlow": "authorization",
+          "version": "2"
+        },
+        "maxTimeoutSeconds": 300,
+        "network": "eip155:8453",
+        "payTo": "0x2222222222222222222222222222222222222222",
+        "scheme": "exact"
+      }
+    ],
+    "extensions": {
+      "bazaar": {
+        "info": {
+          "input": {
+            "body": {
+              "bounds": {
+                "jurisdiction": "test-fixture-not-external-authority",
+                "scope": "submitted-example-only",
+                "valid_from": 1789461990,
+                "valid_until": 1789465690
+              },
+              "buyer_key": "MCowBQYDK2VwAyEAvBi9r1QW7E0gWaPewmXldJPPYslOelvPvx+mfCeUPh0=",
+              "client_reference": "test-fc855ea98a766dab687b4f6e067875ba",
+              "nodes": [
+                {
+                  "payload": {
+                    "content": {
+                      "count": 3,
+                      "statement": "Three items are present in this submitted fixture."
+                    },
+                    "epistemic_status": "REPORT",
+                    "id": "sample-observation",
+                    "jurisdiction": "test-fixture-not-external-authority",
+                    "locator": "urn:whp:test:source-1",
+                    "operations": [
+                      "INFORM",
+                      "RECOMMEND"
+                    ],
+                    "prior_hash": null,
+                    "qualifiers": [
+                      "Only this submitted fixture.",
+                      "No external-world truth claim."
+                    ],
+                    "scope": "submitted-example-only",
+                    "status": "ACTIVE",
+                    "unknowns": [
+                      {
+                        "blocks": [
+                          "EXECUTE"
+                        ],
+                        "description": "No outside-world evidence is supplied.",
+                        "id": "external-validity"
+                      }
+                    ],
+                    "valid_from": 1789461590,
+                    "valid_until": 1789469290,
+                    "version": "1"
+                  },
+                  "protected": {
+                    "algorithm": "Ed25519",
+                    "canonicalization": "WHP-JCS-I1",
+                    "key_id": "77af9a2e903fb5abc56af8ddaf36b698357425d0433077d5ddf628e3a91435a7",
+                    "type": "WHP-SOURCE-ATTESTATION-v1"
+                  },
+                  "signature": "Ntuk7nGniXFPQSgD9vNmeOmpjgipRcFutPYQWiMTnRxunWRxoB05fgQc520cE839Xlo/D9x2YD5uBrbL1Vm/CQ=="
+                },
+                {
+                  "payload": {
+                    "content": {
+                      "count": 3,
+                      "statement": "Three items are present in this submitted fixture."
+                    },
+                    "epistemic_status": "REPORT",
+                    "id": "preserved-representation",
+                    "jurisdiction": "test-fixture-not-external-authority",
+                    "locator": "urn:whp:test:representation-1",
+                    "operations": [
+                      "INFORM",
+                      "RECOMMEND"
+                    ],
+                    "prior_hash": null,
+                    "qualifiers": [
+                      "Only this submitted fixture.",
+                      "No external-world truth claim."
+                    ],
+                    "scope": "submitted-example-only",
+                    "status": "ACTIVE",
+                    "unknowns": [
+                      {
+                        "blocks": [
+                          "EXECUTE"
+                        ],
+                        "description": "No outside-world evidence is supplied.",
+                        "id": "external-validity"
+                      }
+                    ],
+                    "valid_from": 1789461590,
+                    "valid_until": 1789469290,
+                    "version": "1"
+                  },
+                  "protected": {
+                    "algorithm": "Ed25519",
+                    "canonicalization": "WHP-JCS-I1",
+                    "key_id": "77af9a2e903fb5abc56af8ddaf36b698357425d0433077d5ddf628e3a91435a7",
+                    "type": "WHP-SOURCE-ATTESTATION-v1"
+                  },
+                  "signature": "rUUOkfGveJuj18kphMLZPNOv40V99z2ms3rTgik2MAnnN0AKLF/xFgp2upi+Lyjzmxs0Y91Qzx4oAjlxOudlBQ=="
+                }
+              ],
+              "object": {
+                "id": "preserved-representation",
+                "root": "9f76fe2e3ccc2260d7f3432678f3666137f55312bfbbc8d1e55ecb0b72c0401b",
+                "version": "1"
+              },
+              "profile": {
+                "id": "WHP-STANDING-STRUCTURED-PASSAGE",
+                "sha256": "c31929b04e3ca4e267b45ae0d76d65feb3d9ed249612a32b6190808c385a4da5",
+                "version": "1.0.0"
+              },
+              "requested_operation": "INFORM",
+              "transitions": [
+                {
+                  "payload": {
+                    "from": [
+                      "67677c7a07e0c626a20cf9e891f1f64494c71ca0fc771a729e9cc26bebe8a41d"
+                    ],
+                    "jurisdiction": "test-fixture-not-external-authority",
+                    "operations": [
+                      "INFORM",
+                      "RECOMMEND"
+                    ],
+                    "scope": "submitted-example-only",
+                    "to": "9f76fe2e3ccc2260d7f3432678f3666137f55312bfbbc8d1e55ecb0b72c0401b",
+                    "transform": "COPY",
+                    "valid_from": 1789461590,
+                    "valid_until": 1789469290,
+                    "warrant": {
+                      "evidence_hashes": [
+                        "67677c7a07e0c626a20cf9e891f1f64494c71ca0fc771a729e9cc26bebe8a41d"
+                      ],
+                      "statement": "Exact COPY of this source for INFORM or RECOMMEND only; all qualifiers and unknowns retained."
+                    }
+                  },
+                  "protected": {
+                    "algorithm": "Ed25519",
+                    "canonicalization": "WHP-JCS-I1",
+                    "key_id": "1d8af0b1e23d8f727321c871f69a3f16f8aaf90669699c12ba28ddfabd462b42",
+                    "type": "WHP-TRANSITION-WARRANT-v1"
+                  },
+                  "signature": "wRarMk1oWzu2GkU3anh98fkv9DzTtv4LbteB6XVVP3j/oDnv804KB4xde5V0go7ljssTK7U2ftyVYkzpPI3kCQ=="
+                }
+              ],
+              "version": "WHP-STANDING-SUBMISSION-v1"
+            },
+            "bodyType": "json",
+            "headers": {
+              "whp-client-proof": "See http://127.0.0.1:41201/v1/contract for a fresh Ed25519 HTTP proof; this is not a wallet key."
+            },
+            "method": "POST",
+            "type": "http"
+          },
+          "output": {
+            "type": "json"
+          }
+        },
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "properties": {
+            "input": {
+              "additionalProperties": false,
+              "properties": {
+                "body": {
+                  "$ref": "http://127.0.0.1:41201/schemas/submission.schema.json",
+                  "description": "TEST wire-shape example only. A LIVE evaluation requires currently admitted SOURCE and TRANSITION attestations. The complete purchase and authentication contract is http://127.0.0.1:41201/v1/contract"
+                },
+                "bodyType": {
+                  "enum": [
+                    "json"
+                  ],
+                  "type": "string"
+                },
+                "headers": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "type": "object"
+                },
+                "method": {
+                  "enum": [
+                    "POST"
+                  ],
+                  "type": "string"
+                },
+                "type": {
+                  "const": "http",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "type",
+                "method",
+                "bodyType",
+                "body"
+              ],
+              "type": "object"
+            },
+            "output": {
+              "additionalProperties": false,
+              "properties": {
+                "type": {
+                  "const": "json",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "type"
+              ],
+              "type": "object"
+            }
+          },
+          "required": [
+            "input"
+          ],
+          "type": "object"
+        }
+      },
+      "whp-standing": {
+        "info": {
+          "quote": {
+            "payload": {
+              "buyer_key": "MCowBQYDK2VwAyEAwJ0rnhmxWdj7CxFu+h9ImaTH9AkB7BPVbPTz2nCcJ/Y=",
+              "charge_policy": "One evaluation, regardless of outcome. No second charge for this purchase identity.",
+              "environment": "TEST",
+              "expires_at": 1789478406,
+              "issued_at": 1789477806,
+              "issuer": "WHP Standing test issuer — not an institutional issuance",
+              "payment_requirements": {
+                "amount": "1000000",
+                "asset": "0x1111111111111111111111111111111111111111",
+                "extra": {
+                  "assetTransferMethod": "eip3009",
+                  "name": "USDC",
+                  "paymentFlow": "authorization",
+                  "version": "2"
+                },
+                "maxTimeoutSeconds": 300,
+                "network": "eip155:8453",
+                "payTo": "0x2222222222222222222222222222222222222222",
+                "scheme": "exact"
+              },
+              "profile_hash": "c31929b04e3ca4e267b45ae0d76d65feb3d9ed249612a32b6190808c385a4da5",
+              "purchase_id": "36088b45f9c8dfa978489acd4b6c6fc698331b0c9248243363d0d12b76d08512",
+              "request_hash": "9a7628580f726ca050cc825886a8099a834b1755a62b00f2c7b28d5dca962447",
+              "resource": {
+                "description": "One bounded WHP Standing evaluation and durable retrieval",
+                "mimeType": "application/json",
+                "url": "http://127.0.0.1:41201/v1/evaluations"
+              }
+            },
+            "protected": {
+              "algorithm": "Ed25519",
+              "canonicalization": "WHP-JCS-I1",
+              "key_id": "7cecf92f1f40eba85b74e7a704377c3e262bee3ccdd5f220ffa4178911647dfe",
+              "type": "WHP-STANDING-QUOTE-v1"
+            },
+            "signature": "qPKwnQvpoIZ1LDbRxh4Amim4gY12BQzF8+ONXdHS6KDku4Ri23Ts1ctuTl5iWUHvDLN3l2X3gkw27dPjzncyCA=="
+          },
+          "required": true
+        },
+        "schema": {
+          "type": "object"
+        }
+      }
+    },
+    "resource": {
+      "description": "One bounded WHP Standing evaluation and durable retrieval",
+      "mimeType": "application/json",
+      "url": "http://127.0.0.1:41201/v1/evaluations"
+    },
+    "x402Version": 2
+  },
+  "submitted_object": {
+    "id": "external-1eef8ff12f8a9929e24a78734ad47079df09dc2e80479c71c59c00c746caa314",
+    "version": "1",
+    "root": "3eccee2343934d0662ddb76fbb1a204f35c205a0c15b300ee06f91d386605cea"
+  },
+  "submitted_operation": "EXECUTE",
+  "submission_sha256": "9a7628580f726ca050cc825886a8099a834b1755a62b00f2c7b28d5dca962447",
+  "payment_authorizations_created": 0,
+  "wallet_keys_available": false
+}

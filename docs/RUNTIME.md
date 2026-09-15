@@ -5,7 +5,10 @@
 The production entry point requires every value below. None is supplied from a historical DIP default.
 
 ```text
-WHP_ORIGIN                         Public, buyer-pinned HTTPS origin
+WHP_ORIGIN                         Current public, buyer-pinned HTTPS service origin
+WHP_DISCOVERY_ORIGIN               Stable canonical HTTPS resolver origin, retained across service moves
+WHP_RESOLUTION_SEQUENCE            Persisted nonnegative discovery publication revision
+WHP_RESOLUTION_PREVIOUS_HASH       Prior canonical provider hash when revision is greater than zero
 WHP_ROOT_PIN                       SHA-256 fingerprint of the independently admitted root SPKI
 WHP_TRUST_BUNDLE_FILE               Mounted, root-signed LIVE trust/profile/certificate/status JSON
 WHP_ISSUER_PRIVATE_KEY              Authorized Ed25519 PKCS8 PEM, supplied through secret custody
@@ -16,9 +19,9 @@ DATABASE_URL                       Durable PostgreSQL connection string
 PORT                               Standalone HTTP port; default 8080
 ```
 
-The issuer certificate must include ISSUER and REGISTRY roles and the relevant scope/jurisdiction. The profile authorization must bind the exact candidate profile hash, environment LIVE, issuer name `Wheeler Hubbell Publishing`, and effective window. Such authorization must be an actual WHP act; changing a JSON string from TEST to LIVE is not authorization.
+The issuer certificate must include ISSUER, REGISTRY and DISCOVERY roles and the relevant scope/jurisdiction. The profile authorization must bind the exact public-v1 issuance profile hash, environment LIVE, issuer name `Wheeler Hubbell Publishing`, and effective window. Such authorization must be an actual WHP act; changing a JSON string from TEST to LIVE is not authorization.
 
-`pg` is pinned as an optional dependency because offline proof does not need it. A real production installation must actually install and validate that dependency. This environment did not do so, and no dependency audit or fresh online install was claimed.
+`pg` is pinned as an optional dependency because offline proof does not need it. A real production installation must actually install and validate that dependency. A local TEST PostgreSQL execution, when present, is recorded separately in `evidence/postgresql/report.json`. It does not establish production database configuration or a dependency security audit.
 
 ```sh
 npm install --include=optional
@@ -55,3 +58,7 @@ The CLI is LIVE-only and rejects TEST policies. For the no-money, no-wallet proo
 The public review route only records a challenge. An issuer administrator must adjudicate it under the appropriate authority; no positive standing follows from a review receipt.
 
 `StandingService.applyRegistryCommand` accepts a root-signed `WHP-REGISTRY-COMMAND-v1` with `purchase_id`, `expected_previous_hash`, `status`, `reason`, and `at`. It appends an issuer-signed event without editing the old Mark. This library method is not exposed as an unauthenticated HTTP admin endpoint. Production administrator authentication, key custody and case-management operations remain deployment responsibilities.
+
+## Immutable and current material retention
+
+Keep every previously issued profile and verifier content address available. Schema generation retains existing immutable files. Persist the resolution revision and predecessor hash across restarts. Keep the canonical resolver identity reachable while hosting moves; publish a new signed mapping with a valid DISCOVERY delegation. Retain current-status authority for historical Marks independently of later commercial profile offers. The in-process rollback guard is not a substitute for production persistence or independent root admission.

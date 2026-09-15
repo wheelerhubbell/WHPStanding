@@ -1,0 +1,9 @@
+SCHEMA_VALID payment-requirements.schema.json
+SCHEMA_VALID registry.schema.json
+SCHEMA_VALID resolution.schema.json
+SCHEMA_VALID result.schema.json
+SCHEMA_VALID submission.schema.json
+SCHEMA_VALID trust-bundle.schema.json
+INSTANCE_VALID TEST-submission.json
+INSTANCE_VALID TEST-standing-mark.json
+INSTANCE_VALID TEST-registry-snapshot.json

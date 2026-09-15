@@ -1,10 +1,25 @@
-name: Verify WHP Standing source
-on: [push, workflow_dispatch]
+name: Verify first public WHP Standing v1
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
 permissions:
   contents: read
 jobs:
-  offline-verification:
+  public-v1:
     runs-on: ubuntu-latest
+    timeout-minutes: 25
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: standing
+          POSTGRES_PASSWORD: local-test-only
+          POSTGRES_DB: whp_test
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U standing -d whp_test"
+          --health-interval 5s --health-timeout 5s --health-retries 10
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -13,21 +28,25 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.13'
-      - run: python -m pip install -r requirements-verification.txt
-      - name: Prepare isolated verifier when propagation source is present
-        run: |
-          if test -f scripts/build-cold-sandbox.sh; then
-            bash scripts/build-cold-sandbox.sh
-          fi
+      - run: python3 -m pip install -r requirements-verification.txt
+      - run: npm install --include=optional --ignore-scripts --no-package-lock --no-audit --no-fund
+      - run: bash scripts/build-cold-sandbox.sh
       - run: npm run verify
-      - name: Preserve actual verification evidence
+      - run: npm run verify:postgres
+        env:
+          WHP_TEST_POSTGRES_URL: postgres://standing:local-test-only@127.0.0.1:5432/whp_test
+      - name: Preserve actual execution and source identity
         if: always()
-        uses: actions/upload-artifact@v4
+        run: |
+          git rev-parse HEAD > /tmp/VERIFIED-COMMIT.txt
+          git archive --format=tar HEAD > /tmp/verified-source.tar
+      - uses: actions/upload-artifact@v4
+        if: always()
         with:
-          name: whp-standing-source-verification-${{ github.run_id }}
+          name: whp-standing-public-v1-${{ github.run_id }}
           path: |
-            evidence/verification.json
-            evidence/propagation-extension/
-            evidence/cold-agent/
+            evidence/public-v1/
+            evidence/postgresql/
+            /tmp/VERIFIED-COMMIT.txt
+            /tmp/verified-source.tar
           retention-days: 90
-      # No deployment, real database access, real payment, or LIVE issuance.

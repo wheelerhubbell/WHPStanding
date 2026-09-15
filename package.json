@@ -1,6 +1,6 @@
 {
   "name": "whp-standing",
-  "version": "1.0.0-candidate.1",
+  "version": "1.0.0",
   "private": true,
   "type": "module",
   "engines": {
@@ -13,9 +13,26 @@
     "start": "node src/server.mjs",
     "schemas": "python3 scripts/generate-schemas.py",
     "migrate": "node scripts/migrate.mjs",
-    "buy": "node scripts/buy.mjs"
+    "buy": "node scripts/buy.mjs",
+    "verify:postgres": "node scripts/test-postgres.mjs"
   },
   "optionalDependencies": {
     "pg": "8.16.3"
-  }
+  },
+  "description": "WHP Standing: machine-verifiable standing under explicit authority and bounds.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wheelerhubbell/WHPStanding.git"
+  },
+  "author": "Wheeler Hubbell Publishing",
+  "keywords": [
+    "WHP Standing",
+    "WHP Standing Mark",
+    "WHP Standing Profile",
+    "WHP Standing Evaluation",
+    "x402",
+    "MCP",
+    "provenance"
+  ],
+  "mcpName": "io.github.wheelerhubbell/whp-standing"
 }

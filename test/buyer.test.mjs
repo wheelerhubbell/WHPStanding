@@ -36,7 +36,7 @@ test('buyer process state survives journal reopen and a lost paid HTTP response 
 test('real localhost HTTP service completes the autonomous test transaction',async()=>{
   const x=await setup();const server=nodeServer(x.service);await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));x.service.origin='http://127.0.0.1:'+server.address().port;const b=buyer(x,{fetchImpl:fetch});
   try{const r=await b.agent.purchase(x.f.submission);assert.equal(r.state,'VERIFIED');assert.equal(x.rail.transfers,1);const r2=await b.agent.retrieve(x.f.submission);assert.equal(hash(r2.result_bytes),hash(r.result_bytes));}
-  finally{b.journal.close();await new Promise(resolve=>server.close(resolve));await x.store.close();}
+  finally{b.journal.close();await new Promise(resolve=>{server.close(resolve);server.closeAllConnections();});await x.store.close();}
 });
 test('buyer remembers the highest verified trust epoch and refuses rollback',async()=>{const x=await setup(),b=buyer(x);try{
   const first=x.f.trustBundle.status_snapshot;b.journal.rememberTrust(x.f.rootPin,first);

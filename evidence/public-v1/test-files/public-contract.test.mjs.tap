@@ -1,0 +1,90 @@
+TAP version 13
+# (node:4400) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: first-public v1 constructor, closed schema and standalone replay reject semantic additions together
+ok 1 - first-public v1 constructor, closed schema and standalone replay reject semantic additions together
+  ---
+  duration_ms: 733.050821
+  type: 'test'
+  ...
+# Subtest: lexical integers, Unicode ordering, duplicate fields and negative zero agree in JavaScript and independent Python
+ok 2 - lexical integers, Unicode ordering, duplicate fields and negative zero agree in JavaScript and independent Python
+  ---
+  duration_ms: 142.02361
+  type: 'test'
+  ...
+# Subtest: field-name comparison cannot be confused by NUL-joined names
+ok 3 - field-name comparison cannot be confused by NUL-joined names
+  ---
+  duration_ms: 0.297565
+  type: 'test'
+  ...
+# Subtest: current resolution has a closed independently inspectable schema and exact current contract digests
+ok 4 - current resolution has a closed independently inspectable schema and exact current contract digests
+  ---
+  duration_ms: 15.469438
+  type: 'test'
+  ...
+# Subtest: DISCOVERY delegation is distinct from an issuer role and revoked discovery cannot resolve
+ok 5 - DISCOVERY delegation is distinct from an issuer role and revoked discovery cannot resolve
+  ---
+  duration_ms: 18.136022
+  type: 'test'
+  ...
+# Subtest: resolution mapping revision cannot silently change, roll back, or omit its predecessor
+ok 6 - resolution mapping revision cannot silently change, roll back, or omit its predecessor
+  ---
+  duration_ms: 31.328235
+  type: 'test'
+  ...
+# Subtest: canonical resolution reference rejects credentials, fragments, query mutations, noncanonical ports and path changes
+ok 7 - canonical resolution reference rejects credentials, fragments, query mutations, noncanonical ports and path changes
+  ---
+  duration_ms: 0.296143
+  type: 'test'
+  ...
+# Subtest: historical validation remains offline and cannot imply current status
+ok 8 - historical validation remains offline and cannot imply current status
+  ---
+  duration_ms: 402.349258
+  type: 'test'
+  ...
+# Subtest: root pinning still rejects a different issuer root after first-public transition
+ok 9 - root pinning still rejects a different issuer root after first-public transition
+  ---
+  duration_ms: 205.81619
+  type: 'test'
+  ...
+# Subtest: registry cannot acquire semantic extensions outside its event and authority commitments
+ok 10 - registry cannot acquire semantic extensions outside its event and authority commitments
+  ---
+  duration_ms: 44.226054
+  type: 'test'
+  ...
+# Subtest: neutral standing need does not treat self-asserted verification flags as established authority or standing
+ok 11 - neutral standing need does not treat self-asserted verification flags as established authority or standing
+  ---
+  duration_ms: 0.445711
+  type: 'test'
+  ...
+# Subtest: exact independent verifier and issuance profile bytes are content-addressed and retained
+ok 12 - exact independent verifier and issuance profile bytes are content-addressed and retained
+  ---
+  duration_ms: 0.901531
+  type: 'test'
+  ...
+# Subtest: candidate 83/83 execution remains development provenance rather than a second public wire format
+ok 13 - candidate 83/83 execution remains development provenance rather than a second public wire format
+  ---
+  duration_ms: 0.399034
+  type: 'test'
+  ...
+1..13
+# tests 13
+# suites 0
+# pass 13
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1690.306195

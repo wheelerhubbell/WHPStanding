@@ -1,0 +1,84 @@
+TAP version 13
+# (node:4359) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: signed immutable carrier separates historical claim from current resolver, service and registry
+ok 1 - signed immutable carrier separates historical claim from current resolver, service and registry
+  ---
+  duration_ms: 107.822158
+  type: 'test'
+  ...
+# Subtest: independent replay rejects an issuer-signed enlargement of the discovery meaning
+ok 2 - independent replay rejects an issuer-signed enlargement of the discovery meaning
+  ---
+  duration_ms: 242.62406
+  type: 'test'
+  ...
+# Subtest: independent replay rejects signed extra service fields, wrong profile, invalid resolver and semantic redirection
+ok 3 - independent replay rejects signed extra service fields, wrong profile, invalid resolver and semantic redirection
+  ---
+  duration_ms: 806.26824
+  type: 'test'
+  ...
+# Subtest: API catalog, OpenAPI, MCP declaration, indexable documentation and immutable verifier are real GET surfaces
+ok 4 - API catalog, OpenAPI, MCP declaration, indexable documentation and immutable verifier are real GET surfaces
+  ---
+  duration_ms: 11.243658
+  type: 'test'
+  ...
+# Subtest: published purchase contract specifies exact owner payment authority and complete original input schema
+ok 5 - published purchase contract specifies exact owner payment authority and complete original input schema
+  ---
+  duration_ms: 9.483627
+  type: 'test'
+  ...
+# Subtest: Bazaar metadata matches its exact linked schema without copying the customer object
+ok 6 - Bazaar metadata matches its exact linked schema without copying the customer object
+  ---
+  duration_ms: 122.950642
+  type: 'test'
+  ...
+# Subtest: real rail forwards only server-owned discovery while retaining exact original authorized payment fields
+ok 7 - real rail forwards only server-owned discovery while retaining exact original authorized payment fields
+  ---
+  duration_ms: 14.838221
+  type: 'test'
+  ...
+# Subtest: LIVE destination validation pins recipient, native Base USDC and EIP-712 identity separately from signing
+ok 8 - LIVE destination validation pins recipient, native Base USDC and EIP-712 identity separately from signing
+  ---
+  duration_ms: 0.398693
+  type: 'test'
+  ...
+# Subtest: production runtime has no fixture fallback when actual LIVE authority is absent
+ok 9 - production runtime has no fixture fallback when actual LIVE authority is absent
+  ---
+  duration_ms: 0.847591
+  type: 'test'
+  ...
+# Subtest: MCP initializes, lists exact tools and rejects cross-origin requests
+ok 10 - MCP initializes, lists exact tools and rejects cross-origin requests
+  ---
+  duration_ms: 7.331402
+  type: 'test'
+  ...
+# Subtest: MCP reaches the same authenticated 402 boundary and cannot invent payment authority
+ok 11 - MCP reaches the same authenticated 402 boundary and cannot invent payment authority
+  ---
+  duration_ms: 14.109843
+  type: 'test'
+  ...
+# Subtest: MCP result retrieval preserves exact paid bytes and does not settle again
+ok 12 - MCP result retrieval preserves exact paid bytes and does not settle again
+  ---
+  duration_ms: 38.037135
+  type: 'test'
+  ...
+1..12
+# tests 12
+# suites 0
+# pass 12
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1466.435616

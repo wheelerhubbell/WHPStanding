@@ -1,0 +1,19 @@
+{
+  "started_at": "2026-09-15T13:10:20.124Z",
+  "completed_at": "2026-09-15T13:10:20.493Z",
+  "backend": "PostgreSQL",
+  "environment": "TEST",
+  "checks": [
+    "concurrent HTTP requests converge on one transfer and one registry entry",
+    "identical POST and authenticated GET return byte-identical original result without settling",
+    "buyer isolation",
+    "same identity changed object conflicts",
+    "fresh separate process retrieves exact durable PostgreSQL bytes after producer pool closes"
+  ],
+  "all_passed": true,
+  "mark_sha256": "307854a82e39a3f4b29eefcab87b8755793529533557d1ad593036f5ae9b4e1f",
+  "simulated_transfers": 1,
+  "settlement_calls": 1,
+  "production_database_accessed": false,
+  "live_payment_executed": false
+}

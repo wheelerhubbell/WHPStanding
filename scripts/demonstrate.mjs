@@ -11,7 +11,7 @@ let closed=false;
 try{
   const first=await agent.purchase(x.f.submission),retrieved=await agent.retrieve(x.f.submission);demand(first.result_bytes===retrieved.result_bytes,'RETRIEVAL_CHANGED_BYTES');
   const registry=journal.get(first.purchase_id).registry;
-  journal.close();await new Promise(r=>server.close(r));await x.store.close();closed=true;
+  journal.close();await new Promise(r=>{server.close(r);server.closeAllConnections();});await x.store.close();closed=true;
   // Independent OS process reads committed bytes after the writer connection and HTTP server close.
   const {stdout:restarted}=await run(process.execPath,[new URL('../test/helpers/read-store.mjs',import.meta.url).pathname,dbfile,first.purchase_id],{maxBuffer:2097152});
   demand(restarted===first.result_bytes,'PROCESS_RESTART_CHANGED_BYTES');
@@ -30,4 +30,4 @@ try{
     chain_requests:0,actual_funds_moved:'0',private_keys_exported:false,trace,
     not_executed:['Real buyer payment','Institutional root and profile ratification','Live EIP-3009 wallet signature verification','Live facilitator integration','Live chain finality','PostgreSQL integration','Netlify deployment','External independent security audit']};
   await writeFile(join(destination,'execution-record.json'),JSON.stringify(receipt,null,2)+'\n');console.log(JSON.stringify(receipt,null,2));
-}finally{if(!closed){try{journal.close();}catch{}await new Promise(r=>server.close(r));await x.store.close();}await rm(runtime,{recursive:true,force:true});}
+}finally{if(!closed){try{journal.close();}catch{}await new Promise(r=>{server.close(r);server.closeAllConnections();});await x.store.close();}await rm(runtime,{recursive:true,force:true});}

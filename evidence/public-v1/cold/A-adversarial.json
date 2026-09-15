@@ -1,0 +1,80 @@
+[
+  {
+    "name": "missing immutable discovery",
+    "exit_code": 1,
+    "verified": false,
+    "error": "CLOSED_FIELDS:external_object,contemplated_action,interface"
+  },
+  {
+    "name": "altered signature",
+    "exit_code": 1,
+    "verified": false,
+    "error": "InvalidSignature"
+  },
+  {
+    "name": "signed semantic promotion",
+    "exit_code": 1,
+    "verified": false,
+    "error": "INDEPENDENT_VERIFICATION_FAILED:{\"verified\": false, \"error\": \"RESULT_SCHEMA_INVALID:\"}\n"
+  },
+  {
+    "name": "resolver root substitution",
+    "exit_code": 1,
+    "verified": false,
+    "error": "ROOT_SUBSTITUTION"
+  },
+  {
+    "name": "stale resolution",
+    "exit_code": 1,
+    "verified": false,
+    "error": "STALE_RESOLUTION"
+  },
+  {
+    "name": "verifier bytes substituted",
+    "exit_code": 1,
+    "verified": false,
+    "error": "VERIFIER_SOURCE_HASH"
+  },
+  {
+    "name": "missing /v1/material/sha256/c31929b04e3ca4e267b45ae0d76d65feb3d9ed249612a32b6190808c385a4da5",
+    "exit_code": 1,
+    "verified": false,
+    "error": "FETCH_FAILED:404"
+  },
+  {
+    "name": "missing /v1/contract",
+    "exit_code": 1,
+    "verified": false,
+    "error": "FETCH_FAILED:404"
+  },
+  {
+    "name": "stale registry",
+    "exit_code": 1,
+    "verified": false,
+    "error": "REGISTRY_MAX_AGE"
+  },
+  {
+    "name": "changed committed document /v1/contract",
+    "exit_code": 1,
+    "verified": false,
+    "error": "DOCUMENT_HASH"
+  },
+  {
+    "name": "changed committed document /schemas/submission.schema.json",
+    "exit_code": 1,
+    "verified": false,
+    "error": "DOCUMENT_HASH"
+  },
+  {
+    "name": "changed committed document /v1/openapi.json",
+    "exit_code": 1,
+    "verified": false,
+    "error": "DOCUMENT_HASH"
+  },
+  {
+    "name": "withdrawn standing",
+    "exit_code": 1,
+    "verified": false,
+    "error": "CURRENT_STANDING_NOT_ACTIVE"
+  }
+]

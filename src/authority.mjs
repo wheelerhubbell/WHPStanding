@@ -23,7 +23,7 @@ export function validateTrust(bundle, pinnedRoot, at) {
     exact(c,['public_key','subject','roles','scopes','jurisdictions','operations','profile_hash','valid_from','valid_until']);
     keyObject(c.public_key);text(c.subject);timeWindow(c);
     for(const k of ['roles','scopes','jurisdictions','operations']) {array(c[k],64); c[k].forEach(x=>text(x));}
-    demand(c.roles.every(x=>['SOURCE','TRANSITION','ISSUER','REGISTRY'].includes(x)), 'CERTIFICATE_ROLE_INVALID');
+    demand(c.roles.every(x=>['SOURCE','TRANSITION','ISSUER','REGISTRY','DISCOVERY'].includes(x)), 'CERTIFICATE_ROLE_INVALID');
     demand(c.profile_hash===PROFILE_HASH,'CERTIFICATE_PROFILE_MISMATCH');
     const id=keyId(c.public_key);demand(!keys.has(id),'DUPLICATE_AUTHORITY'); keys.set(id,c);
   }
@@ -55,4 +55,11 @@ export function liveAuthorityIntact(result,trust){
     for(const e of s.transitions)authorize(e,'WHP-TRANSITION-WARRANT-v1','TRANSITION',{...s.bounds,operations:e.payload.operations},trust);
     return true;
   }catch{return false;}
+}
+
+export function discoveryAuthority(key,trust) {
+  const c=trust.keys.get(key);
+  demand(c?.roles.includes('DISCOVERY'),'DISCOVERY_AUTHORITY_REQUIRED',503);
+  demand(c.valid_from<=trust.at && trust.at<c.valid_until && !trust.revocations.some(r=>r.key_id===key && r.effective_at<=trust.at),'DISCOVERY_AUTHORITY_INVALID',503);
+  return c;
 }

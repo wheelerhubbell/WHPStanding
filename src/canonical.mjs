@@ -44,7 +44,7 @@ export function parseStrict(text, maxBytes = 262144) {
     }
     for (const [s, v] of [['true', true], ['false', false], ['null', null]]) if (text.startsWith(s, i)) { i += s.length; return v; }
     const m = text.slice(i).match(/^-?(?:0|[1-9][0-9]*)(?:\.[0-9]+)?(?:[eE][+-]?[0-9]+)?/);
-    demand(m, 'INVALID_JSON'); i += m[0].length; const n = Number(m[0]); canonical(n); return n;
+    demand(m, 'INVALID_JSON'); demand(!/[.eE]/.test(m[0]), 'INTEGER_LEXEME_REQUIRED'); i += m[0].length; const n = Number(m[0]); canonical(n); return n;
   }
   const out = val(0); ws(); demand(i === text.length, 'INVALID_JSON'); canonical(out); return out;
 }
@@ -82,9 +82,10 @@ export function openSeal(envelope, type, pub) {
 }
 export function exact(o, fields, path = '$') {
   demand(o && !Array.isArray(o) && typeof o === 'object', 'OBJECT_REQUIRED', 400, path);
-  demand(Object.keys(o).sort().join('\0') === [...fields].sort().join('\0'), 'FIELDS_INVALID', 400, path);
+  const keys=Object.keys(o).sort(), expected=[...fields].sort();
+  demand(keys.length===expected.length && keys.every((k,i)=>k===expected[i]), 'FIELDS_INVALID', 400, path);
 }
-export function text(s, path = '$', max = 4096) { demand(typeof s === 'string' && s.length > 0 && s.length <= max && s.isWellFormed(), 'TEXT_REQUIRED', 400, path); }
+export function text(s, path = '$', max = 4096) { demand(typeof s === 'string' && [...s].length > 0 && [...s].length <= max && s.isWellFormed(), 'TEXT_REQUIRED', 400, path); }
 export function array(a, max = 128, path = '$') { demand(Array.isArray(a) && a.length <= max, 'ARRAY_INVALID', 400, path); }
 export function unique(a, path = '$') { demand(new Set(a.map(x=>canonical(x))).size === a.length, 'DUPLICATE_ITEM', 400, path); }
 export function timeWindow(o, path = '$') { demand(Number.isSafeInteger(o.valid_from) && Number.isSafeInteger(o.valid_until) && o.valid_from >= 0 && o.valid_until > o.valid_from, 'INVALID_TIME_WINDOW', 400, path); }

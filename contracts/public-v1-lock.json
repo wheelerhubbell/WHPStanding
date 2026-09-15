@@ -1,0 +1,30 @@
+{
+  "contract": "WHP Standing v1",
+  "mark": "WHP Standing Mark v1",
+  "wire": "WHP-STANDING-RESULT-v1",
+  "candidate_compatibility": false,
+  "files": {
+    "contracts/WHP-STANDING-v1.md": "dbfc5f73a6ed36112d7acf5e9cdff65ac25ceaf1f9f9326f657db00ed4c2c431",
+    "src/contract.mjs": "8604a3f47d66eb657e6d5c210c542d83e0ef8df3e65c5d1f66c25218d4aa90da",
+    "src/mark.mjs": "728cf278769a580ef4f0a4b52b0b8b37c0a5f296b075ab49aa929a1cdb3f21d2",
+    "src/canonical.mjs": "cf45891da618e2548b81d8b3f39248ef9b473b8283900e51550a2e829a57b352",
+    "src/schema-contract.mjs": "1c81a7d9cfb2f5ce08074f44178c976bfb1e67f760bfb585fa53e9a4d2fe809f",
+    "src/evaluator.mjs": "8a4b1778ccf513d4779bcc9f3bcd40ea20b0ee7aec19aa53f6025c8012d5f1ee",
+    "src/authority.mjs": "f021ea391c595a0518471d30d985513ac1ef5311c98a7d93ae28e78c3f0a3038",
+    "src/service.mjs": "8f62da73b2dfa85aca5c1d95acfbc00b184f18955c6c82df42fb4904f48ce86b",
+    "src/discovery.mjs": "8ea788c0b9a4091d9329a8eb7f8faf99790e5b66130bed2c0bbde3c3286c58e8",
+    "src/need.mjs": "5015ea2773f279465d059b3d0fa9df90e77d9f77ab24afadde4c6cca2fcb5ed2",
+    "scripts/cold-agent.py": "2634849646b5e5a3263f3dde22e4eeff0cbdb7924b7796c714ce637bdf4094f0",
+    "scripts/generate-schemas.py": "92465e69676efc35ed5e12ad44a25eba040722859984f5d5c6a2608cd5be9cd4",
+    "verify/verify_mark.py": "171cb971687f98785cf2f0280be7168f83211eadb374a12c609b9d7c8eb5b536",
+    "public/verifier-manifest.json": "8608764e8f7fa7477bbf0b0e7536397f5776e544918a4f27cdd0647d9aaae5e5",
+    "public/openapi.json": "93696cec15f2fbc7dd2ad0ab47fd67ce03ba6c47651c3529d2aea45abe9c2aa1",
+    "profiles/structured-passage-1.0.0.json": "ac4a1f7a66c65ad5b2e9602e6f3a3665b477d8ebf764be8f8fc917899982e2d5",
+    "schemas/payment-requirements.schema.json": "d33b298970039d4e7335f8a5d16da46d2515d230e9c87031ed05c34e7645a543",
+    "schemas/registry.schema.json": "a4c423a49ad4ef16889e73d56ec30494feb85e4719c712ce0e92ded3b876b95b",
+    "schemas/resolution.schema.json": "4136dd36393eef331254cc5f086b6fc01233b24d7b327a06fd23116cf5027f7d",
+    "schemas/result.schema.json": "4e2ab4b37dc69afd7b81854c185a7baaf48eeb4a2146ce6dae9ccf0e61acc0f8",
+    "schemas/submission.schema.json": "ca3f69c528dc3991e8445d9f6033b71764a5ec0948836983a1ff4979950f2856",
+    "schemas/trust-bundle.schema.json": "3b0c3b59efab47734528d59891cf6dec824f00eccab7990d84beb9ab7f952348"
+  }
+}

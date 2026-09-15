@@ -1,0 +1,11 @@
+{
+  "contract": "WHP Standing v1",
+  "state": "DESIGNED",
+  "source_base": "67d4d3071eb98b5d430905bee90de754a4a8a428",
+  "frozen_at": "2026-09-15T12:41:41.059758+00:00",
+  "specification": "contracts/WHP-STANDING-v1.md",
+  "specification_sha256": "dbfc5f73a6ed36112d7acf5e9cdff65ac25ceaf1f9f9326f657db00ed4c2c431",
+  "lock": "contracts/public-v1-lock.json",
+  "lock_sha256": "7eac7d0f70e93ed7bf5f34ef71562978257fcfdcd2e0bcd9f02c2074cb2783a1",
+  "candidate_compatibility": false
+}

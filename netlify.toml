@@ -6,4 +6,4 @@
 [functions]
   node_bundler = "esbuild"
   external_node_modules = ["pg"]
-  included_files = ["profiles/**", "schemas/**", "public/openapi.json"]
+  included_files = ["profiles/**", "schemas/**", "public/openapi.json", "public/verifier-manifest.json", "public/verification/**", "public/immutable/**", "public/standing-need.interface.json"]

@@ -1,0 +1,4 @@
+{
+  "verified": false,
+  "error": "NO_VALID_COMPATIBLE_PROVIDER:[{\"candidate\": \"urn:whp:standing:v1:97ca52d637033703e60eb7039152ff0d23326f4a7a57a5a6a8a8ea09c28889f2\", \"error\": \"RESOLUTION_ROLLBACK_OR_EQUIVOCATION\"}]"
+}

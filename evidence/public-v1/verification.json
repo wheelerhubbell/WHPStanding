@@ -1,0 +1,161 @@
+{
+  "contract": "WHP Standing v1",
+  "mark": "WHP Standing Mark v1",
+  "version": "1.0.0",
+  "started_at": "2026-09-15T13:09:56.181Z",
+  "completed_at": "2026-09-15T13:10:19.891Z",
+  "environment": "TEST",
+  "states": {
+    "DESIGNED": true,
+    "IMPLEMENTED": true,
+    "VERIFIED": true,
+    "PROPAGATION-PROVEN": "TEST",
+    "DEPLOYED": false,
+    "LIVE": false,
+    "SOLD": false,
+    "ISSUED": false
+  },
+  "source_commit_under_test": "680fbb8a093f04ea100f89776d6589c387d02bd9",
+  "source_commit_note": "During isolated materialization this names the staging commit. source_inventory_sha256 binds every executed source byte; the promotion record identifies the final authoritative commit.",
+  "source_inventory_sha256": "41a6edb917d3d9a102fe3af3bae170629d908bc8ebd490b9d9f8ad7ef61f2304",
+  "contract_lock_sha256": "7eac7d0f70e93ed7bf5f34ef71562978257fcfdcd2e0bcd9f02c2074cb2783a1",
+  "node": "v22.16.0",
+  "python": "Python 3.13.15",
+  "python_packages": {
+    "cryptography": "46.0.4",
+    "jsonschema": "4.26.0"
+  },
+  "javascript_syntax_files": 37,
+  "python_syntax_files": 6,
+  "test_counts": {
+    "tests": 128,
+    "pass": 128,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0
+  },
+  "test_files": [
+    {
+      "file": "test/buyer.test.mjs",
+      "tests": 10,
+      "pass": 10,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    {
+      "file": "test/cold-propagation.test.mjs",
+      "tests": 20,
+      "pass": 20,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    {
+      "file": "test/core.test.mjs",
+      "tests": 46,
+      "pass": 46,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    {
+      "file": "test/discovery.test.mjs",
+      "tests": 12,
+      "pass": 12,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    {
+      "file": "test/governance.test.mjs",
+      "tests": 9,
+      "pass": 9,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    {
+      "file": "test/public-contract.test.mjs",
+      "tests": 13,
+      "pass": 13,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    {
+      "file": "test/rail.test.mjs",
+      "tests": 16,
+      "pass": 16,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    {
+      "file": "test/schema.test.mjs",
+      "tests": 2,
+      "pass": 2,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    }
+  ],
+  "inherited_test_count": 83,
+  "inherited_provenance_preserved": true,
+  "schemas_validated": true,
+  "real_local_http_transaction_executed": true,
+  "separate_process_retrieval_executed": true,
+  "independent_python_verifier_executed": true,
+  "independent_replay_executed": true,
+  "test_artifact_refused_as_live": true,
+  "generic_sandbox_image": "sha256:300f5d24c5212b05160aebcc61ef1ec1b1ccad82c27a3967ef203ce3642e827b",
+  "cold_proofs": {
+    "A": {
+      "kind": "MARK_ONLY",
+      "verified": true,
+      "level": "TEST",
+      "report": "cold/A.json",
+      "sha256": "fa2d46b185fd2d2724cdf957cab58db3d27146247526e0e0f96b1907dd7722b3"
+    },
+    "B": {
+      "kind": "NEED_ONLY",
+      "verified": true,
+      "level": "TEST",
+      "report": "cold/B.json",
+      "sha256": "f8a0e4e0ff503278f763f4b08024e7bf98d53356b92576321badc6ed4598c70a"
+    },
+    "C": {
+      "kind": "RECURSIVE_JOIN",
+      "verified": true,
+      "level": "TEST",
+      "report": "cold/C.json",
+      "sha256": "731fefcc3947d46f936a27f0d8b11a890f7a4bcbf003bb47a3a298b80d173a54"
+    }
+  },
+  "demonstration": {
+    "purchase_id": "610e2e32baa1b9b3d1bc5e2fcd1af85e22b7688da6f131eced97c72f67cbc76e",
+    "mark_id": "WHP-SM-610e2e32baa1b9b3d1bc5e2fcd1af85e22b7688da6f131eced97c72f67cbc76e",
+    "mark_sha256": "8d83556a7a680577143fde03097a127a262c1bc3d85311872a100e8344434660",
+    "root_pin": "05a1ade4d977b3f00fe87f789c3aae26d788e113b7412a7edb2fcf6a5e28ccb3",
+    "wallet_signing_calls": 1,
+    "settlement_calls": 1,
+    "simulated_transfers": 1
+  },
+  "institutional_authority_admission": "NOT_ESTABLISHED by a Mark alone; external root policy remains required.",
+  "production_deployment_performed": false,
+  "live_payment_executed": false,
+  "actual_funds_moved": "0",
+  "public_directory_registration_proven": false,
+  "postgresql_evidence": "Separate optional TEST proof: evidence/postgresql/report.json",
+  "external_security_audit_performed": false,
+  "completion_boundary": "First-public-v1 cryptographic contract and TEST propagation. Production authority, deployment and genuine outside sale/issuance require separate evidence."
+}
