@@ -36,14 +36,33 @@ jobs:
           Purpose: preserve all repository source, evidence, production authority, provider findings, deployment work, and post-ZIP continuity knowledge available at the amended source commit.
           Private keys are not included.
           EOF
-          if grep -RIl --fixed-strings -- '-----BEGIN PRIVATE KEY-----' /tmp/WHP-Standing-v1-amended | grep -q .; then echo PRIVATE_KEY_FOUND; exit 1; fi
-          (cd /tmp/WHP-Standing-v1-amended && find . -type f -print0 | sort -z | xargs -0 sha256sum > AMENDED-FILES.sha256)
+          python3 - <<'PY'
+          from pathlib import Path
+          root=Path('/tmp/WHP-Standing-v1-amended')
+          marker=b'-----BEGIN PRIVATE KEY-----'
+          hits=[]
+          for p in root.rglob('*'):
+              if p.is_file() and p.stat().st_size < 20_000_000:
+                  try:
+                      if marker in p.read_bytes(): hits.append(str(p.relative_to(root)))
+                  except OSError: pass
+          if hits: raise SystemExit('PRIVATE_KEY_FOUND '+','.join(hits))
+          PY
+          (cd /tmp/WHP-Standing-v1-amended && find . -type f ! -name AMENDED-FILES.sha256 -print0 | sort -z | xargs -0 sha256sum > AMENDED-FILES.sha256)
           (cd /tmp/WHP-Standing-v1-amended && zip -q -r "$GITHUB_WORKSPACE/WHP-Standing-v1-candidate-1.zip" .)
           sha256sum WHP-Standing-v1-candidate-1.zip > WHP-Standing-v1-candidate-1.zip.sha256
-          unzip -tq WHP-Standing-v1-candidate-1.zip
-          for required in POST-ZIP-CONTINUITY.md evidence/live-authority/verification.json evidence/production/deployment-blocker.json evidence/production/credit-inspection.json public/authority/root.json; do
-            unzip -l WHP-Standing-v1-candidate-1.zip "$required" | grep -Fq "$required"
-          done
+          python3 - <<'PY'
+          import zipfile
+          z=zipfile.ZipFile('WHP-Standing-v1-candidate-1.zip')
+          bad=z.testzip()
+          if bad: raise SystemExit('CORRUPT_ZIP_MEMBER '+bad)
+          names={n.removeprefix('./') for n in z.namelist()}
+          required={'POST-ZIP-CONTINUITY.md','evidence/live-authority/verification.json','evidence/production/deployment-blocker.json','evidence/production/credit-inspection.json','public/authority/root.json','AMENDED-ARCHIVE-IDENTITY.txt','AMENDED-FILES.sha256'}
+          missing=required-names
+          if missing: raise SystemExit('MISSING_REQUIRED '+','.join(sorted(missing)))
+          if 'WHP-Standing-v1-candidate-1.zip' in names: raise SystemExit('RECURSIVE_OLD_ZIP_PRESENT')
+          print('AMENDED_ARCHIVE_VERIFIED',len(names),'members')
+          PY
       - name: Replace old ZIP with amended continuity archive
         run: |
           git config user.name 'WHP Standing Archive'
