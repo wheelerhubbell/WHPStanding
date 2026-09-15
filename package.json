@@ -33,5 +33,8 @@
     "MCP",
     "provenance"
   ],
-  "mcpName": "io.github.wheelerhubbell/whp-standing"
+  "mcpName": "io.github.wheelerhubbell/whp-standing",
+  "dependencies": {
+    "@netlify/database": "2.0.1"
+  }
 }
