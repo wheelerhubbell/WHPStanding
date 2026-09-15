@@ -40,13 +40,17 @@ jobs:
           https.request = function(...args) {
             const req = original.apply(this,args);
             req.on('response',res=>{
+              if(res.statusCode===403 && req.path.split('?')[0].endsWith('/deploys')) {
+                let body='';res.on('data',chunk=>{if(body.length<10000)body+=chunk});
+                res.on('end',()=>process.stderr.write('NETLIFY_DEPLOY_DENIAL '+body+'\n'));
+              }
               if(res.statusCode>=400) process.stderr.write(JSON.stringify({http_status:res.statusCode,method:req.method,host:req.host,path:req.path.split('?')[0]})+'\n');
             });
             return req;
           };
           JS
           export NODE_OPTIONS="--require=/tmp/whp-http-diagnostic.cjs"
-          .runtime/deploy-tools/node_modules/.bin/netlify deploy --prod --no-build --dir public --functions netlify/functions --json > evidence/production/deploy.json
+          .runtime/deploy-tools/node_modules/.bin/netlify deploy --prod --build --dir public --functions netlify/functions --json > evidence/production/deploy.json
       - name: Verify public authority, discovery, and real unpaid boundary
         run: |
           export WHP_ROOT_PIN="$(node --input-type=module -e "import fs from 'node:fs';console.log(JSON.parse(fs.readFileSync('public/authority/root.json')).root_pin)")"
