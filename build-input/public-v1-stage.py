@@ -39,9 +39,11 @@ else:
         with urllib.request.urlopen(req,timeout=120) as resp:return json.load(resp)
     tracked=git('ls-files','-z').decode().split('\0');untracked=git('ls-files','--others','--exclude-standard','-z').decode().split('\0')
     allowed=('src/','verify/','scripts/','schemas/','profiles/','contracts/','public/','test/','netlify/','docs/','examples/','evidence/','migrations/','discovery/')
+    allowed_root={'AGENTS.md','package-lock.json'}
     entries=[]
     for name in sorted(set(tracked+untracked)-{''}):
-        if name not in tracked:assert name.startswith(allowed),name
+        if '__pycache__' in pathlib.PurePosixPath(name).parts or name.endswith('.pyc'):continue
+        if name not in tracked:assert name.startswith(allowed) or name in allowed_root,name
         p=safe(name)
         if not p.exists():
             if name in tracked:entries.append({'path':name,'mode':'100644','type':'blob','sha':None})
