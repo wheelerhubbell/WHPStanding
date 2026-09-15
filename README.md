@@ -6,36 +6,29 @@ WHP Standing produces a signed, bounded assessment of a submitted source/provena
 
 This is a new implementation, not a DIP repair branch or compatibility layer. The governing institutional sources remain distinct from the new implementation. The narrower candidate profile in this build is **Structured Provenance and Passage Integrity 1.0.0**. It does not claim to assess an external workflow's behavior or to replace WHP's existing Action-Boundary Profile.
 
-## Executed result
+## Recovered candidate and extension evidence
 
-`evidence/verification.json` records the actual latest run. The suite executes the Node implementation, a separate Python verifier, a real localhost HTTP purchase, strict validation, autonomous buyer policy checks, recovery faults, settlement evidence checks against mocked RPC, registry changes, and durable retrieval from a separate process.
+The exact originally uploaded candidate was recovered without changing any candidate byte at commit `ec3d1b8710c7a55529e4c450a806a8fea5dc7fee`. The original archive and its evidence remain preserved. `evidence/recovery/candidate-identity.json` records every source hash; recovery Actions run 34960508166 actually passed the original 83 tests and promoted the source. The earlier run 34958976070 failed after successful verification, not because tests failed.
 
-`evidence/demonstration/TEST-standing-mark.json` is an actual signed **TEST artifact**. Its Ed25519 signatures and source/authority signatures are real. Its institutional identity, buyer wallet signer, EVM payment signature, and payment rail are **test fixtures**. No funds moved. No WHP institutional issuance, live payment, external deployment, or independent third-party audit is claimed.
+This source adds signed discovery carriers, canonical contracts and profiles, content-addressed independent verification, a no-prior-WHP-configuration cold-process test, real MCP transport, standard API-catalog metadata, and facilitator discovery forwarding. Current extension executions write separate records to `evidence/propagation-extension/`, `evidence/cold-agent/` and `evidence/postgresql/`. Do not treat historical candidate counts as extension test results.
 
-The requested live boundary remains: a real pre-authorized buyer payment, a WHP-authorized profile/root/key, durable production storage, actual settlement/finality, one stored Mark, and independent verification plus retrieval. Code and a test proof do not substitute for that boundary.
-
-## Run the implemented proof
-
-Requires Node 22.16.0 or later with `node:sqlite`, Python 3.11 or later, and the verification packages. The recorded execution used the exact versions in `evidence/verification.json`.
+## Execute verification
 
 ```sh
 python3 -m pip install -r requirements-verification.txt
+bash scripts/build-cold-sandbox.sh
 npm run verify
 ```
 
-The proof path needs no npm install, wallet, paid API, live chain, or external database. It creates temporary SQLite files and ephemeral test keys, removes them afterward, and writes public proof artifacts under `evidence/`. Test payment signatures are not wallet-generated ECDSA signatures.
+The full suite requires Docker for the independent verifier sandbox and fails rather than silently skipping it. The generic image contains only Python and crypto/schema libraries, not WHP source, fixtures or URLs. The test subprocess receives one completed TEST Mark and resolves all WHP-specific knowledge through it. No real wallet is present and no money moves. PostgreSQL integration runs separately with an explicit localhost-only TEST database URL and has no production fallback.
 
-Verify the included historical test artifact by taking the root pin and fixture timestamp from `evidence/demonstration/execution-record.json`:
+For an archived candidate Mark, use the verifier from the archived candidate, preserving its historical root and timestamp. The new verifier requires the new signed carrier. A downloaded new verifier is bound by its SHA256 content address. The code and archived artifact do not become LIVE merely because their cryptographic signatures verify.
 
-```sh
-python3 verify/verify_mark.py evidence/demonstration/TEST-standing-mark.json \
-  --root-pin ROOT_PIN_FROM_EXECUTION_RECORD \
-  --allow-test \
-  --registry evidence/demonstration/TEST-registry-snapshot.json \
-  --at 1789462090
-```
+## Production and discovery boundary
 
-Without `--allow-test`, the verifier rejects it as `TEST_ARTIFACT_NOT_LIVE`. The saved registry snapshot is historical; it is not a fresh present-time status response. The root pin included alongside a test result is an audit fixture, not an out-of-band institutional trust anchor.
+`docs/DISCOVERY-FIELD.md` records the researched current standards and directory requirements. Serving a contract or MCP declaration is not a registration. The real publisher script refuses to publish until it verifies the deployed HTTPS origin, explicitly admitted LIVE root and functioning MCP transport, and requires external catalog read-back to record REGISTERED.
+
+The runtime remains fail-closed until actual LIVE WHP root/profile authority, separate issuer signing key, designated Base USDC recipient, durable PostgreSQL database, canonical HTTPS origin, facilitator and trusted RPC are configured. No fixture fallback, self-sale or institutional issuance is manufactured. The production authorization inspection is preserved in Actions run 34961217519; the checked repository deployment and signing configuration was absent. No deployment or first outside sale follows from recovered source or TEST execution.
 
 ## What is implemented
 
@@ -51,7 +44,7 @@ The buyer agent discovers the contract, pins trust and payment destinations, com
 
 `src/runtime.mjs`, `src/server.mjs`, `netlify/functions/standing.mjs`, `netlify.toml`, and `scripts/migrate.mjs` are included. The runtime requires explicit LIVE authority, origin, key, payment terms, RPC, facilitator, and PostgreSQL configuration. It does not create a root, invent a buyer wallet, silently choose a price/recipient, or fall back to ephemeral storage.
 
-The `pg` adapter and Netlify wrapper have passed syntax checking only. PostgreSQL integration, fresh dependency installation/auditing, Netlify bundling/runtime, real EIP-3009 signature interoperability, real settlement and real chain finality were not executed here. No deployment or GitHub write was performed.
+The `pg` adapter and Netlify wrapper have passed syntax checking only. PostgreSQL integration, fresh dependency installation/auditing, Netlify bundling/runtime, real EIP-3009 signature interoperability, real settlement and real chain finality were not executed here. The original candidate report said no deployment or GitHub write was performed during its initial local build. Recovery and subsequent source commits are separately evidenced; a source commit is still not a production deployment.
 
 Read `docs/RUNTIME.md` for the exact environment contract, `docs/WIRE-CONTRACT.md` for the signed model and protocol boundary, `docs/SECURITY-AND-RECOVERY.md` for trust/failure semantics, and `docs/EXACT-COMPLETION.md` for the fixed object and actual completion ledger.
 

@@ -1,6 +1,7 @@
 import { seal, hash, canonical, keyId, publicDer, demand } from './canonical.mjs';
 import { validateTrust, issuerAuthority } from './authority.mjs';
 import { profile } from './profile.mjs';
+import {carrier} from './discovery.mjs';
 
 export function assembleResult(row,privateKey,rootPin) {
   demand(row.state==='SETTLED' && row.settlement && row.decision,'RESULT_NOT_READY',503);
@@ -25,6 +26,7 @@ export function assembleResult(row,privateKey,rootPin) {
     retrieval:{purchase_path:'/v1/purchases/'+row.id,result_path:'/v1/purchases/'+row.id+'/result',
       registry_path:'/v1/registry/'+row.id,authentication:'Buyer Ed25519 proof bound to HTTP method, path and body',additional_charge:false},
     limitations:profile().not_assessed,
+    discovery:carrier(new URL(row.quote.payload.resource.url).origin,row.id,trust.profile.environment),
     current_status_rule:'This immutable record proves issuance-time assessment. Current standing requires a fresh signed registry response and current trust/revocation information.'
   };
   const type=isMark?'WHP-STANDING-MARK-v1':'WHP-STANDING-ASSESSMENT-v1';

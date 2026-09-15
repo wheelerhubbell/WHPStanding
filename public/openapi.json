@@ -3,17 +3,12 @@
   "info": {
     "title": "WHP Standing",
     "version": "1.0.0-candidate.1",
-    "description": "Candidate Structured Passage assessment machinery. Discovery or API health is not proof of live institutional issuance."
+    "description": "WHP Standing: machine-verifiable standing under explicit authority and bounds. Payment buys a bounded WHP Standing Evaluation, not a favorable Mark. Public metadata is not evidence of LIVE issuance or external registration."
   },
   "servers": [
     {
-      "url": "{origin}",
-      "variables": {
-        "origin": {
-          "default": "https://standing.invalid",
-          "description": "Replace with the actually deployed, buyer-pinned HTTPS origin; this is a placeholder, not a deployment."
-        }
-      }
+      "url": "/",
+      "description": "The canonical origin serving this contract."
     }
   ],
   "paths": {
@@ -242,6 +237,177 @@
           }
         }
       }
+    },
+    "/v1/contract": {
+      "get": {
+        "operationId": "getStandingPurchaseContract",
+        "responses": {
+          "200": {
+            "description": "Complete schema, authority, authentication, quote binding and independent buyer payment requirements."
+          },
+          "503": {
+            "description": "Service/authority unavailable."
+          }
+        }
+      }
+    },
+    "/v1/verification": {
+      "get": {
+        "operationId": "getStandingVerification",
+        "responses": {
+          "200": {
+            "description": "Content-addressed independent verifier and invocation recipe."
+          },
+          "503": {
+            "description": "Service/authority unavailable."
+          }
+        }
+      }
+    },
+    "/v1/profiles/{profile_id}/{version}": {
+      "get": {
+        "operationId": "getStandingProfileVersion",
+        "responses": {
+          "200": {
+            "description": "Exact hash-addressed WHP Standing Profile and authorization."
+          },
+          "503": {
+            "description": "Service/authority unavailable."
+          }
+        },
+        "parameters": [
+          {
+            "name": "profile_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/.well-known/api-catalog": {
+      "get": {
+        "operationId": "getApiCatalog",
+        "responses": {
+          "200": {
+            "description": "RFC 9727 API catalog."
+          },
+          "503": {
+            "description": "Service/authority unavailable."
+          }
+        }
+      }
+    },
+    "/server.json": {
+      "get": {
+        "operationId": "getMcpServerMetadata",
+        "responses": {
+          "200": {
+            "description": "Remote MCP metadata; not evidence of registry acceptance."
+          },
+          "503": {
+            "description": "Service/authority unavailable."
+          }
+        }
+      }
+    },
+    "/robots.txt": {
+      "get": {
+        "operationId": "getRobotsPolicy",
+        "responses": {
+          "200": {
+            "description": "Crawler policy."
+          },
+          "503": {
+            "description": "Service/authority unavailable."
+          }
+        }
+      }
+    },
+    "/sitemap.xml": {
+      "get": {
+        "operationId": "getCanonicalSitemap",
+        "responses": {
+          "200": {
+            "description": "Canonical documentation URLs."
+          },
+          "503": {
+            "description": "Service/authority unavailable."
+          }
+        }
+      }
+    },
+    "/llms.txt": {
+      "get": {
+        "operationId": "getMachineDocumentation",
+        "responses": {
+          "200": {
+            "description": "Indexable capability, bounds, contract and payment documentation."
+          },
+          "503": {
+            "description": "Service/authority unavailable."
+          }
+        }
+      }
+    },
+    "/mcp": {
+      "post": {
+        "operationId": "callStandingMcp",
+        "summary": "Stateless Streamable HTTP MCP; no wallet credentials accepted.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "jsonrpc",
+                  "method"
+                ],
+                "properties": {
+                  "jsonrpc": {
+                    "const": "2.0"
+                  },
+                  "method": {
+                    "type": "string"
+                  },
+                  "id": {},
+                  "params": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "JSON-RPC response; 402 terms are carried by tool structuredContent.http_status."
+          },
+          "202": {
+            "description": "Accepted notification."
+          },
+          "400": {
+            "description": "Invalid message."
+          },
+          "403": {
+            "description": "Invalid Origin."
+          },
+          "405": {
+            "description": "Unsupported transport method."
+          }
+        }
+      }
     }
   },
   "components": {
@@ -253,5 +419,7 @@
         "description": "Base64 WHP-CLIENT-PROOF-v1 Ed25519 signature binding method, exact path/query, body SHA256, issued_at, expires_at and random nonce. See wire contract."
       }
     }
-  }
+  },
+  "x-whp-purchase-contract": "/v1/contract",
+  "x-whp-verification": "/v1/verification"
 }

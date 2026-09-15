@@ -11,6 +11,8 @@ import { evaluate } from './evaluator.mjs';
 import { assembleResult } from './mark.mjs';
 import { profile, PROFILE_HASH } from './profile.mjs';
 import { validatePayment, validateRequirements, HEX32 } from './payment.mjs';
+import {discoveryRoute,contract,profilePath,livePaymentDestination,bazaar} from './discovery.mjs';
+import {mcpRoute} from './mcp.mjs';
 
 const headers={'content-type':'application/json; charset=utf-8','cache-control':'no-store','x-content-type-options':'nosniff'};
 const json=(status,body,extra={})=>new Response(canonical(body)+'\n',{status,headers:{...headers,...extra}});
@@ -40,6 +42,7 @@ export class StandingService {
     demand(trust.keys.get(this.keyId)?.roles.includes('ISSUER')&&trust.keys.get(this.keyId)?.roles.includes('REGISTRY'),'ISSUER_AND_REGISTRY_AUTHORITY_REQUIRED',503);
     demand(requirements.scheme==='exact'&&requirements.extra.assetTransferMethod==='eip3009'&&requirements.extra.paymentFlow==='authorization','PAYMENT_SCHEME_UNSUPPORTED',503);
     demand(/^eip155:[1-9][0-9]*$/.test(requirements.network)&&/^0x[0-9a-f]{40}$/.test(requirements.asset)&&/^0x[0-9a-f]{40}$/.test(requirements.payTo)&&/^[1-9][0-9]*$/.test(requirements.amount),'PAYMENT_CONFIG_INVALID',503);
+    if(trust.profile.environment==='LIVE')livePaymentDestination(requirements);
     demand(trust.profile.environment!=='LIVE'||(origin.startsWith('https://')&&trust.profile.issuer==='Wheeler Hubbell Publishing'&&rail.constructor.name==='EvmRail'),'LIVE_CONFIGURATION_INVALID',503);
   }
   async handle(req){try{return await this.route(req);}catch(e){
@@ -48,11 +51,14 @@ export class StandingService {
     return json(503,{error:{code:'SERVICE_UNAVAILABLE',retryable:true}});
   }}
   async route(req){const u=new URL(req.url),now=this.clock(),path=u.pathname;
+    const discovered=await discoveryRoute(this,req);if(discovered)return discovered;
+    if(path==='/mcp')return mcpRoute(this,req);
     if(req.method==='GET'&&['/schemas/submission.schema.json','/schemas/result.schema.json','/schemas/trust-bundle.schema.json','/schemas/payment-requirements.schema.json'].includes(path)){
       return json(200,publicSchemas[path]);}
-    if(req.method==='GET'&&path==='/v1/openapi.json')return json(200,openapi);
+    if(req.method==='GET'&&path==='/v1/openapi.json')return json(200,{...openapi,servers:[{url:this.origin}]});
     if(req.method==='GET'&&path==='/healthz')return json(200,{service:'WHP Standing',version:'1.0.0-candidate.1',live_completion_proven:false});
     if(req.method==='GET'&&path==='/.well-known/whp-standing.json')return json(200,{
+      contract_url:this.origin+'/v1/contract',verification_url:this.origin+'/v1/verification',profile_url:this.origin+profilePath,mcp_url:this.origin+'/mcp',
       service:'WHP Standing',version:'1.0.0-candidate.1',environment:this.trustBundle.profile_authorization.payload.environment,
       issuer:this.trustBundle.profile_authorization.payload.issuer,root_public_key:this.trustBundle.root_public_key,root_pin:this.rootPin,
       issuer_certificate:this.trustBundle.certificates.find(e=>keyId(e.payload.public_key)===this.keyId),
@@ -88,16 +94,16 @@ export class StandingService {
         return this.progress(row);
       }
       demand(now<row.quote.payload.expires_at,'QUOTE_EXPIRED',409);
-      if(!payment){const terms={x402Version:2,resource:row.quote.payload.resource,accepts:[row.quote.payload.payment_requirements],extensions:{'whp-standing':{info:{required:true,quote:row.quote},schema:{type:'object'}}}};
+      if(!payment){const terms={x402Version:2,resource:row.quote.payload.resource,accepts:[row.quote.payload.payment_requirements],extensions:{'whp-standing':{info:{required:true,quote:row.quote},schema:{type:'object'}},bazaar:bazaar(this)}};
         return json(402,terms,{'payment-required':encode(terms)});}
       const paymentKey=validatePayment(payment,row.quote,now);
       const observedBlock=await this.rail.startBlock();
-      await this.rail.verify(payment,row.quote.payload.payment_requirements);
+      const verifiedPayment=await this.rail.verify(payment,row.quote.payload.payment_requirements);
       const decision=evaluate(s,row.trust_bundle,this.rootPin,now);
       demand(Buffer.byteLength(canonical({submission:s,decision,authority:row.trust_bundle,payment,quote:row.quote}))<=850000,'RESULT_CAPACITY_EXCEEDED',413);
       // Demonstrate signer availability before exposing any settlement side effect.
       seal('WHP-SIGNER-PREFLIGHT-v1',{purchase_id:id,decision_hash:hash(decision)},this.privateKey);
-      row=await this.store.reserve(id,requestHash,{payment_key:paymentKey,payment_payload:payment,decision,observed_block:observedBlock,scan_from:observedBlock,attempts:0,next_attempt_at:now});
+      row=await this.store.reserve(id,requestHash,{payment_key:paymentKey,payment_payload:payment,discovery_verification:verifiedPayment.whp_discovery_evidence??null,decision,observed_block:observedBlock,scan_from:observedBlock,attempts:0,next_attempt_at:now});
       await this.hooks.afterPrepared?.(row);
       return this.progress(row);
     }
@@ -142,6 +148,7 @@ export class StandingService {
           let settled=null;
           try{settled=await this.rail.settle(row.payment_payload,row.quote.payload.payment_requirements);}catch{}
           await this.hooks.afterSettle?.(row,settled);
+          if(settled?.whp_discovery_evidence)row=await this.store.update(id,owner,r=>({...r,discovery_settlement:settled.whp_discovery_evidence}));
           if(settled&&settled.network===row.payment_payload.accepted.network&&HEX32.test(settled.transaction??'')&&(!settled.payer||settled.payer.toLowerCase()===row.payment_payload.payload.authorization.from.toLowerCase()))
             row=await this.store.update(id,owner,r=>({...r,transaction_hint:settled.transaction.toLowerCase()}));
           proof=await this.rail.reconcile(row,now);

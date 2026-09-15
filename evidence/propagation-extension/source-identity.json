@@ -1,0 +1,161 @@
+{
+  "recovered_candidate": "ec3d1b8710c7a55529e4c450a806a8fea5dc7fee",
+  "concurrent_main_preserved": "2004b4b6a738c13c3b6f5adaf46adf217de28ece",
+  "files": [
+    {
+      "path": "AGENTS.md",
+      "before": null,
+      "sha256": "9c3d11c6f7d440e1a0013052af89c8919d2d25154fc9ba30c2f58ca8ea762459"
+    },
+    {
+      "path": "README.md",
+      "before": "ad415b20979f9de6ad15e25a79576fa9fe6b568ddc77417f58a83ad4473c3b21",
+      "sha256": "a7e1536a6c4d838185cd62a3de5cdcac5ea1316b5a2c93bd51f73e3d7b3d708e"
+    },
+    {
+      "path": "docs/DISCOVERY-FIELD.md",
+      "before": null,
+      "sha256": "8af130db1907d3928d579d70688f0ea60910b741ec9c992ef1825fb8767c3fc3"
+    },
+    {
+      "path": "netlify/functions/standing.mjs",
+      "before": "7e41b205978af240896a9f8bfec6199477a5cb2723142c391b032497f788312a",
+      "sha256": "5b86c6d4f661a4be92df93b77fe07dc7631280678426af60450f6ad43e490572"
+    },
+    {
+      "path": "netlify.toml",
+      "before": "934211d936fba41303a9332b9552d0d473613223d30be847cbd491546bea6b07",
+      "sha256": "d1c825cf311e72dfe42b592b8f157abf54d37631deac502fa0399a97580812ae"
+    },
+    {
+      "path": "package.json",
+      "before": "ef30ecf0b32b9f86212b99a5674fe658894b2bb6d0c54dc83636e88c5b659419",
+      "sha256": "801fcae231735f253514c962b0fc3c75b25c07d03e69751d3dbaf5021d7fd69d"
+    },
+    {
+      "path": "public/examples/submission.TEST.json",
+      "before": null,
+      "sha256": "d91d85f76b3c2d932cc2a42428f59f406f03528f8dda66a6f2588538a52ef622"
+    },
+    {
+      "path": "public/openapi.json",
+      "before": "e3fdf707b0deaa69d5bc54d2bd55703cf0b913d9dbf9e3dfeef0b465657adefc",
+      "sha256": "810b1b68b3fe67e79f510c7c1fa6be786a4e8ffceec2c1a4372168722f0b6338"
+    },
+    {
+      "path": "public/verification/30053d078472d0da7970d3e89dc6f71546c38d6a0078068c5108a10d93769dec.py",
+      "before": null,
+      "sha256": "30053d078472d0da7970d3e89dc6f71546c38d6a0078068c5108a10d93769dec"
+    },
+    {
+      "path": "public/verifier-manifest.json",
+      "before": null,
+      "sha256": "478f59643bc0f6137d6f81cdefff28102cb3ded3ca652a33c36f6e2807fbe21f"
+    },
+    {
+      "path": "schemas/payment-requirements.schema.json",
+      "before": "5793b6e210f41e7cf67ee5cb643e51764ce7ca96a639add2ed903816f66744fc",
+      "sha256": "175bf2ffa04d6dc2b1cd298fc389ac40f53075269fba2f65078ca283472be4f4"
+    },
+    {
+      "path": "schemas/result.schema.json",
+      "before": "cc3d26a9f3c87f00aa817bea2e9d0b08ec4b418bdc0b3aba4b2de1972cc846f2",
+      "sha256": "feaf954076d0f3cfe545cf09388893c9fab323d3faeed023cb9c992163e0dcb2"
+    },
+    {
+      "path": "schemas/submission.schema.json",
+      "before": "f080dacaadc4df7d9a7a29bf7fc1a65a5a0302c9a8c2bcfcd40de1e33d8dbf77",
+      "sha256": "ba95376ba8dffe74cf92f100de1087ff4eb11804d927b86392b7c0856187df30"
+    },
+    {
+      "path": "schemas/trust-bundle.schema.json",
+      "before": "39819a6079ce4df84e60e04bd65c36f882ea08434e5b392aa4cee20d7a69aa36",
+      "sha256": "a62f1209d6b9ffcfe542eef2f09066420d11b4105560c431a31a3ecff001f69d"
+    },
+    {
+      "path": "scripts/build-cold-sandbox.sh",
+      "before": null,
+      "sha256": "cfdc070278b495caedbff14ede37666fcfc3b3f17b2e788c3010ae35aaf245f0"
+    },
+    {
+      "path": "scripts/check-public-service.mjs",
+      "before": null,
+      "sha256": "c48e566a6635d8f9453c8499477914a510b3112840dfa5d5fdbe3e2b903a439d"
+    },
+    {
+      "path": "scripts/check.mjs",
+      "before": "12c7cedaa320fa2221c4645b2ee583efdb08f005bdd68c6a73152a9bde02d5f4",
+      "sha256": "d60466ea3d38bfb5e9add88b64a4e5f7db2973e832175988f5a69ead77dee684"
+    },
+    {
+      "path": "scripts/cold-agent.py",
+      "before": null,
+      "sha256": "42a00e7136ece8c179263ca693133dacdc8041c9ad9ee4992a819183730ca1f8"
+    },
+    {
+      "path": "scripts/generate-schemas.py",
+      "before": "9c06c096d8f58bb226e690961e48c91ff8f7b53e20ebb81424ad801ddc7b423d",
+      "sha256": "26f9eb770379648ae94222f0d331864ec4b85c6483cc584d7b85f00ec53fb62a"
+    },
+    {
+      "path": "scripts/publish-mcp.sh",
+      "before": null,
+      "sha256": "e95cc11caf1b09905108187067c976f95119cc5bf768c1d392c70745a1e90dbf"
+    },
+    {
+      "path": "scripts/test-postgres.mjs",
+      "before": null,
+      "sha256": "b32687f7351ddd9a0cbd72d67e312f3e5f584c5b7b65e9dbff7ae77d448d400a"
+    },
+    {
+      "path": "src/discovery.mjs",
+      "before": null,
+      "sha256": "bc07f3bfac33a4416e0209c1de02820a547a0775c8d63c4ee8cad18b01b7cb81"
+    },
+    {
+      "path": "src/mark.mjs",
+      "before": "aa33459e3969bd8597e59eb2c34468b692c638394efb1e416fbe5e1fdc1b9897",
+      "sha256": "30d85a3a5cf144f76d28247a52921e1218bf7e4157bceaa282a71cc975024872"
+    },
+    {
+      "path": "src/mcp.mjs",
+      "before": null,
+      "sha256": "58f8ab3abb69993686f43df4f5af61f192039c12ca897e8e9395e5b80fc59bb2"
+    },
+    {
+      "path": "src/payment.mjs",
+      "before": "9687f0268ef0ff87dd6bda03117596cb1de67920d91e73f0bf0e39013a4a9a83",
+      "sha256": "587d1becdc965de563acae0b0d8028d7dd60c7c3d9d370b85f428c83550b372f"
+    },
+    {
+      "path": "src/runtime.mjs",
+      "before": "73526fcaa737d706765691abea9aacb3190deaa7344f80baada582f30d6c0507",
+      "sha256": "fd5205e80665c28e6d71c7e26f1a47a4d61f97128a8ea196e877dc1b19bdf571"
+    },
+    {
+      "path": "src/service.mjs",
+      "before": "25e1b0262dedd24fdcf90ee17e1f98da16206cb243704ef502ce698de30420a6",
+      "sha256": "502a613cdc15b359cc62643629a429e86f0c18c61634739b515f72f973dea4fc"
+    },
+    {
+      "path": "test/cold-propagation.test.mjs",
+      "before": null,
+      "sha256": "9e1c5f3334461f65db312a05cd546d59c52e997c1421fe663c8bf91bad4513bf"
+    },
+    {
+      "path": "test/discovery.test.mjs",
+      "before": null,
+      "sha256": "3e09f51ef98a462c7003d5f72c353bc2bb2bc6f1f0bdf0d4a5cf094db65d574a"
+    },
+    {
+      "path": "test/fixtures.mjs",
+      "before": "88c00151fccc18a50a255a8eba070d1a1b54ad808d97114f2a0525d47bcbf32b",
+      "sha256": "31aaa910d9070bca483fac614f7f831298953c022631bbb9e5ab325ff3ed559b"
+    },
+    {
+      "path": "verify/verify_mark.py",
+      "before": "5c5cd8c74da436364dce7ebe6f34342609b9fdaf42dc5a06014284dc43ada383",
+      "sha256": "30053d078472d0da7970d3e89dc6f71546c38d6a0078068c5108a10d93769dec"
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "encoding": "xz-base64-parts",
+  "sha256": "597a8b7e02d00b8f32b8368a790266778b7f32733f22815bf0a3772f3f9c056f",
+  "parts": [
+    "build-input/extension.part0",
+    "build-input/extension.part1",
+    "build-input/extension.part2",
+    "build-input/extension.part3",
+    "build-input/extension.part4",
+    "build-input/extension.part5",
+    "build-input/extension.part6",
+    "build-input/extension.part7"
+  ],
+  "recovered_candidate": "ec3d1b8710c7a55529e4c450a806a8fea5dc7fee",
+  "purpose": "Lossless source extension over the recovered candidate. TEST execution is not LIVE issuance, sale, external registration, or PROPAGATION-PROVEN."
+}

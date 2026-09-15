@@ -1,0 +1,140 @@
+{
+  "bounds": {
+    "jurisdiction": "test-fixture-not-external-authority",
+    "scope": "submitted-example-only",
+    "valid_from": 1789461990,
+    "valid_until": 1789465690
+  },
+  "buyer_key": "MCowBQYDK2VwAyEAKEm+9KA63lccHUEBF7bUeunJblKrZ+FAdkptxRu8nok=",
+  "client_reference": "test-a436414e95c23434e5308a772df8f9bf",
+  "nodes": [
+    {
+      "payload": {
+        "content": {
+          "count": 3,
+          "statement": "Three items are present in this submitted fixture."
+        },
+        "epistemic_status": "REPORT",
+        "id": "sample-observation",
+        "jurisdiction": "test-fixture-not-external-authority",
+        "locator": "urn:whp:test:source-1",
+        "operations": [
+          "INFORM",
+          "RECOMMEND"
+        ],
+        "prior_hash": null,
+        "qualifiers": [
+          "Only this submitted fixture.",
+          "No external-world truth claim."
+        ],
+        "scope": "submitted-example-only",
+        "status": "ACTIVE",
+        "unknowns": [
+          {
+            "blocks": [
+              "EXECUTE"
+            ],
+            "description": "No outside-world evidence is supplied.",
+            "id": "external-validity"
+          }
+        ],
+        "valid_from": 1789461590,
+        "valid_until": 1789469290,
+        "version": "1"
+      },
+      "protected": {
+        "algorithm": "Ed25519",
+        "canonicalization": "WHP-JCS-I1",
+        "key_id": "f2256c1fc60b9e0bc6571d99ef60b6b52d15547bf7ed0651c6bbe03e82118b41",
+        "type": "WHP-SOURCE-ATTESTATION-v1"
+      },
+      "signature": "V4Om6VcFsLIzl0UZyMe/oxJrTjkksVol0dcqSx39wcv8U4XGoDR/aewQGkOa1wGob26PnFVz5h8lS7U2XZelAQ=="
+    },
+    {
+      "payload": {
+        "content": {
+          "count": 3,
+          "statement": "Three items are present in this submitted fixture."
+        },
+        "epistemic_status": "REPORT",
+        "id": "preserved-representation",
+        "jurisdiction": "test-fixture-not-external-authority",
+        "locator": "urn:whp:test:representation-1",
+        "operations": [
+          "INFORM",
+          "RECOMMEND"
+        ],
+        "prior_hash": null,
+        "qualifiers": [
+          "Only this submitted fixture.",
+          "No external-world truth claim."
+        ],
+        "scope": "submitted-example-only",
+        "status": "ACTIVE",
+        "unknowns": [
+          {
+            "blocks": [
+              "EXECUTE"
+            ],
+            "description": "No outside-world evidence is supplied.",
+            "id": "external-validity"
+          }
+        ],
+        "valid_from": 1789461590,
+        "valid_until": 1789469290,
+        "version": "1"
+      },
+      "protected": {
+        "algorithm": "Ed25519",
+        "canonicalization": "WHP-JCS-I1",
+        "key_id": "f2256c1fc60b9e0bc6571d99ef60b6b52d15547bf7ed0651c6bbe03e82118b41",
+        "type": "WHP-SOURCE-ATTESTATION-v1"
+      },
+      "signature": "8R7jJrFQYvC6OO/fGarBJy20KmY+n5WjRdIUFxQeD4x8Q98gfdSOsxtvs1oxyagrv/3YZrXzEped9IybPjuFCg=="
+    }
+  ],
+  "object": {
+    "id": "preserved-representation",
+    "root": "9f76fe2e3ccc2260d7f3432678f3666137f55312bfbbc8d1e55ecb0b72c0401b",
+    "version": "1"
+  },
+  "profile": {
+    "id": "WHP-STANDING-STRUCTURED-PASSAGE",
+    "sha256": "dc25aa63cadad8b5b02ba3cbaac552ca8273c6d6793b4eefdef16aadd180046e",
+    "version": "1.0.0"
+  },
+  "requested_operation": "INFORM",
+  "transitions": [
+    {
+      "payload": {
+        "from": [
+          "67677c7a07e0c626a20cf9e891f1f64494c71ca0fc771a729e9cc26bebe8a41d"
+        ],
+        "jurisdiction": "test-fixture-not-external-authority",
+        "operations": [
+          "INFORM",
+          "RECOMMEND"
+        ],
+        "scope": "submitted-example-only",
+        "to": "9f76fe2e3ccc2260d7f3432678f3666137f55312bfbbc8d1e55ecb0b72c0401b",
+        "transform": "COPY",
+        "valid_from": 1789461590,
+        "valid_until": 1789469290,
+        "warrant": {
+          "evidence_hashes": [
+            "67677c7a07e0c626a20cf9e891f1f64494c71ca0fc771a729e9cc26bebe8a41d"
+          ],
+          "statement": "Exact COPY of this source for INFORM or RECOMMEND only; all qualifiers and unknowns retained."
+        }
+      },
+      "protected": {
+        "algorithm": "Ed25519",
+        "canonicalization": "WHP-JCS-I1",
+        "key_id": "112853f6c28a7b7616f20f8df36d43429941688318049946df233b4e1b7fb000",
+        "type": "WHP-TRANSITION-WARRANT-v1"
+      },
+      "signature": "w7isyH9I1aWQpWHyI0QbYfcng/Mxyu7WdeWxEGBeuValsVm8++wvTsq5kroE4OG4NE/K+byMjW81mbHKAXiJDw=="
+    }
+  ],
+  "version": "WHP-STANDING-SUBMISSION-v1"
+}

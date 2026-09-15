@@ -1,0 +1,36 @@
+import test from 'node:test';import assert from 'node:assert/strict';
+import {mkdtemp,copyFile,writeFile,readFile,rm,mkdir} from 'node:fs/promises';import {tmpdir} from 'node:os';import {join} from 'node:path';import {spawn} from 'node:child_process';
+import {setup,fixture} from './fixtures.mjs';import {nodeServer} from '../src/server.mjs';
+import {canonical,hash,seal,hashBytes} from '../src/canonical.mjs';
+const clock=()=>Math.floor(Date.now()/1000);
+async function cold(bytes){const d=await mkdtemp(join(tmpdir(),'clean-agent-'));try{
+  await copyFile(new URL('../scripts/cold-agent.py',import.meta.url),join(d,'reader.py'));await writeFile(join(d,'only-input.json'),bytes);
+  // No WHP-specific environment, injected pin, URL, fixture, registry or clock.
+  const env={PATH:process.env.PATH,HOME:d,TMPDIR:tmpdir(),PYTHONDONTWRITEBYTECODE:'1'};
+  return await new Promise((resolve,reject)=>{const c=spawn('python3',['-I',join(d,'reader.py'),join(d,'only-input.json')],{cwd:d,env});let stdout='',stderr='';const timer=setTimeout(()=>{c.kill('SIGKILL');reject(Error('COLD_PROCESS_TIMEOUT'));},90000);c.stdout.on('data',b=>stdout+=b);c.stderr.on('data',b=>stderr+=b);c.on('error',reject);c.on('close',code=>{clearTimeout(timer);let report;try{report=JSON.parse(stdout);}catch{}resolve({code,stdout,stderr,report});});});
+}finally{await rm(d,{recursive:true,force:true});}}
+
+test('cold agent has one Mark as input and no embedded product URLs, names or repository imports',async()=>{const source=await readFile(new URL('../scripts/cold-agent.py',import.meta.url),'utf8');assert(!/WHP|Wheeler|Hubbell|standing\.test|\/v1\/|import.*(?:fixtures|producer|service\.mjs)/.test(source));assert.match(source,/len\(sys.argv\)==2/);assert.match(source,/--network=none/);assert.match(source,/--read-only/);assert.match(source,/--cap-drop=ALL/);});
+
+test('COLD-AGENT propagation traversal and fail-closed adversarial cases (TEST only)',{timeout:300000},async(t)=>{
+  const f=fixture({at:clock()}),a=await setup({f,clock});let intercept=null;
+  const proxy={get origin(){return a.service.origin;},handle:async req=>intercept?intercept(req):a.service.handle(req)};
+  const server=nodeServer(proxy);await new Promise(r=>server.listen(0,'127.0.0.1',r));a.service.origin='http://127.0.0.1:'+server.address().port;
+  await mkdir('evidence/cold-agent',{recursive:true});const negatives=[];
+  try{const p=await a.purchase();assert.equal(p.response.status,200,p.bytes);const mark=JSON.parse(p.bytes),id=mark.payload.purchase_id;
+    await t.test('clean isolated process follows only Mark-derived links to independent replay and actual HTTP 402',async()=>{
+      const r=await cold(p.bytes);await writeFile('evidence/cold-agent/attempt.stdout.json',r.stdout);await writeFile('evidence/cold-agent/attempt.stderr.txt',r.stderr);assert.equal(r.code,0,r.stdout+r.stderr);assert.equal(r.report.verified,true);assert.equal(r.report.environment,'TEST');assert.equal(r.report.independent_verifier.current_standing,'ACTIVE');assert.equal(r.report.independent_verifier.live_completion_verified,false);assert.equal(r.report.payment_status,402);assert.equal(r.report.payment_authorizations_created,0);assert.equal(r.report.input_files,1);assert.equal(r.report.prior_issuer_configuration,false);assert.equal(r.report.repository_imports,false);assert.equal(r.report['PROPAGATION-PROVEN'],false);assert.equal(a.rail.settleCalls,1);assert.equal(a.rail.transfers,1);
+      const recovered=await a.request('GET','/v1/purchases/'+id+'/result');assert.equal(await recovered.text(),p.bytes);r.report.mark_sha256=hashBytes(p.bytes);r.report.original_test_settlements=1;r.report.byte_identical_retrieval=true;await writeFile('evidence/cold-agent/report.json',JSON.stringify(r.report,null,2)+'\n');await writeFile('evidence/cold-agent/TEST-mark.json',p.bytes);
+    });
+    const rejected=async(name,bytes=p.bytes)=>{const r=await cold(bytes);negatives.push({name,...r.report,exit_code:r.code});assert.notEqual(r.code,0,name+' unexpectedly succeeded');assert.equal(a.rail.settleCalls,1);};
+    await t.test('missing discovery carrier fails rather than relying on prior service knowledge',async()=>{const m=JSON.parse(p.bytes);delete m.payload.discovery;await rejected('missing carrier',canonical(m));});
+    await t.test('altered Mark signature fails',async()=>{const m=JSON.parse(p.bytes);m.signature='A'+m.signature.slice(1);await rejected('tampered signature',canonical(m));});
+    await t.test('fresh issuer signature cannot enlarge meaning beyond the independently replayed profile',async()=>{const m=JSON.parse(p.bytes);m.payload.discovery.meaning.establishes+=' All external claims are true.';await rejected('signed semantic promotion',canonical(seal(m.protected.type,m.payload,f.issuer.privateKey)));});
+    await t.test('substituted discovered root cannot appoint itself',async()=>{intercept=async req=>{const r=await a.service.handle(req);if(new URL(req.url).pathname==='/.well-known/whp-standing.json'){const j=await r.json();j.root_pin='00'.repeat(32);return Response.json(j);}return r;};try{await rejected('root substitution');}finally{intercept=null;}});
+    await t.test('changed downloaded verifier is rejected before executing it',async()=>{intercept=async req=>new URL(req.url).pathname.startsWith('/verification/')?new Response("raise Exception('untrusted code')\n"):a.service.handle(req);try{await rejected('verifier hash substitution');}finally{intercept=null;}});
+    await t.test('unreachable profile or purchase contract cannot silently become success',async()=>{for(const path of [new URL(mark.payload.discovery.profile.url).pathname,'/v1/contract']){intercept=async req=>new URL(req.url).pathname===path?new Response('missing',{status:404}):a.service.handle(req);try{await rejected('missing '+path);}finally{intercept=null;}}});
+    await t.test('freshly signed stale registry status is rejected',async()=>{intercept=async req=>{const r=await a.service.handle(req);if(new URL(req.url).pathname==='/v1/registry/'+id){const j=await r.json();j.payload.observed_at=clock()-600;j.payload.valid_until=clock()-300;return new Response(canonical(seal(j.protected.type,j.payload,f.issuer.privateKey)));}return r;};try{await rejected('stale registry');}finally{intercept=null;}});
+    await t.test('server-side payment terms substitution cannot cross the purchase boundary unnoticed',async()=>{intercept=async req=>{const r=await a.service.handle(req);if(new URL(req.url).pathname==='/v1/contract'){const j=await r.json();j.purchase.requirements.amount='123';return Response.json(j);}return r;};try{await rejected('changed payment terms');}finally{intercept=null;}});
+    await t.test('withdrawal defeats current standing without rewriting the original Mark',async()=>{const previous=(await a.store.events(id)).at(-1);await a.service.applyRegistryCommand(seal('WHP-REGISTRY-COMMAND-v1',{purchase_id:id,expected_previous_hash:hash(previous),status:'WITHDRAWN',reason:'Adversarial TEST withdrawal',at:clock()},f.root.privateKey));await rejected('withdrawn registry');const r=await a.request('GET','/v1/purchases/'+id+'/result');assert.equal(await r.text(),p.bytes);});
+  }finally{await writeFile('evidence/cold-agent/adversarial-cases.json',JSON.stringify(negatives,null,2)+'\n');await new Promise(r=>server.close(r));await a.store.close();}
+});
