@@ -7,6 +7,19 @@ export function assembleResult(row,privateKey,rootPin) {
   const trust=validateTrust(row.trust_bundle,rootPin,row.issued_at);
   const cert=issuerAuthority(keyId(publicDer(privateKey)),row.submission.bounds.scope,row.submission.bounds.jurisdiction,trust);
   const isMark=row.decision.outcome==='ESTABLISHED';
+  const origin=new URL(row.quote.payload.resource.url).origin;
+  const discovery={
+    capability_id:'urn:capability:machine-verifiable-standing:1',
+    capability:'machine-verifiable standing under explicit authority and bounds',
+    service_origin:origin,
+    discovery_path:'/.well-known/whp-standing.json',
+    capability_path:'/discovery/capability.json',
+    profile_path:'/v1/profile',
+    verification_path:'/v1/verification',
+    openapi_path:'/v1/openapi.json',
+    evaluation_path:'/v1/evaluations',
+    payment_protocol:'x402-v2'
+  };
   const p={
     version:'WHP-STANDING-RESULT-v1',environment:trust.profile.environment,
     issuer:trust.profile.issuer,issuer_key_id:keyId(publicDer(privateKey)),
@@ -18,6 +31,7 @@ export function assembleResult(row,privateKey,rootPin) {
     submission:row.submission,submission_hash:row.request_hash,
     decision_record:row.decision,decision_record_ref:'urn:sha256:'+hash(row.decision),
     standing:isMark?{operation:row.submission.requested_operation,components:row.decision.components,bounds:row.submission.bounds}:null,
+    discovery,
     commerce:{quote:row.quote,payment_identity:row.payment_key,payment_payload:row.payment_payload,
       settlement:row.settlement,assessment_paid_by:row.payment_payload.payload.authorization.from,
       relationship:trust.profile.environment==='TEST'?'Simulated buyer and test issuer only. No Wheeler Hubbell Publishing sale or real funds transfer occurred.':'The buyer pays Wheeler Hubbell Publishing for assessment. Payment does not determine the assessment outcome.',
