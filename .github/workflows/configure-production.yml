@@ -1,0 +1,38 @@
+name: Configure WHP Standing production
+on:
+  push:
+    branches: [standing-v1-propagation]
+    paths: [.github/workflows/configure-production.yml, scripts/configure-production.mjs]
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: whp-standing-production-configuration
+  cancel-in-progress: false
+jobs:
+  configure:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.16.0'
+      - run: npm ci --include=optional --ignore-scripts
+      - name: Configure production without spending or executing payment
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+        run: node scripts/configure-production.mjs
+      - name: Preserve public configuration evidence
+        if: always()
+        run: |
+          if grep -Rq 'BEGIN .*PRIVATE KEY\|postgresql://' evidence/production; then exit 1; fi
+          git config user.name 'WHP Standing Production'
+          git config user.email 'actions@users.noreply.github.com'
+          git add evidence/production
+          git diff --cached --quiet || git commit -m 'Record actual production configuration result'
+          git push origin "HEAD:${GITHUB_REF_NAME}"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: production-configuration-${{ github.run_id }}
+          path: evidence/production/
