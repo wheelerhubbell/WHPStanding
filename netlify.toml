@@ -1,0 +1,9 @@
+[build]
+  publish = "public"
+  functions = "netlify/functions"
+[build.environment]
+  NODE_VERSION = "22.16.0"
+[functions]
+  node_bundler = "esbuild"
+  external_node_modules = ["pg"]
+  included_files = ["profiles/**", "schemas/**", "public/openapi.json"]
