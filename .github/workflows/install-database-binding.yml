@@ -1,0 +1,24 @@
+name: Lock official Netlify database binding
+on:
+  push:
+    branches: [standing-v1-propagation]
+    paths: [.github/workflows/install-database-binding.yml]
+permissions:
+  contents: write
+jobs:
+  install:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.16.0'
+      - run: npm install --save-exact @netlify/database
+      - run: |
+          node --input-type=module -e "import {getConnectionString} from '@netlify/database';if(typeof getConnectionString!=='function')process.exit(1)"
+          git config user.name 'WHP Standing Production'
+          git config user.email 'actions@users.noreply.github.com'
+          git add package.json package-lock.json
+          git commit -m 'Pin official Netlify connection binding without replacing pg adapter'
+          git pull --rebase origin standing-v1-propagation
+          git push origin HEAD:standing-v1-propagation
