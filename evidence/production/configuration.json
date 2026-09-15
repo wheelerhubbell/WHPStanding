@@ -1,6 +1,6 @@
 {
-  "checked_at": "2026-09-15T13:44:49.777Z",
-  "source_commit": "2058870be2c17bb64cb2758274ac91513eb17771",
+  "checked_at": "2026-09-15T13:48:56.276Z",
+  "source_commit": "b0070773535208fe16b8339a1221e4624fb4a715",
   "payment_executed": false,
   "paid_plan_enabled": false,
   "account_plan": "Free",
@@ -29,13 +29,19 @@
   "rpc": {
     "url": "https://base-rpc.publicnode.com",
     "chain_id": 8453,
-    "finalized_number": "0x30f74f3",
-    "finalized_hash": "0x7526736a0a44fd9757fb6132c142141621e0508e1d70ec29263b54c79e2a7dd7",
+    "finalized_number": "0x30f75b1",
+    "finalized_hash": "0xa7c0dcdff364e036b450c365c68f7c6f50f45fdd3e67545da62a402150f56458",
     "independent_base_rpc_agrees": true,
     "usdc_code_present": true,
     "logs_readable": true
   },
-  "database_stage": "migration",
-  "failure": "42501",
-  "permission_error": "permission denied for schema public"
+  "database": {
+    "provider": "Netlify managed PostgreSQL",
+    "api_role": "netlifydb_readonly",
+    "migration_verified": false,
+    "production_runtime_connection": "Netlify getConnectionString",
+    "migration_path": "netlify/database/migrations/0001_whp_standing.sql"
+  },
+  "configuration_ready_for_deployment": true,
+  "configuration_verified": false
 }
