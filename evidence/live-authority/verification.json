@@ -1,0 +1,85 @@
+{
+  "version": "WHP-AUTHORITY-CEREMONY-PROOF-v1",
+  "verified_at": "2026-09-15T13:41:47.248Z",
+  "source_commit": "e30fbed696e948ab3f940a8f768db607a89051d2",
+  "run_id": "34976591575",
+  "authority_state": "VERIFIED",
+  "service_live": false,
+  "root_pin": "c9507f2c5d0d80935a4885071c8372eeba25010e514e81401acabb246134bff6",
+  "issuer_key_id": "baabb9cd21f367bb8467f1bce570cd1f4ef1b418172f2cb68968ebe7186f487e",
+  "profile": {
+    "id": "WHP-STANDING-STRUCTURED-PASSAGE",
+    "sha256": "dc25aa63cadad8b5b02ba3cbaac552ca8273c6d6793b4eefdef16aadd180046e",
+    "version": "1.0.0"
+  },
+  "existing_identity_reused": false,
+  "canonical_primitives": "src/canonical.mjs seal/publicDer/keyId/hash; src/authority.mjs validateTrust/issuerAuthority/authorize",
+  "production_verifier": {
+    "root_pin_consistent": true,
+    "issuer_certificate_verified": true,
+    "issuer_private_key_matches_certificate": true,
+    "issuer_and_registry_roles_verified": true,
+    "scope": "whp-standing-structured-passage",
+    "jurisdiction": "protocol-structural-assessment-only",
+    "profile": {
+      "id": "WHP-STANDING-STRUCTURED-PASSAGE",
+      "version": "1.0.0",
+      "sha256": "dc25aa63cadad8b5b02ba3cbaac552ca8273c6d6793b4eefdef16aadd180046e"
+    },
+    "trust_status_verified": true,
+    "challenge": {
+      "protected": {
+        "type": "WHP-REGISTRY-CUSTODY-PROOF-v1",
+        "algorithm": "Ed25519",
+        "canonicalization": "WHP-JCS-I1",
+        "key_id": "baabb9cd21f367bb8467f1bce570cd1f4ef1b418172f2cb68968ebe7186f487e"
+      },
+      "payload": {
+        "root_pin": "c9507f2c5d0d80935a4885071c8372eeba25010e514e81401acabb246134bff6",
+        "at": 1789479704
+      },
+      "signature": "x1YT+r2Rv6ubPalXdbt1duJBWdVnewVgtrSPUJSMkDPNZEJfJIXATdJZTvqgQeXbVP1UYV2+eGhAaY/xrQ16DQ=="
+    }
+  },
+  "independent_python_authority_verified": true,
+  "published_schema_validated": true,
+  "negative_proofs": [
+    {
+      "name": "wrong institutional root pin",
+      "rejected": true
+    },
+    {
+      "name": "environment relabel without root signature",
+      "rejected": true
+    },
+    {
+      "name": "profile commitment tampering",
+      "rejected": true
+    },
+    {
+      "name": "expired trust status",
+      "rejected": true
+    },
+    {
+      "name": "unadmitted jurisdiction",
+      "rejected": true
+    },
+    {
+      "name": "unadmitted scope",
+      "rejected": true
+    }
+  ],
+  "secret_custody_readback_verified": true,
+  "root_excluded_from_production_context": true,
+  "issuer_production_context_accepted": true,
+  "secrets_controller_enabled": false,
+  "private_keys_committed": false,
+  "private_keys_uploaded_as_artifacts": false,
+  "private_keys_printed": false,
+  "trust_status_valid_until": 1789566103,
+  "automatic_trust_refresh_established": false,
+  "payment_authorized": false,
+  "payment_settled": false,
+  "live_mark_issued": false,
+  "remaining": "Production database, rail readiness, deployment, and public execution must be independently established; authority proof alone is not a LIVE service."
+}
