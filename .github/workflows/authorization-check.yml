@@ -1,0 +1,55 @@
+name: Check current production authorization
+on:
+  push:
+    branches: ['standing-v1-propagation']
+    paths: ['.github/workflows/authorization-check.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check named deployment and authority inputs; do not print their values
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID || vars.NETLIFY_SITE_ID }}
+          WHP_ORIGIN: ${{ secrets.WHP_ORIGIN || vars.WHP_ORIGIN }}
+          WHP_ROOT_PIN: ${{ secrets.WHP_ROOT_PIN || vars.WHP_ROOT_PIN }}
+          WHP_TRUST_BUNDLE_JSON: ${{ secrets.WHP_TRUST_BUNDLE_JSON }}
+          WHP_ISSUER_PRIVATE_KEY: ${{ secrets.WHP_ISSUER_PRIVATE_KEY }}
+          WHP_PAYMENT_REQUIREMENTS_JSON: ${{ secrets.WHP_PAYMENT_REQUIREMENTS_JSON }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          NETLIFY_DB_URL: ${{ secrets.NETLIFY_DB_URL }}
+          WHP_RPC_URL: ${{ secrets.WHP_RPC_URL || vars.WHP_RPC_URL }}
+          WHP_FACILITATOR_URL: ${{ secrets.WHP_FACILITATOR_URL || vars.WHP_FACILITATOR_URL }}
+        run: |
+          python3 - <<'PY'
+          import os,json,pathlib,datetime,urllib.request
+          names=['NETLIFY_AUTH_TOKEN','NETLIFY_SITE_ID','WHP_ORIGIN','WHP_ROOT_PIN','WHP_TRUST_BUNDLE_JSON','WHP_ISSUER_PRIVATE_KEY','WHP_PAYMENT_REQUIREMENTS_JSON','DATABASE_URL','NETLIFY_DB_URL','WHP_RPC_URL','WHP_FACILITATOR_URL']
+          r={'checked_at':datetime.datetime.now(datetime.timezone.utc).isoformat(),'source_commit':os.environ['GITHUB_SHA'],'run_id':os.environ['GITHUB_RUN_ID'],'scope':'Named repository Actions secrets and variables available to this branch; not all external accounts or environments.','configured':{n:bool(os.environ.get(n)) for n in names},'secret_values_exported':False,'production_mutated':False,'payment_authorized':False}
+          token=os.environ.get('NETLIFY_AUTH_TOKEN')
+          if token:
+              try:
+                  req=urllib.request.Request('https://api.netlify.com/api/v1/sites?per_page=100',headers={'Authorization':'Bearer '+token})
+                  with urllib.request.urlopen(req,timeout=20) as response:sites=json.load(response)
+                  r['netlify_authenticated_read']='VERIFIED'
+                  r['matching_sites']=[{'id':s['id'],'name':s['name'],'url':s.get('ssl_url')} for s in sites if 'WHPStanding' in str((s.get('build_settings') or {}).get('repo_url',''))]
+              except Exception as e:r['netlify_authenticated_read']='FAILED';r['error_type']=type(e).__name__
+          else:r['netlify_authenticated_read']='AUTHORIZATION_NOT_CONFIGURED'
+          p=pathlib.Path('evidence/production-authorization/latest-inspection.json');p.parent.mkdir(parents=True,exist_ok=True);p.write_text(json.dumps(r,indent=2)+'\n');print(json.dumps(r,indent=2))
+          PY
+      - name: Preserve current inspection on the same release branch
+        run: |
+          git config user.name 'WHP Standing Verification'
+          git config user.email 'actions@users.noreply.github.com'
+          git add evidence/production-authorization/latest-inspection.json
+          git commit -m 'Record current production authorization boundary without exposing values'
+          git push origin "HEAD:${GITHUB_REF_NAME}"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: whp-standing-authorization-${{ github.run_id }}
+          path: evidence/production-authorization/latest-inspection.json
+          retention-days: 90
