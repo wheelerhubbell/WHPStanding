@@ -1,0 +1,53 @@
+name: Inspect Netlify credit block read-only
+on:
+  push:
+    branches: [standing-v1-propagation]
+    paths: [.github/workflows/credit-block-inspection.yml]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Read account credit counters and published site state only
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+        run: |
+          mkdir -p /tmp/whp-credit-inspection
+          python3 - <<'PY'
+          import os,json,re,datetime,urllib.request,pathlib
+          account='6aa6fb2da06f6afa962eee67'
+          site='914e2d6d-ec82-4b03-aa58-785fcf3b453b'
+          report={'checked_at':datetime.datetime.now(datetime.timezone.utc).isoformat(),'source_commit':os.environ['GITHUB_SHA'],'run_id':os.environ['GITHUB_RUN_ID'],'scope':'Read-only deployment-credit diagnostics; not a plan change, recharge, deployment, or payment.','production_mutated':False,'payment_executed':False,'credit_fields':{}}
+          def get(path):
+              req=urllib.request.Request('https://api.netlify.com/api/v1'+path,headers={'Authorization':'Bearer '+os.environ['NETLIFY_AUTH_TOKEN']})
+              with urllib.request.urlopen(req,timeout=25) as response:return json.load(response)
+          def collect(obj,path=()):
+              if isinstance(obj,dict):
+                  for key,value in obj.items():
+                      if not re.search(r'token|secret|password|card|email|address|connection',key,re.I):collect(value,path+(key,))
+              elif isinstance(obj,list):
+                  for i,value in enumerate(obj[:50]):collect(value,path+(str(i),))
+              elif re.search(r'credit|usage|current_period|billing_period|paused|suspended|blocked', '.'.join(path),re.I):
+                  if obj is None or isinstance(obj,(bool,int,float)) or (isinstance(obj,str) and re.fullmatch(r'\d{4}-\d{2}-\d{2}[T 0-9:.+Z-]*',obj)):
+                      report['credit_fields']['.'.join(path)]=obj
+          try:
+              a=get('/accounts/'+account)
+              report['account_id']=a.get('id');report['account_slug']=a.get('slug');report['plan']=a.get('type_name');collect(a)
+              s=get('/sites/'+site)
+              report['site']={'id':s.get('id'),'name':s.get('name'),'state':s.get('state'),'public_origin':s.get('ssl_url'),'published_deploy_id':(s.get('published_deploy') or {}).get('id'),'published_at':(s.get('published_deploy') or {}).get('published_at')}
+              report['account_read_verified']=True
+          except Exception as e:
+              report['error_type']=type(e).__name__;report['http_status']=getattr(e,'code',None)
+          out=json.dumps(report,indent=2)+'\n'
+          pathlib.Path('/tmp/whp-credit-inspection/credit-inspection.json').write_text(out)
+          print(out)
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: whp-credit-inspection-${{ github.run_id }}
+          path: /tmp/whp-credit-inspection/credit-inspection.json
+          retention-days: 7
