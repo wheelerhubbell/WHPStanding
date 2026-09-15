@@ -1,6 +1,6 @@
 {
-  "checked_at": "2026-09-15T13:48:56.276Z",
-  "source_commit": "b0070773535208fe16b8339a1221e4624fb4a715",
+  "checked_at": "2026-09-15T13:52:09.060Z",
+  "source_commit": "1b51b3d1c4a5cc4de2463df19a2f085a3da9ecde",
   "payment_executed": false,
   "paid_plan_enabled": false,
   "account_plan": "Free",
@@ -29,8 +29,8 @@
   "rpc": {
     "url": "https://base-rpc.publicnode.com",
     "chain_id": 8453,
-    "finalized_number": "0x30f75b1",
-    "finalized_hash": "0xa7c0dcdff364e036b450c365c68f7c6f50f45fdd3e67545da62a402150f56458",
+    "finalized_number": "0x30f7672",
+    "finalized_hash": "0xdaf249b6f8ecdf13b4821ca1efccae1c791c6b2325a5a28326d31d764d462ed2",
     "independent_base_rpc_agrees": true,
     "usdc_code_present": true,
     "logs_readable": true

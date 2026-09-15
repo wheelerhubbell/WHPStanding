@@ -1,0 +1,11 @@
+{
+  "checked_at": "2026-09-15T13:52:17.624Z",
+  "root_pin": "c9507f2c5d0d80935a4885071c8372eeba25010e514e81401acabb246134bff6",
+  "status_sequence": 0,
+  "previous_hash": null,
+  "valid_until": 1789566103,
+  "root_rotated": false,
+  "profile_changed": false,
+  "certificates_changed": false,
+  "payment_executed": false
+}
