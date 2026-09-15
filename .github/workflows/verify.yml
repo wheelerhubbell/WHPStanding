@@ -1,7 +1,7 @@
 name: Verify first public WHP Standing v1
 on:
   push:
-    branches: [main]
+    branches: [main, 'work/first-public-v1-contract']
   workflow_dispatch:
 permissions:
   contents: read
