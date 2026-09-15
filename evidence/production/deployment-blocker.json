@@ -1,0 +1,16 @@
+{
+  "checked_at": "2026-09-15T13:54:34Z",
+  "operation": "POST /api/v1/sites/914e2d6d-ec82-4b03-aa58-785fcf3b453b/deploys",
+  "http_status": 403,
+  "provider_error": "Account credit usage exceeded - new deploys are blocked until credits are added",
+  "evidence_run": "https://github.com/wheelerhubbell/WHPStanding/actions/runs/34977973264",
+  "account_plan": "Free",
+  "production_authority": "VERIFIED",
+  "production_deployment": "BLOCKED",
+  "public_payment_boundary": "NOT_VERIFIED",
+  "registration": "NOT_REGISTERED",
+  "live_mark": "NOT_ISSUED",
+  "live_mark_propagation": "NOT_PROVEN",
+  "payment_executed": false,
+  "billing_mutated": false
+}
