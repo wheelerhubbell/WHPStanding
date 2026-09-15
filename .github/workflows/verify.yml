@@ -1,4 +1,4 @@
-name: Verify WHP Standing candidate
+name: Verify WHP Standing source
 on: [push, workflow_dispatch]
 permissions:
   contents: read
@@ -14,5 +14,20 @@ jobs:
         with:
           python-version: '3.13'
       - run: python -m pip install -r requirements-verification.txt
+      - name: Prepare isolated verifier when propagation source is present
+        run: |
+          if test -f scripts/build-cold-sandbox.sh; then
+            bash scripts/build-cold-sandbox.sh
+          fi
       - run: npm run verify
-      # This workflow never deploys, initializes a real database, or contacts a wallet.
+      - name: Preserve actual verification evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: whp-standing-source-verification-${{ github.run_id }}
+          path: |
+            evidence/verification.json
+            evidence/propagation-extension/
+            evidence/cold-agent/
+          retention-days: 90
+      # No deployment, real database access, real payment, or LIVE issuance.
